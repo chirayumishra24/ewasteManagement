@@ -249,7 +249,7 @@
 
         /* Fullscreen */
         .fullscreen-btn {
-            position: fixed;
+            
             top: 24px;
             right: 24px;
             z-index: 100;
@@ -268,8 +268,8 @@
         }
         .fullscreen-btn:hover { transform: scale(1.05); }
 
-        #scroll-progress {
-            position: fixed;
+        #scroll-progress { position: fixed;
+            
             top: 0;
             right: 0;
             width: 4px;
@@ -278,7 +278,7 @@
             z-index: 1000;
         }
 
-        .fade-in { opacity: 0; transform: translateY(20px); }
+        .fade-in { opacity: 1; transform: translateY(0); }
 
         /* Fun comparison label */
         .fun-label {
@@ -303,29 +303,14 @@
 <body>
     <div id="scroll-progress"></div>
 
-    <button class="fullscreen-btn" id="toggle-fullscreen" title="Toggle Fullscreen">
+    <!-- Header -->
+
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;" title="Toggle Fullscreen">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
     </button>
-
-    <!-- Header -->
-    <header class="header-gradient py-12 px-6 text-center text-white mb-8">
-        <div class="max-w-4xl mx-auto">
-            <p class="uppercase tracking-[0.2em] font-bold text-white/80 text-sm mb-3">Module 01 · Activity 1.3</p>
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Gold Rush Calculator</h1>
-            <p class="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
-                How much treasure is hiding in your school's old electronics? Input your device count and discover the recoverable metals, market value, and environmental savings.
-            </p>
-            <div class="flex flex-wrap justify-center gap-3 mt-8">
-                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">📱 4 Device Types</span>
-                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">⚗️ 4 Precious Metals</span>
-                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">💰 Live Pricing</span>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto px-6 space-y-8 pb-20">
 
         <!-- Device Inventory Input -->
         <section class="topic-card p-6 md:p-8 fade-in">
@@ -556,6 +541,32 @@
             const pct = (window.scrollY / totalScroll) * 100;
             document.getElementById('scroll-progress').style.height = pct + '%';
         });
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
     </script>
 </body>
 </html>

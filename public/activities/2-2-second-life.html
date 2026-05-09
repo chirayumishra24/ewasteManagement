@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Life Workshop | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f8f7f3;
+            --surface: #ffffff;
+            --surface-soft: #f5f3ff;
+            --primary: #c17cff;
+            --primary-dark: #a855f7;
+            --primary-light: #d8b4fe;
+            --text-primary: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        #three-canvas-container {
+            width: 100%;
+            height: 400px;
+            background: radial-gradient(circle at center, #fdfaff 0%, #f5f3ff 100%);
+            border-radius: 16px;
+            position: relative;
+            cursor: grab;
+        }
+
+        .mission-card {
+            background: var(--surface);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .mission-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(168, 85, 247, 0.1); border-color: var(--primary-light); }
+        .mission-card.active { border-color: var(--primary); background: var(--surface-soft); }
+
+        .compatibility-pill {
+            position: absolute; top: 12px; right: 12px;
+            padding: 4px 10px; border-radius: 999px;
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+        }
+
+        .pill-high { background: #dcfce7; color: #15803d; }
+        .pill-med { background: #fef9c3; color: #854d0e; }
+        .pill-low { background: #fee2e2; color: #b91c1c; }
+
+        .carousel-nav {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 20;
+        }
+
+        .nav-dot {
+            width: 10px; height: 10px; border-radius: 50%; background: #ddd;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .nav-dot.active { width: 24px; background: var(--primary); border-radius: 5px; }
+
+        .impact-badge {
+            display: flex; align-items: center; gap: 12px;
+            padding: 1rem; background: var(--surface-soft); border-radius: 16px;
+        }
+
+        .fullscreen-btn {
+             top: 24px; right: 24px; z-index: 100;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 16px rgba(168, 85, 247, 0.3);
+            cursor: pointer; border: 0;
+        }
+
+        .fade-in { opacity: 1; transform: translateY(0); }
+        
+        .is-embedded main { padding-top: 2rem; }
+
+        .drag-hint {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 40px; height: 40px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; z-index: 20;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <!-- 3D Device Shelf -->
+        <section class="topic-card p-4 md:p-6 fade-in">
+            <h3 class="text-xl font-bold mb-6 text-center">Step 1: Select a Retired Device</h3>
+            <div class="relative">
+                <div id="three-canvas-container">
+                    <div id="canvas-loading" class="absolute inset-0 flex items-center justify-center bg-purple-50 z-10">
+                        <div class="text-center">
+                            <div class="w-12 h-12 border-4 border-purple-200 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+                            <p class="font-bold text-purple-400">Loading Device Shelf...</p>
+                        </div>
+                    </div>
+                    <div class="drag-hint left-4" id="prev-device">←</div>
+                    <div class="drag-hint right-4" id="next-device">→</div>
+                </div>
+                <div class="carousel-nav" id="carousel-nav">
+                    <!-- Dots injected by JS -->
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center" id="device-info">
+                <h4 class="text-2xl font-bold text-purple-700" id="active-device-name">Smartphone (2018)</h4>
+                <p class="text-slate-500 max-w-lg mx-auto mt-2" id="active-device-desc">Snapdragon 845, 6GB RAM, Functional Camera, Cracked screen.</p>
+            </div>
+        </section>
+
+        <!-- Mission Matching -->
+        <section class="fade-in">
+            <h3 class="text-xl font-bold mb-6">Step 2: Assign a New Mission</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="mission-grid">
+                <!-- Missions injected by JS -->
+            </div>
+        </section>
+
+        <!-- Outcome Section -->
+        <section id="outcome-section" class="topic-card p-6 md:p-10 fade-in hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div>
+                    <div class="inline-block px-4 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase mb-4">Mission Feasibility: High</div>
+                    <h3 class="text-3xl font-bold mb-4" id="outcome-title">Security Camera Node</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6" id="outcome-desc">
+                        Old smartphones make incredible security cameras. Their high-res lenses and built-in batteries (acting as internal UPS) outperform many dedicated IP cameras.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="impact-badge">
+                            <span class="text-3xl">📦</span>
+                            <div>
+                                <p class="font-bold text-sm">Purchase Avoided</p>
+                                <p class="text-xs text-slate-500">Saves ₹2,500 on new security hardware.</p>
+                            </div>
+                        </div>
+                        <div class="impact-badge">
+                            <span class="text-3xl">🌿</span>
+                            <div>
+                                <p class="font-bold text-sm">Carbon Saving</p>
+                                <p class="text-xs text-slate-500">Prevents 70kg of CO₂ from new manufacturing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <h4 class="font-bold mb-4 flex items-center gap-2">
+                        <span>🛠️</span> Deployment Blueprint
+                    </h4>
+                    <ul class="space-y-4" id="blueprint-steps">
+                        <!-- Steps injected by JS -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
+        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
+        <p class="text-slate-500">Second Life Workshop · Chapter 2.2 · Reuse</p>
+    </footer>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- DATA ---
+        const DEVICES = [
+            { id: 'phone', name: 'Smartphone (2018)', desc: '8-Core CPU, 6GB RAM, Functional Camera, Cracked shell.', color: 0x334155, scale: [0.6, 1.2, 0.1] },
+            { id: 'tablet', name: 'Android Tablet (2016)', desc: '10" Display, Slow OS, Strong Battery, Good WiFi.', color: 0x1e293b, scale: [1.2, 0.8, 0.1] },
+            { id: 'laptop', name: 'Core i5 Laptop (2014)', desc: 'Dead Battery, HDD failing, 8GB RAM, Great Keyboard.', color: 0x475569, scale: [1.5, 0.1, 1.0] },
+            { id: 'router', name: 'WiFi 5 Router', desc: 'Old Firmware, 4 LAN ports, perfectly stable hardware.', color: 0x0f172a, scale: [1.0, 0.3, 0.8] }
+        ];
+
+        const MISSIONS = [
+            { 
+                id: 'cam', 
+                title: 'Security Cam', 
+                icon: '📹',
+                compat: { phone: 'high', tablet: 'med', laptop: 'low', router: 'low' },
+                desc: 'Repurpose the optical sensor for home monitoring.',
+                longDesc: 'Using an old phone as a camera is a classic reuse win. With apps like Alfred or Haven, you turn a retired device into a smart sensor with motion detection and cloud alerts.',
+                steps: ['Factory reset device', 'Install IP Camera App', 'Mount near power source', 'Connect to home WiFi']
+            },
+            { 
+                id: 'hub', 
+                title: 'Smart Home Hub', 
+                icon: '🏠',
+                compat: { phone: 'med', tablet: 'high', laptop: 'med', router: 'med' },
+                desc: 'A dedicated control panel for your lights and locks.',
+                longDesc: 'A wall-mounted tablet running Home Assistant or Google Home provides a premium, always-on interface for your entire household that beats using your primary phone.',
+                steps: ['Strip non-essential apps', 'Enable "Stay Awake" in dev options', 'Install Hub software', 'Wall mount with hidden cable']
+            },
+            { 
+                id: 'nas', 
+                title: 'File Server / NAS', 
+                icon: '🗄️',
+                compat: { phone: 'low', tablet: 'low', laptop: 'high', router: 'med' },
+                desc: 'Centralized storage for photos and backups.',
+                longDesc: 'Old laptops with large screens are great, but their processors and SATA ports are even better. Add an external drive and run OpenMediaVault for a free private cloud.',
+                steps: ['Install lightweight Linux', 'Configure Samba file sharing', 'Connect external HDD', 'Setup automated backup sync']
+            },
+            { 
+                id: 'node', 
+                title: 'WiFi Extender', 
+                icon: '📡',
+                compat: { phone: 'low', tablet: 'low', laptop: 'low', router: 'high' },
+                desc: 'Erase dead zones in your home network.',
+                longDesc: 'Don\'t throw out old routers! Most can be put into "Bridge Mode" or "Access Point Mode" to extend your current network range for free.',
+                steps: ['Login to admin panel', 'Disable DHCP server', 'Assign static IP', 'Connect to main router via LAN']
+            }
+        ];
+
+        // --- APP STATE ---
+        let scene, camera, renderer, controls, deviceGroup;
+        let activeIndex = 0;
+        let isTransitioning = false;
+
+        const container = document.getElementById('three-canvas-container');
+
+        // --- INITIALIZATION ---
+        function init() {
+            scene = new THREE.Scene();
+            
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 1, 5);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(ambient);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1.5);
+            light.position.set(5, 5, 5);
+            light.castShadow = true;
+            scene.add(light);
+
+            deviceGroup = new THREE.Group();
+            scene.add(deviceGroup);
+
+            createDevices();
+            renderMissions();
+            renderNav();
+            updateActiveDevice();
+            animate();
+
+            document.getElementById('canvas-loading').style.display = 'none';
+            document.getElementById('next-device').addEventListener('click', () => rotateCarousel(1));
+            document.getElementById('prev-device').addEventListener('click', () => rotateCarousel(-1));
+            window.addEventListener('resize', onResize);
+        }
+
+        function createDevices() {
+            DEVICES.forEach((dev, i) => {
+                const group = new THREE.Group();
+                
+                // Body
+                const geom = new THREE.BoxGeometry(...dev.scale);
+                const mat = new THREE.MeshStandardMaterial({ color: dev.color, roughness: 0.2, metalness: 0.8 });
+                const mesh = new THREE.Mesh(geom, mat);
+                mesh.castShadow = true;
+                group.add(mesh);
+
+                // Screen (Front side)
+                if (dev.id !== 'router') {
+                    const screenGeom = new THREE.PlaneGeometry(dev.scale[0] * 0.9, dev.scale[1] * 0.9);
+                    const screenMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, emissive: 0x222222 });
+                    const screen = new THREE.Mesh(screenGeom, screenMat);
+                    screen.position.z = dev.scale[2]/2 + 0.01;
+                    group.add(screen);
+                }
+
+                // Layout in a circle
+                const angle = (i / DEVICES.length) * Math.PI * 2;
+                const radius = 2.5;
+                group.position.set(Math.sin(angle) * radius, 0, Math.cos(angle) * radius);
+                group.rotation.y = angle;
+                
+                deviceGroup.add(group);
+            });
+        }
+
+        function rotateCarousel(dir) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            activeIndex = (activeIndex + dir + DEVICES.length) % DEVICES.length;
+            
+            const targetRotation = -(activeIndex / DEVICES.length) * Math.PI * 2;
+            gsap.to(deviceGroup.rotation, {
+                y: targetRotation,
+                duration: 0.8,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    isTransitioning = false;
+                    updateActiveDevice();
+                }
+            });
+
+            updateNav();
+        }
+
+        function updateActiveDevice() {
+            const dev = DEVICES[activeIndex];
+            document.getElementById('active-device-name').textContent = dev.name;
+            document.getElementById('active-device-desc').textContent = dev.desc;
+            
+            // Re-render mission compatibility
+            renderMissions();
+            
+            // Hide outcome if device changed
+            document.getElementById('outcome-section').classList.add('hidden');
+        }
+
+        function renderMissions() {
+            const grid = document.getElementById('mission-grid');
+            grid.innerHTML = '';
+            const activeDevId = DEVICES[activeIndex].id;
+
+            MISSIONS.forEach(mission => {
+                const compat = mission.compat[activeDevId];
+                const card = document.createElement('div');
+                card.className = 'mission-card fade-in';
+                card.style.opacity = '1';
+                card.style.transform = 'none';
+                
+                let pillClass = compat === 'high' ? 'pill-high' : (compat === 'med' ? 'pill-med' : 'pill-low');
+                
+                card.innerHTML = `
+                    <div class="compatibility-pill ${pillClass}">${compat} Fit</div>
+                    <div class="text-4xl mb-4">${mission.icon}</div>
+                    <h4 class="font-bold text-lg mb-2">${mission.title}</h4>
+                    <p class="text-xs text-slate-500">${mission.desc}</p>
+                `;
+                
+                card.addEventListener('click', () => showOutcome(mission, compat));
+                grid.appendChild(card);
+            });
+        }
+
+        function showOutcome(mission, compat) {
+            const section = document.getElementById('outcome-section');
+            section.classList.remove('hidden');
+            
+            document.getElementById('outcome-title').textContent = mission.title;
+            document.getElementById('outcome-desc').textContent = mission.longDesc;
+            
+            const stepsList = document.getElementById('blueprint-steps');
+            stepsList.innerHTML = '';
+            mission.steps.forEach((step, i) => {
+                const li = document.createElement('li');
+                li.className = 'flex gap-3 text-sm';
+                li.innerHTML = `<span class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">${i+1}</span> <span>${step}</span>`;
+                stepsList.appendChild(li);
+            });
+
+            gsap.from(section, { opacity: 0, y: 30, duration: 0.6 });
+            
+            // Scroll to outcome
+            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function renderNav() {
+            const nav = document.getElementById('carousel-nav');
+            nav.innerHTML = '';
+            DEVICES.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = `nav-dot ${i === activeIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => {
+                    const diff = i - activeIndex;
+                    if (diff !== 0) rotateCarousel(diff);
+                });
+                nav.appendChild(dot);
+            });
+        }
+
+        function updateNav() {
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, i) => {
+                dot.className = `nav-dot ${i === activeIndex ? 'active' : ''}`;
+            });
+        }
+
+        function onResize() {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (deviceGroup) {
+                // Subtle breathing animation for all devices
+                deviceGroup.children.forEach((child, i) => {
+                    child.position.y = Math.sin(Date.now() * 0.001 + i) * 0.05;
+                    child.rotation.y += 0.005;
+                });
+            }
+            renderer.render(scene, camera);
+        }
+
+        // Fullscreen Toggle
+        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Check for embedded mode
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+
+        // Initialize
+        init();
+
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    gsap.to(entry.target, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

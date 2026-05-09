@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPR Simulator | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #6366f1;
+            --text-primary: #1e293b;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 24px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            padding: 2rem;
+        }
+
+        .node-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            background: white;
+            border: 2px solid #f1f5f9;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .node-card.active { border-color: var(--primary); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1); }
+        .node-card.completed { border-color: #10b981; background: #f0fdf4; }
+
+        .doc-item {
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: grab;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .doc-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+
+        .drop-zone {
+            margin-top: 12px;
+            height: 50px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .drop-zone.hover { border-color: var(--primary); background: #f5f3ff; color: var(--primary); }
+        .drop-zone.filled { border-style: solid; border-color: #10b981; background: #f0fdf4; color: #10b981; }
+
+        .connector {
+            position: absolute;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: -1;
+            transition: background 0.3s;
+        }
+        .connector.active { background: #6366f1; }
+
+        .fullscreen-btn {
+             top: 16px; right: 16px; z-index: 100;
+            width: 48px; height: 48px;
+            background: rgba(255,255,255,0.2);
+            backdrop-blur: 8px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="relative max-w-6xl mx-auto px-6 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Doc Bank -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="topic-card bg-slate-50">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">Document Bank</h3>
+                    <div class="space-y-3" id="doc-bank">
+                        <div class="doc-item" draggable="true" data-doc="import">
+                            <span>📄</span>
+                            <span>Import Manifest</span>
+                        </div>
+                        <div class="doc-item" draggable="true" data-doc="epr">
+                            <span>📜</span>
+                            <span>EPR Target Cert</span>
+                        </div>
+                        <div class="doc-item" draggable="true" data-doc="transfer">
+                            <span>🚚</span>
+                            <span>Transfer Form 3</span>
+                        </div>
+                        <div class="doc-item" draggable="true" data-doc="recycling">
+                            <span>⚙️</span>
+                            <span>Recycling Certificate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic-card">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Compliance Score</div>
+                    <div class="text-3xl font-bold text-indigo-600" id="v-score">0%</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Place all documents in the correct stage to complete the legal chain.</p>
+                </div>
+            </div>
+
+            <!-- Flow Area -->
+            <div class="lg:col-span-3 space-y-12 py-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 relative" id="flow-grid">
+                    <!-- Node 1 -->
+                    <div class="node-card" id="node-import">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-4">🏭</div>
+                        <h4 class="font-bold">1. Manufacturer</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Registers sales and import volumes with CPCB.</p>
+                        <div class="drop-zone" data-target="import">DROP MANIFEST</div>
+                    </div>
+
+                    <!-- Node 2 -->
+                    <div class="node-card" id="node-epr">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-4">🎯</div>
+                        <h4 class="font-bold">2. EPR Obligation</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Sets mandatory collection targets for the year.</p>
+                        <div class="drop-zone" data-target="epr">DROP TARGET CERT</div>
+                    </div>
+
+                    <!-- Node 3 -->
+                    <div class="node-card" id="node-transfer">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-4">📦</div>
+                        <h4 class="font-bold">3. Collection Point</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Handoff waste to an authorized recycler.</p>
+                        <div class="drop-zone" data-target="transfer">DROP FORM 3</div>
+                    </div>
+
+                    <!-- Node 4 -->
+                    <div class="node-card" id="node-recycling">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl mx-auto mb-4">♻️</div>
+                        <h4 class="font-bold">4. Formal Recycler</h4>
+                        <p class="text-[10px] text-slate-500 mt-1">Final processing and recovery audit.</p>
+                        <div class="drop-zone" data-target="recycling">DROP RECYCLING CERT</div>
+                    </div>
+                </div>
+
+                <div id="summary-msg" class="topic-card bg-indigo-50 border-indigo-100 text-center hidden">
+                    <h4 class="text-indigo-700 font-bold mb-2">Chain Fully Verified!</h4>
+                    <p class="text-xs text-indigo-600 leading-relaxed">
+                        In India, the 2022 E-Waste rules mandate that producers fulfill 100% of their collection targets through these official documents.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let draggedDoc = null;
+        let completed = new Set();
+
+        function init() {
+            const docs = document.querySelectorAll('.doc-item');
+            const zones = document.querySelectorAll('.drop-zone');
+
+            docs.forEach(doc => {
+                doc.addEventListener('dragstart', () => {
+                    draggedDoc = doc.dataset.doc;
+                    doc.style.opacity = '0.5';
+                });
+                doc.addEventListener('dragend', () => {
+                    doc.style.opacity = '1';
+                });
+            });
+
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', e => e.preventDefault());
+                zone.addEventListener('dragenter', () => zone.classList.add('hover'));
+                zone.addEventListener('dragleave', () => zone.classList.remove('hover'));
+                zone.addEventListener('drop', () => handleDrop(zone));
+            });
+
+            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function handleDrop(zone) {
+            zone.classList.remove('hover');
+            const target = zone.dataset.target;
+
+            if (draggedDoc === target) {
+                zone.textContent = 'VERIFIED ✓';
+                zone.classList.add('filled');
+                completed.add(target);
+                
+                const node = zone.closest('.node-card');
+                node.classList.add('completed');
+                
+                // Remove from bank
+                const bankItem = document.querySelector(`.doc-item[data-doc="${target}"]`);
+                bankItem.style.display = 'none';
+
+                updateProgress();
+            } else {
+                gsap.to(zone, { x: 10, repeat: 3, yoyo: true, duration: 0.05 });
+            }
+        }
+
+        function updateProgress() {
+            const score = Math.round((completed.size / 4) * 100);
+            document.getElementById('v-score').textContent = score + '%';
+
+            if (score === 100) {
+                document.getElementById('summary-msg').classList.remove('hidden');
+                gsap.from('#summary-msg', { y: 20, opacity: 0, duration: 0.5 });
+            }
+        }
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

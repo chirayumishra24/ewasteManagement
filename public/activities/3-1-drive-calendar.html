@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive Calendar Planner | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #f3a44a;
+            --text-primary: #1e293b;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .month-cell {
+            aspect-ratio: 1;
+            padding: 16px;
+            background: white;
+            border: 2px dashed #e2e8f0;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .month-cell:hover { border-color: var(--primary); background: #fffbeb; }
+        .month-cell.occupied { border-style: solid; border-color: transparent; }
+
+        .event-type {
+            padding: 12px;
+            border-radius: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+        .event-type:active { cursor: grabbing; }
+        .event-type:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        .event-general { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+        .event-battery { background: #fefce8; color: #854d0e; border-color: #fef08a; }
+        .event-data { background: #faf5ff; color: #6b21a8; border-color: #e9d5ff; }
+        .event-cable { background: #ecfdf5; color: #065f46; border-color: #d1fae5; }
+        .event-workshop { background: #fef2f2; color: #991b1b; border-color: #fee2e2; }
+
+        .selected-event {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .constraint-pill {
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .constraint-pill.warning { background: #fee2e2; color: #b91c1c; }
+        .constraint-pill.success { background: #dcfce7; color: #15803d; }
+
+        .fullscreen-btn {
+             top: 24px; right: 24px; z-index: 100;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            cursor: pointer; border: 0;
+        }
+
+        .is-embedded main { padding-top: 2rem; }
+    </style>
+</head>
+<body>
+
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar: Event Types -->
+            <div class="space-y-6">
+                <div class="topic-card p-6">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">Event Types</h3>
+                    <div class="space-y-3" id="event-bank">
+                        <div class="event-type event-general" draggable="true" data-type="general">
+                            <span class="text-xl">🗳️</span>
+                            <span>General Drive</span>
+                        </div>
+                        <div class="event-type event-battery" draggable="true" data-type="battery">
+                            <span class="text-xl">🔋</span>
+                            <span>Battery Only</span>
+                        </div>
+                        <div class="event-type event-data" draggable="true" data-type="data">
+                            <span class="text-xl">💻</span>
+                            <span>Data Devices</span>
+                        </div>
+                        <div class="event-type event-cable" draggable="true" data-type="cable">
+                            <span class="text-xl">🔌</span>
+                            <span>Cable/Charger</span>
+                        </div>
+                        <div class="event-type event-workshop" draggable="true" data-type="workshop">
+                            <span class="text-xl">🎓</span>
+                            <span>Awareness</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topic-card p-6 bg-slate-50">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">Plan Score</h3>
+                    <div class="text-4xl font-bold mb-2" id="score-text">0</div>
+                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-6">
+                        <div id="score-bar" class="h-full bg-orange-400 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    
+                    <ul class="space-y-3" id="feedback-list">
+                        <li class="flex items-start gap-2 text-xs text-slate-500">
+                            <span>⚪</span>
+                            <span>Add at least 3 events to start scoring.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main: Calendar -->
+            <div class="lg:col-span-3">
+                <div class="topic-card p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-bold">2024 Collection Roadmap</h2>
+                        <button id="reset-calendar" class="text-xs font-bold text-rose-500 hover:text-rose-600">RESET ALL</button>
+                    </div>
+
+                    <div class="calendar-grid" id="calendar-container">
+                        <!-- Months will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const MONTHS = [
+            { name: 'Jan', constraint: null },
+            { name: 'Feb', constraint: null },
+            { name: 'Mar', constraint: 'EXAM MONTH', warning: true },
+            { name: 'Apr', constraint: null },
+            { name: 'May', constraint: null },
+            { name: 'Jun', constraint: null },
+            { name: 'Jul', constraint: null },
+            { name: 'Aug', constraint: null },
+            { name: 'Sep', constraint: null },
+            { name: 'Oct', constraint: 'INTL E-WASTE DAY', success: true },
+            { name: 'Nov', constraint: null },
+            { name: 'Dec', constraint: null }
+        ];
+
+        const EVENT_META = {
+            general: { label: 'General Drive', icon: '🗳️', class: 'event-general' },
+            battery: { label: 'Battery Only', icon: '🔋', class: 'event-battery' },
+            data: { label: 'Data Devices', icon: '💻', class: 'event-data' },
+            cable: { label: 'Cable/Charger', icon: '🔌', class: 'event-cable' },
+            workshop: { label: 'Awareness', icon: '🎓', class: 'event-workshop' }
+        };
+
+        let draggedType = null;
+        let plan = {}; // monthIdx: eventType
+
+        function init() {
+            const container = document.getElementById('calendar-container');
+            MONTHS.forEach((m, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'month-cell';
+                cell.dataset.idx = idx;
+                
+                let constraintHTML = '';
+                if (m.constraint) {
+                    const cClass = m.warning ? 'warning' : (m.success ? 'success' : '');
+                    constraintHTML = `<div class="constraint-pill ${cClass} absolute bottom-2">${m.constraint}</div>`;
+                }
+
+                cell.innerHTML = `
+                    <span class="absolute top-2 left-3 text-[10px] font-bold text-slate-300 uppercase">${m.name}</span>
+                    <div class="event-placeholder text-2xl opacity-10">➕</div>
+                    ${constraintHTML}
+                `;
+
+                cell.addEventListener('dragover', e => e.preventDefault());
+                cell.addEventListener('drop', e => handleDrop(e, idx));
+                cell.addEventListener('click', () => handleCellClick(idx));
+
+                container.appendChild(cell);
+            });
+
+            document.querySelectorAll('.event-type').forEach(el => {
+                el.addEventListener('dragstart', () => draggedType = el.dataset.type);
+            });
+
+            document.getElementById('reset-calendar').addEventListener('click', () => {
+                plan = {};
+                renderCalendar();
+                calculateScore();
+            });
+
+            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function handleDrop(e, idx) {
+            e.preventDefault();
+            if (draggedType) {
+                plan[idx] = draggedType;
+                renderCalendar();
+                calculateScore();
+            }
+        }
+
+        function handleCellClick(idx) {
+            if (plan[idx]) {
+                delete plan[idx];
+                renderCalendar();
+                calculateScore();
+            }
+        }
+
+        function renderCalendar() {
+            document.querySelectorAll('.month-cell').forEach((cell, idx) => {
+                const type = plan[idx];
+                const placeholder = cell.querySelector('.event-placeholder');
+                
+                if (type) {
+                    const meta = EVENT_META[type];
+                    cell.classList.add('occupied');
+                    cell.innerHTML = `
+                        <span class="absolute top-2 left-3 text-[10px] font-bold text-slate-300 uppercase">${MONTHS[idx].name}</span>
+                        <div class="selected-event ${meta.class}">
+                            <span class="text-2xl mb-1">${meta.icon}</span>
+                            <span class="text-[10px] uppercase font-bold">${meta.label}</span>
+                        </div>
+                        <button class="absolute -top-1 -right-1 bg-white text-slate-300 hover:text-rose-500 rounded-full shadow-sm w-5 h-5 flex items-center justify-center text-[10px]">✕</button>
+                    `;
+                } else {
+                    const m = MONTHS[idx];
+                    cell.classList.remove('occupied');
+                    let constraintHTML = '';
+                    if (m.constraint) {
+                        const cClass = m.warning ? 'warning' : (m.success ? 'success' : '');
+                        constraintHTML = `<div class="constraint-pill ${cClass} absolute bottom-2">${m.constraint}</div>`;
+                    }
+                    cell.innerHTML = `
+                        <span class="absolute top-2 left-3 text-[10px] font-bold text-slate-300 uppercase">${m.name}</span>
+                        <div class="event-placeholder text-2xl opacity-10">➕</div>
+                        ${constraintHTML}
+                    `;
+                }
+            });
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let feedback = [];
+            const events = Object.entries(plan);
+            const eventTypes = new Set(Object.values(plan));
+
+            if (events.length < 1) {
+                feedback.push('⚪ Add events to begin planning.');
+            } else {
+                // 1. Coverage
+                score += eventTypes.size * 15;
+                feedback.push(`✅ Covered ${eventTypes.size}/5 event types.`);
+
+                // 2. Exam Check (March/Oct)
+                const examConflict = plan[2] || plan[9];
+                if (plan[2]) {
+                    score -= 20;
+                    feedback.push('❌ Avoid March drives (Exam Month).');
+                }
+                
+                // 3. Awareness Alignment (October Bonus)
+                if (plan[9]) {
+                    score += 25;
+                    feedback.push('🌟 Bonus: October Drive (Intl E-Waste Day)!');
+                }
+
+                // 4. Spacing
+                const sortedMonths = Object.keys(plan).map(Number).sort((a,b) => a-b);
+                let wellSpaced = true;
+                for (let i = 1; i < sortedMonths.length; i++) {
+                    if (sortedMonths[i] - sortedMonths[i-1] < 2) wellSpaced = false;
+                }
+                if (wellSpaced && events.length >= 3) {
+                    score += 20;
+                    feedback.push('✅ Good spacing between events.');
+                } else if (events.length >= 3) {
+                    feedback.push('⚠️ Events are too close together.');
+                }
+
+                // 5. Max capacity
+                if (events.length > 6) {
+                    score -= 10;
+                    feedback.push('⚠️ Too many events might cause fatigue.');
+                }
+            }
+
+            score = Math.max(0, Math.min(100, score));
+            document.getElementById('score-text').textContent = score;
+            document.getElementById('score-bar').style.width = score + '%';
+            
+            const list = document.getElementById('feedback-list');
+            list.innerHTML = feedback.map(f => `<li class="flex items-start gap-2 text-xs">${f}</li>`).join('');
+            
+            if (score >= 90) {
+                showConfetti();
+            }
+        }
+
+        function showConfetti() {
+            // Minimal confetti simulation using CSS/JS
+            for (let i = 0; i < 30; i++) {
+                const c = document.createElement('div');
+                c.className = 'fixed pointer-events-none z-[100] w-2 h-2 rounded-full';
+                c.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                document.body.appendChild(c);
+                gsap.to(c, {
+                    y: '110vh',
+                    x: (Math.random() - 0.5) * 200,
+                    rotation: Math.random() * 360,
+                    duration: 2 + Math.random() * 2,
+                    ease: 'none',
+                    onComplete: () => c.remove()
+                });
+            }
+        }
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

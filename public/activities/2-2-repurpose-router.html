@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repurpose Router | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #85a9ff;
+            --primary-dark: #3b82f6;
+            --text-primary: #0f172a;
+            --accent: #6366f1;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+        code { font-family: 'JetBrains Mono', monospace; }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #85a9ff 100%);
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        #three-canvas-container {
+            width: 100%;
+            height: 350px;
+            background: #0f172a;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-group {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        .input-group:focus-within { border-color: var(--primary); background: white; }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%; height: 6px;
+            background: #cbd5e1; border-radius: 5px; outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 20px; height: 20px; background: var(--primary-dark);
+            cursor: pointer; border-radius: 50%; border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .route-path {
+            position: relative; padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
+        }
+        .route-path::before {
+            content: ''; position: absolute; left: -9px; top: 0;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--primary); border: 4px solid white;
+        }
+
+        .result-pill {
+            background: #dcfce7; color: #15803d;
+            padding: 4px 12px; border-radius: 999px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+
+        .fullscreen-btn {
+             top: 24px; right: 24px; z-index: 100;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+            cursor: pointer; border: 0;
+        }
+
+        .is-embedded main { padding-top: 2rem; }
+
+        .weight-tag {
+            position: absolute; bottom: 20px; right: 20px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <!-- Spec Input -->
+            <section class="topic-card p-6 md:p-8 space-y-8">
+                <h3 class="text-xl font-bold border-b border-slate-100 pb-4">Hardware Profile</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-bold text-slate-500 uppercase">System RAM</label>
+                            <span class="text-sm font-bold text-blue-600" id="ram-val">4 GB</span>
+                        </div>
+                        <input type="range" min="1" max="16" value="4" class="slider" id="ram-input">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-bold text-slate-500 uppercase">CPU Age</label>
+                            <span class="text-sm font-bold text-blue-600" id="cpu-val">8 Years Old</span>
+                        </div>
+                        <input type="range" min="1" max="15" value="8" class="slider" id="cpu-input">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-bold text-slate-500 uppercase block mb-4">Storage Type</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="p-4 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700 font-bold text-sm storage-btn active" data-type="hdd">Traditional HDD</button>
+                            <button class="p-4 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 font-bold text-sm storage-btn" data-type="ssd">Fast SSD</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100 mt-8">
+                    <p class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">Digital Weight Analysis</p>
+                    <p class="text-sm text-blue-800 leading-relaxed" id="analysis-text">
+                        Your system is carrying roughly 12GB of background OS bloat. Modern Windows will feel heavy here.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Visualizer & Results -->
+            <section class="space-y-8">
+                <div class="topic-card p-2 relative overflow-hidden">
+                    <div id="three-canvas-container">
+                        <div class="weight-tag" id="weight-label">BLOAT: 85%</div>
+                    </div>
+                </div>
+
+                <div class="topic-card p-6 md:p-8">
+                    <h3 class="text-xl font-bold mb-6">Optimized Routing</h3>
+                    <div class="space-y-6" id="results-container">
+                        <div class="route-path">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h4 class="font-bold text-lg" id="os-name">Lubuntu / ChromeOS Flex</h4>
+                                <span class="result-pill">Optimal OS</span>
+                            </div>
+                            <p class="text-sm text-slate-500" id="os-desc">Reduces idle RAM usage from 3.2GB to 600MB.</p>
+                        </div>
+
+                        <div class="route-path">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h4 class="font-bold text-lg" id="mission-name">Retropie Console</h4>
+                                <span class="result-pill" style="background:#e0f2fe; color:#0369a1;">Perfect Role</span>
+                            </div>
+                            <p class="text-sm text-slate-500" id="mission-desc">Your CPU is perfectly suited for emulating classic arcade and 16-bit games.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Facts -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="topic-card p-6 bg-slate-900 text-white border-0">
+                <h4 class="text-blue-400 text-sm font-bold uppercase mb-2">Did You Know?</h4>
+                <p class="text-sm text-slate-300">Linux can run on as little as 512MB of RAM. A laptop that "can't run Windows" is often a high-performance machine in a Linux environment.</p>
+            </div>
+            <div class="topic-card p-6">
+                <h4 class="text-slate-400 text-sm font-bold uppercase mb-2">The SSD Win</h4>
+                <p class="text-sm text-slate-600">Swapping a mechanical HDD for a ₹1,200 SSD is the single biggest "Reuse" upgrade you can perform, often making a 10-year-old laptop feel brand new.</p>
+            </div>
+            <div class="topic-card p-6">
+                <h4 class="text-slate-400 text-sm font-bold uppercase mb-2">Privacy Bonus</h4>
+                <p class="text-sm text-slate-600">Lightweight OS choices like Tails or Puppy Linux offer specialized privacy and speed that mainstream operating systems can't match on any hardware.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
+        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
+        <p class="text-slate-500">Repurpose Router · Chapter 2.2 · Reuse</p>
+    </footer>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- APP STATE ---
+        let ram = 4;
+        let age = 8;
+        let storage = 'hdd';
+        let scene, camera, renderer, weightBlock, particleSystem;
+
+        const container = document.getElementById('three-canvas-container');
+
+        // --- INITIALIZATION ---
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 2, 5);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const amb = new THREE.AmbientLight(0x404040, 2);
+            scene.add(amb);
+            const point = new THREE.PointLight(0x3b82f6, 5, 50);
+            point.position.set(2, 5, 2);
+            scene.add(point);
+
+            // The "System" Block
+            const geom = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: 0x1e293b, 
+                wireframe: true,
+                emissive: 0x0ea5e9,
+                emissiveIntensity: 0.5
+            });
+            weightBlock = new THREE.Mesh(geom, mat);
+            scene.add(weightBlock);
+
+            // Particles (Representing Bloat)
+            createParticles();
+            
+            animate();
+            setupUI();
+            updateAll();
+        }
+
+        function createParticles() {
+            if (particleSystem) scene.remove(particleSystem);
+            
+            const count = 500;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                pos[i*3] = (Math.random() - 0.5) * 4;
+                pos[i*3+1] = (Math.random() - 0.5) * 4;
+                pos[i*3+2] = (Math.random() - 0.5) * 4;
+                
+                colors[i*3] = 0.2;
+                colors[i*3+1] = 0.5;
+                colors[i*3+2] = 1.0;
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const pMat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.8 });
+            particleSystem = new THREE.Points(geo, pMat);
+            scene.add(particleSystem);
+        }
+
+        function setupUI() {
+            const ramInput = document.getElementById('ram-input');
+            const cpuInput = document.getElementById('cpu-input');
+            const storageBtns = document.querySelectorAll('.storage-btn');
+
+            ramInput.addEventListener('input', (e) => {
+                ram = parseInt(e.target.value);
+                document.getElementById('ram-val').textContent = ram + ' GB';
+                updateAll();
+            });
+
+            cpuInput.addEventListener('input', (e) => {
+                age = parseInt(e.target.value);
+                document.getElementById('cpu-val').textContent = age + ' Years Old';
+                updateAll();
+            });
+
+            storageBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    storageBtns.forEach(b => {
+                        b.classList.remove('active', 'border-blue-500', 'bg-blue-50', 'text-blue-700');
+                        b.classList.add('border-transparent', 'bg-slate-100', 'text-slate-600');
+                    });
+                    btn.classList.add('active', 'border-blue-500', 'bg-blue-50', 'text-blue-700');
+                    btn.classList.remove('border-transparent', 'bg-slate-100', 'text-slate-600');
+                    storage = btn.dataset.type;
+                    updateAll();
+                });
+            });
+        }
+
+        function updateAll() {
+            // Logic for recommendations
+            let os = "Linux Mint / Ubuntu";
+            let osDesc = "A balanced choice for standard utility.";
+            let mission = "Media Center";
+            let missionDesc = "Perfect for streaming movies and music.";
+            let weight = 50;
+
+            if (ram <= 2) {
+                os = "Antix / Puppy Linux";
+                osDesc = "Ultra-light OS designed for ancient systems.";
+                weight = 85;
+            } else if (ram <= 4) {
+                os = "ChromeOS Flex";
+                osDesc = "Turns old laptops into fast, secure web machines.";
+                weight = 60;
+            } else {
+                os = "Pop!_OS / Zorin OS";
+                osDesc = "Modern, beautiful, and faster than Windows.";
+                weight = 30;
+            }
+
+            if (age > 10) {
+                mission = "Retro Console";
+                missionDesc = "Run thousands of classic games from the 80s and 90s.";
+            } else if (storage === 'ssd') {
+                mission = "Remote Work Hub";
+                missionDesc = "Solid enough for coding, writing, and browser work.";
+            } else {
+                mission = "Dedicated Server";
+                missionDesc = "Run your own cloud, web server, or Minecraft node.";
+            }
+
+            // Visual updates
+            document.getElementById('os-name').textContent = os;
+            document.getElementById('os-desc').textContent = osDesc;
+            document.getElementById('mission-name').textContent = mission;
+            document.getElementById('mission-desc').textContent = missionDesc;
+            document.getElementById('weight-label').textContent = `DIGITAL WEIGHT: ${weight}%`;
+            
+            const analysis = document.getElementById('analysis-text');
+            if (weight > 70) {
+                analysis.textContent = `CRITICAL BLOAT: Your hardware is struggling under modern software layers. Switching to ${os} will restore up to 80% of lost speed.`;
+            } else if (weight > 40) {
+                analysis.textContent = `MODERATE BLOAT: System is functional but sluggish. A move to ${os} and an SSD would make this device feel new.`;
+            } else {
+                analysis.textContent = `HEALTHY SYSTEM: This device has strong bones. It can handle modern lightweight Linux distributions with ease.`;
+            }
+
+            // Update 3D
+            if (particleSystem) {
+                const targetOpacity = weight / 100;
+                gsap.to(particleSystem.material, { opacity: targetOpacity, duration: 0.5 });
+                gsap.to(particleSystem.scale, { x: 1 + targetOpacity, y: 1 + targetOpacity, z: 1 + targetOpacity, duration: 0.5 });
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (weightBlock) {
+                weightBlock.rotation.y += 0.01;
+                weightBlock.rotation.x += 0.005;
+            }
+            if (particleSystem) {
+                particleSystem.rotation.y -= 0.002;
+            }
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // Fullscreen
+        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

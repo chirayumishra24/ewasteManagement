@@ -31,16 +31,8 @@
         }
 
         /* Fullscreen handling */
-        .is-embedded header { display: none; }
+        
         .is-embedded .main-container { padding-top: 1rem; height: 100%; }
-
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d9 100%);
-            padding: 2rem;
-            text-align: center;
-            color: white;
-            flex-shrink: 0;
-        }
 
         .main-container {
             flex-grow: 1;
@@ -198,7 +190,7 @@
         .legend-line.informal { border-top: 2px dashed var(--danger); }
 
         .fullscreen-btn {
-            position: fixed;
+            
             top: 20px;
             right: 20px;
             width: 44px;
@@ -216,19 +208,12 @@
 </head>
 <body>
 
-    <button class="fullscreen-btn" id="toggle-fullscreen">
+    <div class="relative main-container">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
     </button>
-
-    <header>
-        <p class="text-xs font-bold uppercase tracking-[0.2em] mb-1 opacity-80">Module 01 · Activity 1.1</p>
-        <h1 class="text-3xl font-bold">The Global Flow Map</h1>
-        <p class="text-sm opacity-90 mt-2">Trace the journey of e-waste from consumers to processing hubs.</p>
-    </header>
-
-    <div class="main-container">
         <div id="info-panel" class="info-panel">
             <div class="info-close" onclick="closeInfo()">✕</div>
             <h3 id="info-title" class="text-xl font-bold text-slate-800 mb-1">Guiyu, China</h3>
@@ -309,6 +294,32 @@
 
         function closeInfo() {
             document.getElementById('info-panel').classList.remove('active');
+        }
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
         }
     </script>
 </body>

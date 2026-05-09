@@ -1704,12 +1704,7 @@ a {
   height: 100%;
 }
 
-.activity-iframe-overlay {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 10;
-}
+
 
 .image-grid {
   display: grid;

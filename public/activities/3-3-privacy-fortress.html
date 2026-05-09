@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Fortress | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #6366f1;
+            --text-primary: #1e293b;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        #canvas-container {
+            width: 100%;
+            height: calc(100vh - 80px);
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+            position: relative;
+        }
+
+        .hud-panel {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            width: 340px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .hud-panel > * { pointer-events: auto; }
+
+        .security-layer {
+            padding: 1.25rem;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .security-layer:hover { transform: translateX(8px); border-color: var(--primary); }
+        .security-layer.active { border-color: var(--primary); background: #f5f3ff; }
+        .security-layer.locked { opacity: 0.5; filter: grayscale(1); }
+
+        .vault-status {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 340px;
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            z-index: 20;
+        }
+
+        .fullscreen-btn {
+             top: 16px; right: 16px; z-index: 100;
+            width: 48px; height: 48px;
+            background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 0;
+        }
+
+        .is-embedded #canvas-container { height: 100vh; }
+    </style>
+</head>
+<body>
+
+    <main id="canvas-container" class="relative">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="hud-panel space-y-4">
+            <div class="security-layer" id="layer-1" data-id="factory">
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">⚙️</div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Factory Reset</h4>
+                    <p class="text-[10px] text-slate-500">Wipe settings and apps</p>
+                </div>
+                <div class="status-dot w-3 h-3 rounded-full bg-slate-200"></div>
+            </div>
+            <div class="security-layer" id="layer-2" data-id="accounts">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl">👤</div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Account Logout</h4>
+                    <p class="text-[10px] text-slate-500">Unlink Google/iCloud</p>
+                </div>
+                <div class="status-dot w-3 h-3 rounded-full bg-slate-200"></div>
+            </div>
+            <div class="security-layer" id="layer-3" data-id="shred">
+                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-xl">✂️</div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Data Shredding</h4>
+                    <p class="text-[10px] text-slate-500">Overwrite drive sectors</p>
+                </div>
+                <div class="status-dot w-3 h-3 rounded-full bg-slate-200"></div>
+            </div>
+            <div class="security-layer" id="layer-4" data-id="physical">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl">⚒️</div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold">Physical Security</h4>
+                    <p class="text-[10px] text-slate-500">Remove SIM and SD cards</p>
+                </div>
+                <div class="status-dot w-3 h-3 rounded-full bg-slate-200"></div>
+            </div>
+        </div>
+
+        <div class="vault-status">
+            <h3 class="text-lg font-bold mb-2" id="status-title">Vault Initializing...</h3>
+            <p class="text-xs text-slate-500 leading-relaxed mb-6" id="status-desc">
+                Your device still contains ghosts of your digital life. Activate security layers to reach 100% data immunity.
+            </p>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
+                <div id="integrity-bar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 20%"></div>
+            </div>
+            <div id="action-tip" class="p-3 bg-indigo-50 rounded-xl text-[10px] text-indigo-700 font-medium">
+                TIP: Always log out of cloud accounts before factory resetting.
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let scene, camera, renderer, controls, vault;
+        let layers = {
+            factory: false,
+            accounts: false,
+            shred: false,
+            physical: false
+        };
+
+        const container = document.getElementById('canvas-container');
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(6, 4, 6);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 1));
+            const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+            sun.position.set(5, 10, 5);
+            scene.add(sun);
+
+            createVault();
+            setupEvents();
+            animate();
+        }
+
+        function createVault() {
+            vault = new THREE.Group();
+
+            // Core - The "Data"
+            const coreGeo = new THREE.IcosahedronGeometry(0.8, 1);
+            const coreMat = new THREE.MeshStandardMaterial({ 
+                color: 0x6366f1, 
+                wireframe: true,
+                emissive: 0x6366f1,
+                emissiveIntensity: 0.5
+            });
+            const core = new THREE.Mesh(coreGeo, coreMat);
+            vault.add(core);
+
+            // Shield Rings
+            for(let i=0; i<4; i++) {
+                const ringGeo = new THREE.TorusGeometry(1.5 + i*0.4, 0.02, 16, 100);
+                const ringMat = new THREE.MeshStandardMaterial({ 
+                    color: 0xe2e8f0, 
+                    transparent: true, 
+                    opacity: 0.3 
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.random() * Math.PI;
+                ring.rotation.y = Math.random() * Math.PI;
+                ring.name = `ring-${i+1}`;
+                vault.add(ring);
+            }
+
+            scene.add(vault);
+        }
+
+        function setupEvents() {
+            document.querySelectorAll('.security-layer').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = el.dataset.id;
+                    if (layers[id]) return; // Already active
+
+                    layers[id] = true;
+                    el.classList.add('active');
+                    el.querySelector('.status-dot').classList.replace('bg-slate-200', 'bg-emerald-500');
+                    
+                    activateLayer(id);
+                    updateProgress();
+                });
+            });
+
+            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function activateLayer(id) {
+            let ringIdx = 0;
+            switch(id) {
+                case 'accounts': ringIdx = 1; break;
+                case 'factory': ringIdx = 2; break;
+                case 'shred': ringIdx = 3; break;
+                case 'physical': ringIdx = 4; break;
+            }
+
+            const ring = vault.children.find(c => c.name === `ring-${ringIdx}`);
+            if (ring) {
+                gsap.to(ring.material, { opacity: 1, duration: 1 });
+                gsap.to(ring.scale, { x: 1.1, y: 1.1, z: 1.1, duration: 0.5, yoyo: true, repeat: 1 });
+                ring.material.color.set(0x6366f1);
+            }
+
+            // HUD Tips
+            const tips = {
+                accounts: "Cloud links severed. Local encryption keys invalidated.",
+                factory: "OS file system wiped. Operating system re-initialized.",
+                shred: "Overwriting storage sectors with random 1s and 0s.",
+                physical: "SIM and SD cards safely removed. Connectivity dead."
+            };
+            document.getElementById('action-tip').textContent = tips[id];
+        }
+
+        function updateProgress() {
+            const count = Object.values(layers).filter(v => v).length;
+            const integrity = 20 + (count * 20);
+            
+            document.getElementById('integrity-text').textContent = integrity + '%';
+            document.getElementById('integrity-bar').style.width = integrity + '%';
+
+            const statusTitle = document.getElementById('status-title');
+            const statusDesc = document.getElementById('status-desc');
+
+            if (integrity === 100) {
+                statusTitle.textContent = "Data Fortress Active";
+                statusDesc.textContent = "All security layers verified. Your device is now safe for disposal/donation.";
+                document.getElementById('integrity-bar').classList.replace('bg-indigo-500', 'bg-emerald-500');
+                
+                // Final Animation
+                gsap.to(vault.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 2, repeat: -1, yoyo: true });
+            } else {
+                statusTitle.textContent = `${count}/4 Protocols Active`;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            if (vault) {
+                vault.rotation.y += 0.005;
+                // Animate core pulsing
+                const core = vault.children[0];
+                core.rotation.x += 0.01;
+                core.scale.setScalar(1 + Math.sin(Date.now() * 0.002) * 0.05);
+            }
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detective | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --page-bg: #f1f5f9;
+            --surface: #ffffff;
+            --primary: #ef4444;
+            --text-primary: #1e293b;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .email-list-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .email-list-item:hover { background: #f8fafc; }
+        .email-list-item.active { background: #f1f5f9; border-left: 4px solid #6366f1; }
+        .email-list-item.scanned { opacity: 0.6; }
+
+        .email-viewer {
+            background: white;
+            border-radius: 20px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .inspectable {
+            border-bottom: 2px dashed #e2e8f0;
+            cursor: help;
+            position: relative;
+            display: inline-block;
+        }
+        .inspectable:hover { border-color: #6366f1; background: #f5f3ff; }
+
+        .clue-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            background: #1e293b;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .inspectable:hover .clue-tooltip { opacity: 1; }
+
+        .verdict-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-blur: 4px;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .fullscreen-btn {
+             top: 16px; right: 16px; z-index: 101;
+            width: 48px; height: 48px;
+            background: rgba(255,255,255,0.2);
+            backdrop-blur: 8px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar: Inbox -->
+            <div class="lg:col-span-1 topic-card overflow-hidden">
+                <div class="bg-slate-50 p-4 border-b font-bold text-xs uppercase tracking-widest text-slate-400">INBOX (3)</div>
+                <div id="email-list">
+                    <!-- Emails here -->
+                </div>
+                <div class="p-6 mt-4">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Detection Score</div>
+                    <div class="text-3xl font-bold text-indigo-600" id="v-score">0</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Identify all 3 scams to earn the Badge of Digital Citizenship.</p>
+                </div>
+            </div>
+
+            <!-- Viewer -->
+            <div class="lg:col-span-3 email-viewer topic-card relative">
+                <div id="email-content" class="h-full flex flex-col">
+                    <div class="p-8 border-b bg-slate-50">
+                        <h2 class="text-xl font-bold mb-2" id="v-subject">Select an email to inspect</h2>
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span id="v-from">---</span>
+                            <span>•</span>
+                            <span id="v-date">---</span>
+                        </div>
+                    </div>
+                    <div class="p-12 flex-1 overflow-y-auto leading-relaxed text-slate-600" id="v-body">
+                        <div class="h-full flex items-center justify-center text-slate-300 italic">
+                            Select an email from the left sidebar to start the investigation.
+                        </div>
+                    </div>
+                    
+                    <div id="action-bar" class="p-8 border-t bg-slate-50 hidden flex justify-end gap-4">
+                        <button class="px-6 py-2 rounded-lg font-bold text-sm text-emerald-600 border-2 border-emerald-100 hover:bg-emerald-50" data-verdict="legit">TRUSTED</button>
+                        <button class="px-6 py-2 rounded-lg font-bold text-sm bg-rose-500 text-white hover:bg-rose-600" data-verdict="scam">REPORT SCAM</button>
+                    </div>
+                </div>
+
+                <div class="verdict-overlay" id="verdict-overlay">
+                    <div>
+                        <div class="text-5xl mb-4" id="res-icon">🎯</div>
+                        <h3 class="text-2xl font-bold mb-2" id="res-title">Correct Analysis!</h3>
+                        <p class="text-slate-500 max-w-sm mb-8" id="res-desc">You identified the suspicious domain and the sense of false urgency.</p>
+                        <button class="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm" id="close-verdict">CONTINUE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const EMAILS = [
+            {
+                id: 1,
+                subject: "URGENT: Your device was flagged for illegal disposal",
+                from: "Gov Compliance <support@gov-portal-update.com>",
+                date: "10:45 AM",
+                isScam: true,
+                body: `
+                    Dear Citizen,<br><br>
+                    Our regional monitoring system has flagged your IP address for <span class="inspectable">improper e-waste disposal<div class="clue-tooltip">RED FLAG: Gov agencies usually send mail via post, not email for disposal fines.</div></span>. 
+                    A fine of <b>₹5,000</b> has been issued.<br><br>
+                    To avoid legal action and court summons, please pay the fine immediately via our <span class="inspectable">Secure Disposal Link<div class="clue-tooltip">RED FLAG: The link points to bit.ly/fine-pay-urgent, not an official govt domain.</div></span>.<br><br>
+                    You have <span class="inspectable">2 hours to comply<div class="clue-tooltip">RED FLAG: Creating a false sense of urgency is a classic phishing tactic.</div></span>.<br><br>
+                    Regards,<br>
+                    Waste Management Board
+                `,
+                reason: "Sense of false urgency, suspicious sender domain, and third-party payment link."
+            },
+            {
+                id: 2,
+                subject: "Confirmation: Scheduled E-Waste Pickup #29931",
+                from: "Skilizee Authorized <pickups@skilizee-waste.org>",
+                date: "Yesterday",
+                isScam: false,
+                body: `
+                    Hello User,<br><br>
+                    Your request for an e-waste pickup has been confirmed for <b>Oct 15th</b>. 
+                    Our representative will arrive between 10:00 AM and 1:00 PM.<br><br>
+                    Please ensure all devices are data-wiped. No payment is required for this service.
+                    You can view your request details in your <span class="inspectable">Dashboard<div class="clue-tooltip">SAFE: Link points to your internal student portal.</div></span>.<br><br>
+                    Thank you for recycling!
+                `,
+                reason: "Consistent with your recent actions and points to an official domain."
+            },
+            {
+                id: 3,
+                subject: "Exclusive Gold Recovery Bonus - Claim Now!",
+                from: "MetaRecycle Global <no-reply@meta-recycling-app.io>",
+                date: "2 days ago",
+                isScam: true,
+                body: `
+                    CONGRATULATIONS!<br><br>
+                    You have been selected for our <span class="inspectable">Annual Gold Recovery Bonus<div class="clue-tooltip">RED FLAG: Unsolicited financial rewards for recycling are rare.</div></span>. 
+                    Based on your regional activity, you are eligible for a <b>₹2,500 cashback</b>.<br><br>
+                    To claim your reward, <span class="inspectable">Login with your credentials<div class="clue-tooltip">RED FLAG: Scammers use 'Reward' hooks to steal account passwords.</div></span> on our partner portal.<br><br>
+                    Offer expires at midnight!
+                `,
+                reason: "Suspicious 'too good to be true' offer and credential harvesting attempt."
+            }
+        ];
+
+        let activeId = null;
+        let score = 0;
+        let results = {}; // id: {correct, verdict}
+
+        function init() {
+            renderList();
+            setupEvents();
+
+            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function renderList() {
+            const list = document.getElementById('email-list');
+            list.innerHTML = EMAILS.map(e => `
+                <div class="email-list-item ${results[e.id] ? 'scanned' : ''}" data-id="${e.id}">
+                    <div class="text-[10px] font-bold text-indigo-600 mb-1">${results[e.id] ? 'INVESTIGATED' : 'NEW'}</div>
+                    <div class="font-bold text-sm truncate">${e.subject}</div>
+                    <div class="text-xs text-slate-500">${e.from.split('<')[0]}</div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.email-list-item').forEach(el => {
+                el.addEventListener('click', () => openEmail(parseInt(el.dataset.id)));
+            });
+        }
+
+        function openEmail(id) {
+            if (results[id]) return;
+            activeId = id;
+            const e = EMAILS.find(x => x.id === id);
+            
+            document.querySelectorAll('.email-list-item').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-id="${id}"]`).classList.add('active');
+
+            document.getElementById('v-subject').textContent = e.subject;
+            document.getElementById('v-from').textContent = e.from;
+            document.getElementById('v-date').textContent = e.date;
+            document.getElementById('v-body').innerHTML = e.body;
+            document.getElementById('action-bar').classList.remove('hidden');
+        }
+
+        function setupEvents() {
+            document.querySelectorAll('[data-verdict]').forEach(btn => {
+                btn.addEventListener('click', () => handleVerdict(btn.dataset.verdict));
+            });
+
+            document.getElementById('close-verdict').addEventListener('click', () => {
+                document.getElementById('verdict-overlay').style.display = 'none';
+                renderList();
+                resetViewer();
+            });
+        }
+
+        function resetViewer() {
+            document.getElementById('v-subject').textContent = 'Select an email to inspect';
+            document.getElementById('v-from').textContent = '---';
+            document.getElementById('v-date').textContent = '---';
+            document.getElementById('v-body').innerHTML = '<div class="h-full flex items-center justify-center text-slate-300 italic">Select an email from the left sidebar to start the investigation.</div>';
+            document.getElementById('action-bar').classList.add('hidden');
+        }
+
+        function handleVerdict(v) {
+            const e = EMAILS.find(x => x.id === activeId);
+            const isScamVerdict = (v === 'scam');
+            const isCorrect = (isScamVerdict === e.isScam);
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('v-score').textContent = score;
+                showVerdict(true, e.reason);
+            } else {
+                showVerdict(false, e.isScam ? "This was actually a scam! Notice the false urgency." : "This was a legit notification. Not all emails are dangerous.");
+            }
+
+            results[activeId] = { correct: isCorrect, verdict: v };
+        }
+
+        function showVerdict(isCorrect, desc) {
+            const overlay = document.getElementById('verdict-overlay');
+            const title = document.getElementById('res-title');
+            const resDesc = document.getElementById('res-desc');
+            const icon = document.getElementById('res-icon');
+
+            overlay.style.display = 'flex';
+            title.textContent = isCorrect ? 'Correct Analysis!' : 'Analysis Error';
+            title.className = isCorrect ? 'text-2xl font-bold mb-2 text-emerald-600' : 'text-2xl font-bold mb-2 text-rose-600';
+            resDesc.textContent = desc;
+            icon.textContent = isCorrect ? '🎯' : '⚠️';
+        }
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
+</body>
+</html>

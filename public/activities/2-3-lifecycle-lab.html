@@ -1,445 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lifecycle Decision Lab | Skilizee E-Waste</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #07111b;
-      --panel: rgba(11, 23, 37, 0.92);
-      --panel-soft: rgba(16, 31, 48, 0.92);
-      --line: rgba(151, 211, 255, 0.14);
-      --text: #edf5ff;
-      --copy: #b5c5d8;
-      --muted: #7b8ea4;
-      --reduce: #53d18d;
-      --reuse: #c17cff;
-      --recycle: #ff6f61;
-      --accent: #61b8ff;
-      --warning: #f3a44a;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifecycle Decision Lab | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #f3a44a;
+            --reduce: #60a5fa;
+            --reuse: #c084fc;
+            --recycle: #fbbf24;
+            --text-primary: #1e293b;
+        }
 
-    * { box-sizing: border-box; }
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      background:
-        radial-gradient(circle at 14% 16%, rgba(97, 184, 255, 0.14), transparent 24%),
-        radial-gradient(circle at 88% 22%, rgba(243, 164, 74, 0.14), transparent 20%),
-        linear-gradient(180deg, #050c14 0%, #07111b 48%, #0b1827 100%);
-    }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
 
-    .shell {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 18px;
-      display: grid;
-      gap: 16px;
-    }
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
 
-    .topbar,
-    .hero,
-    .panel,
-    .scenario-card,
-    .decision-btn,
-    .stat {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--panel);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.26);
-      backdrop-filter: blur(16px);
-    }
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-    }
+        #three-canvas-container {
+            width: 100%;
+            height: 400px;
+            background: radial-gradient(circle at center, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            position: relative;
+        }
 
-    .eyebrow,
-    .chip,
-    .metric-label,
-    .decision-btn span,
-    .scenario-tag,
-    .score-badge {
-      font-family: 'Chakra Petch', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
+        .decision-btn {
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            cursor: pointer;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .decision-btn:hover { transform: translateY(-4px); }
+        .btn-reduce:hover { border-color: var(--reduce); background: #eff6ff; }
+        .btn-reuse:hover { border-color: var(--reuse); background: #faf5ff; }
+        .btn-recycle:hover { border-color: var(--recycle); background: #fffbeb; }
 
-    .hero {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
-      gap: 16px;
-      background:
-        linear-gradient(145deg, rgba(10, 22, 36, 0.96), rgba(9, 17, 28, 0.88)),
-        radial-gradient(circle at top right, rgba(97, 184, 255, 0.16), transparent 20%);
-    }
+        .stat-badge {
+            display: flex; align-items: center; gap: 12px;
+            padding: 0.75rem 1rem; border-radius: 12px; background: #f1f5f9;
+        }
 
-    .hero h1 {
-      margin: 8px 0 12px;
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
+        .fullscreen-btn {
+             top: 24px; right: 24px; z-index: 100;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            cursor: pointer; border: 0;
+        }
 
-    .hero p,
-    .scenario-card p,
-    .panel p {
-      margin: 0;
-      color: var(--copy);
-      line-height: 1.65;
-    }
+        .is-embedded main { padding-top: 2rem; }
 
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
+        .scenario-box {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
-    .stat {
-      padding: 14px;
-      background: var(--panel-soft);
-    }
-
-    .stat strong {
-      display: block;
-      margin-top: 6px;
-      font-size: 1.05rem;
-    }
-
-    .lab-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-      gap: 16px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 16px;
-    }
-
-    .scenario-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .scenario-card {
-      padding: 16px;
-      display: grid;
-      gap: 12px;
-      background: var(--panel-soft);
-    }
-
-    .scenario-card.active {
-      border-color: rgba(97, 184, 255, 0.42);
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(97, 184, 255, 0.12);
-    }
-
-    .scenario-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: start;
-    }
-
-    .scenario-head h3 {
-      margin: 6px 0 8px;
-      font-family: 'Sora', sans-serif;
-      font-size: 1.15rem;
-    }
-
-    .scenario-tag {
-      color: var(--accent);
-      background: rgba(97, 184, 255, 0.12);
-      padding: 5px 10px;
-      border-radius: 999px;
-      width: fit-content;
-    }
-
-    .decision-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .decision-btn {
-      border-radius: 16px;
-      padding: 14px 10px;
-      cursor: pointer;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-      text-align: left;
-      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-    }
-
-    .decision-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.14);
-    }
-
-    .decision-btn strong {
-      display: block;
-      margin-top: 7px;
-      font-size: 1rem;
-    }
-
-    .decision-reduce.active { border-color: rgba(83, 209, 141, 0.42); background: rgba(83, 209, 141, 0.1); }
-    .decision-reuse.active { border-color: rgba(193, 124, 255, 0.42); background: rgba(193, 124, 255, 0.1); }
-    .decision-recycle.active { border-color: rgba(255, 111, 97, 0.42); background: rgba(255, 111, 97, 0.1); }
-
-    .score-board {
-      display: grid;
-      gap: 12px;
-    }
-
-    .score-card {
-      padding: 18px;
-      border-radius: 20px;
-      background:
-        linear-gradient(145deg, rgba(13, 28, 45, 0.96), rgba(9, 17, 28, 0.88)),
-        radial-gradient(circle at top right, rgba(97, 184, 255, 0.14), transparent 18%);
-      border: 1px solid var(--line);
-    }
-
-    .score-card h2 {
-      margin: 8px 0 0;
-      font-size: 2.5rem;
-      font-family: 'Sora', sans-serif;
-      line-height: 1;
-    }
-
-    .score-badge {
-      color: var(--accent);
-    }
-
-    .meter {
-      margin-top: 14px;
-      height: 10px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .meter span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--reduce), var(--warning));
-      width: 0%;
-      transition: width 0.35s ease;
-    }
-
-    .mini-stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mini-stat {
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .mini-stat strong {
-      display: block;
-      margin-top: 6px;
-      font-size: 1.05rem;
-    }
-
-    .feedback {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px dashed rgba(255, 255, 255, 0.12);
-    }
-
-    .feedback h3 {
-      margin: 0 0 8px;
-      font-family: 'Sora', sans-serif;
-    }
-
-    .legend {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .legend-item {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      color: var(--copy);
-      font-size: 0.92rem;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      flex: none;
-    }
-
-    .dot.reduce { background: var(--reduce); }
-    .dot.reuse { background: var(--reuse); }
-    .dot.recycle { background: var(--recycle); }
-
-    .fullscreen-btn {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(8, 18, 30, 0.88);
-      color: var(--accent);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .is-embedded .topbar,
-    .is-embedded .fullscreen-btn { display: none; }
-
-    @media (max-width: 980px) {
-      .hero,
-      .lab-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-metrics,
-      .decision-grid,
-      .mini-stats {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .impact-pill {
+            padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
-  <button class="fullscreen-btn" id="toggle-fullscreen" aria-label="Toggle fullscreen">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-    </svg>
-  </button>
 
-  <div class="shell">
-    <header class="topbar">
-      <div>
-        <div class="eyebrow">Module 02 · Activity 2.3</div>
-        <strong>Lifecycle Decision Lab</strong>
-      </div>
-      <div class="chip">Reduce · Reuse · Recycle</div>
-    </header>
+    <main class="relative max-w-5xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <!-- Scenario Card -->
+        <section class="topic-card overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="p-8 md:p-12 space-y-6">
+                    <div class="inline-block px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Current Scenario</div>
+                    <h2 class="text-3xl font-bold" id="scenario-title">Old Office Laptop</h2>
+                    <p class="text-slate-500 leading-relaxed" id="scenario-desc">
+                        A 2016 ThinkPad with 4GB RAM and a slow HDD. The battery is at 40% health, but the screen and keyboard are in perfect condition.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <div class="stat-badge">
+                            <span class="text-xl">⚙️</span>
+                            <span class="text-xs font-medium text-slate-600" id="spec-1">Core i3 (6th Gen)</span>
+                        </div>
+                        <div class="stat-badge">
+                            <span class="text-xl">🔋</span>
+                            <span class="text-xs font-medium text-slate-600" id="spec-2">40% Battery Health</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="three-canvas-container">
+                    <!-- 3D Model of the device -->
+                </div>
+            </div>
+        </section>
 
-    <section class="hero">
-      <div>
-        <div class="eyebrow">Decision Engine</div>
-        <h1>Pick The Right R For The Right Device</h1>
-        <p>
-          Not every device should go straight to the recycler. Work through realistic e-waste cases and decide whether the best move is to extend use, repurpose the hardware, or send it into formal recycling.
-        </p>
-        <div class="hero-metrics">
-          <article class="stat">
-            <div class="metric-label">Mission</div>
-            <strong>6 scenarios</strong>
-            <p>Each one tests whether you can delay waste or route it cleanly.</p>
-          </article>
-          <article class="stat">
-            <div class="metric-label">Scoring</div>
-            <strong>3 points each</strong>
-            <p>Best choices preserve value and cut contamination risk.</p>
-          </article>
-          <article class="stat">
-            <div class="metric-label">Output</div>
-            <strong>Decision literacy</strong>
-            <p>Learn when to maintain, repurpose, or recycle.</p>
-          </article>
-        </div>
-      </div>
-      <aside class="panel">
-        <div class="eyebrow">Decision Legend</div>
-        <h3 style="margin: 8px 0 10px; font-family: 'Sora', sans-serif;">How To Think</h3>
-        <div class="legend">
-          <div class="legend-item"><span class="dot reduce"></span> <span><strong>Reduce</strong> when the device still works and needs care, repair, or lighter use.</span></div>
-          <div class="legend-item"><span class="dot reuse"></span> <span><strong>Reuse</strong> when the original job is over but the hardware still has a second-life role.</span></div>
-          <div class="legend-item"><span class="dot recycle"></span> <span><strong>Recycle</strong> when the device is beyond sensible recovery and should enter formal material processing.</span></div>
-        </div>
-      </aside>
-    </section>
+        <!-- Decisions -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="decision-btn btn-reduce" data-choice="reduce">
+                <div class="text-3xl mb-3">📉</div>
+                <h4 class="text-lg font-bold text-blue-600">Reduce</h4>
+                <p class="text-xs text-slate-400 mt-2">Optimization & Repair</p>
+            </div>
+            <div class="decision-btn btn-reuse" data-choice="reuse">
+                <div class="text-3xl mb-3">🔄</div>
+                <h4 class="text-lg font-bold text-purple-600">Reuse</h4>
+                <p class="text-xs text-slate-400 mt-2">Repurpose & Secondary Life</p>
+            </div>
+            <div class="decision-btn btn-recycle" data-choice="recycle">
+                <div class="text-3xl mb-3">♻️</div>
+                <h4 class="text-lg font-bold text-orange-500">Recycle</h4>
+                <p class="text-xs text-slate-400 mt-2">Safe Material Recovery</p>
+            </div>
+        </section>
 
-    <section class="lab-grid">
-      <div class="panel">
-        <div class="eyebrow">Scenario Queue</div>
-        <div class="scenario-list" id="scenario-list"></div>
-      </div>
+        <!-- Result Section (Overlay/Hidden) -->
+        <section id="feedback-panel" class="topic-card p-8 md:p-10 hidden fade-in">
+            <div class="flex items-start gap-6">
+                <div id="feedback-icon" class="text-5xl">✅</div>
+                <div class="flex-1">
+                    <div id="feedback-pill" class="impact-pill mb-3">Optimal Path</div>
+                    <h3 class="text-2xl font-bold mb-3" id="feedback-title">Great Choice: Reuse</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6" id="feedback-text">
+                        By turning this into a Linux media station, you extend its life by 5 years without spending a cent.
+                    </p>
+                    <button id="next-scenario" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors">Next Scenario</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-      <div class="score-board">
-        <div class="score-card">
-          <div class="score-badge">Readiness Score</div>
-          <h2 id="score-value">0 / 18</h2>
-          <p id="score-message" style="margin-top: 8px;">Start with the first scenario and choose the strongest recovery path.</p>
-          <div class="meter"><span id="score-meter"></span></div>
-        </div>
+    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
+        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
+        <p class="text-slate-500">Lifecycle Decision Lab · Chapter 2.3 · Recycle</p>
+    </footer>
 
-        <div class="panel mini-stats">
-          <article class="mini-stat">
-            <div class="metric-label">Value preserved</div>
-            <strong id="value-saved">0</strong>
-          </article>
-          <article class="mini-stat">
-            <div class="metric-label">Hazard avoided</div>
-            <strong id="hazard-avoided">0</strong>
-          </article>
-          <article class="mini-stat">
-            <div class="metric-label">Best choices</div>
-            <strong id="correct-count">0</strong>
-          </article>
-          <article class="mini-stat">
-            <div class="metric-label">Scenarios left</div>
-            <strong id="remaining-count">6</strong>
-          </article>
-        </div>
+    <script type="module">
+        import * as THREE from 'three';
 
-        <div class="feedback" id="feedback-panel">
-          <div class="eyebrow">Console Feedback</div>
-          <h3>Awaiting first decision</h3>
-          <p>Select one of the three R pathways on a scenario card. The console will explain what the stronger move looks like.</p>
-        </div>
-      </div>
-    </section>
-  </div>
+        // --- DATA ---
+        const SCENARIOS = [
+            {
+                id: 'laptop',
+                title: 'Office Laptop (2016)',
+                desc: 'Slow HDD, 4GB RAM, Great screen. Battery is weak but functional when plugged in.',
+                specs: ['Core i3 CPU', 'Battery: 40%'],
+                color: 0x475569,
+                scale: [1.5, 0.1, 1],
+                best: 'reuse',
+                feedback: {
+                    reduce: { title: 'Good effort', text: 'Repairing is possible, but 4GB RAM will still struggle with modern Windows. Consider a lighter mission.', icon: '🤔', type: 'suboptimal' },
+                    reuse: { title: 'Perfect Path', text: 'Installing ChromeOS Flex or Linux turns this into a high-speed web browsing station for years to come.', icon: '✨', type: 'optimal' },
+                    recycle: { title: 'Too Early', text: 'Recycling is for dead hardware. This machine still has 5+ years of secondary life in it.', icon: '⚠️', type: 'inefficient' }
+                }
+            },
+            {
+                id: 'phone',
+                title: 'Cracked Smartphone',
+                desc: 'Recent model but with a shattered screen. Repair costs ₹8,000, new phone is ₹12,000.',
+                specs: ['Modern 5G Chip', 'Shattered Display'],
+                color: 0x1e293b,
+                scale: [0.6, 1.2, 0.1],
+                best: 'reduce',
+                feedback: {
+                    reduce: { title: 'Optimal Choice', text: 'Repairing a modern chip saves the massive footprint of manufacturing a new motherboard. It is worth the fix.', icon: '🛠️', type: 'optimal' },
+                    reuse: { title: 'Clever Option', text: 'If you won\'t fix it, use it as a headless server or security cam. But repair is still better for primary use.', icon: '📱', type: 'suboptimal' },
+                    recycle: { title: 'High Waste', text: 'Discarding a modern 5G chip because of a screen crack is the biggest cause of e-waste growth.', icon: '🛑', type: 'inefficient' }
+                }
+            },
+            {
+                id: 'tablet',
+                title: 'Swollen Battery Tablet',
+                desc: 'A budget tablet from 2014. The battery has started to expand and the OS is no longer supported.',
+                specs: ['Swollen Battery', 'Dead OS'],
+                color: 0x334155,
+                scale: [1.2, 0.8, 0.2],
+                best: 'recycle',
+                feedback: {
+                    reduce: { title: 'Dangerous!', text: 'Never try to repair or open a swollen battery. It is a major fire hazard.', icon: '🔥', type: 'dangerous' },
+                    reuse: { title: 'Risky Path', text: 'Continuing to plug in a swollen battery is dangerous. Do not reuse.', icon: '🚫', type: 'dangerous' },
+                    recycle: { title: 'Correct & Safe', text: 'The battery has reached the end of its safety life. Take it to a professional recycler immediately.', icon: '✅', type: 'optimal' }
+                }
+            }
+        ];
 
-  <script src="./2-3-lifecycle-lab.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('embedded') === 'true') {
-      document.body.classList.add('is-embedded')
-    }
+        // --- APP STATE ---
+        let scene, camera, renderer, deviceMesh;
+        let activeIdx = 0;
 
-    document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-      } else {
-        document.exitFullscreen()
-      }
-    })
-  </script>
+        const container = document.getElementById('three-canvas-container');
+
+        // --- INITIALIZATION ---
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(2, 2, 3);
+            camera.lookAt(0,0,0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const ambient = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(ambient);
+            const directional = new THREE.DirectionalLight(0xffffff, 1.5);
+            directional.position.set(5, 5, 5);
+            scene.add(directional);
+
+            renderScenario();
+            animate();
+            setupEvents();
+        }
+
+        function renderScenario() {
+            if (deviceMesh) scene.remove(deviceMesh);
+            if (activeIdx >= SCENARIOS.length) {
+                alert("Lab Complete!");
+                activeIdx = 0;
+            }
+
+            const s = SCENARIOS[activeIdx];
+            const geo = new THREE.BoxGeometry(...s.scale);
+            const mat = new THREE.MeshStandardMaterial({ color: s.color, roughness: 0.2 });
+            deviceMesh = new THREE.Mesh(geo, mat);
+            scene.add(deviceMesh);
+
+            document.getElementById('scenario-title').textContent = s.title;
+            document.getElementById('scenario-desc').textContent = s.desc;
+            document.getElementById('spec-1').textContent = s.specs[0];
+            document.getElementById('spec-2').textContent = s.specs[1];
+            
+            document.getElementById('feedback-panel').classList.add('hidden');
+            gsap.from(deviceMesh.scale, { x:0, y:0, z:0, duration: 0.5 });
+        }
+
+        function setupEvents() {
+            document.querySelectorAll('.decision-btn').forEach(btn => {
+                btn.addEventListener('click', () => handleChoice(btn.dataset.choice));
+            });
+            document.getElementById('next-scenario').addEventListener('click', () => {
+                activeIdx++;
+                renderScenario();
+            });
+        }
+
+        function handleChoice(choice) {
+            const s = SCENARIOS[activeIdx];
+            const feedback = s.feedback[choice];
+            const panel = document.getElementById('feedback-panel');
+            
+            panel.classList.remove('hidden');
+            document.getElementById('feedback-title').textContent = feedback.title;
+            document.getElementById('feedback-text').textContent = feedback.text;
+            document.getElementById('feedback-icon').textContent = feedback.icon;
+            
+            const pill = document.getElementById('feedback-pill');
+            pill.textContent = feedback.type.toUpperCase();
+            pill.style.background = feedback.type === 'optimal' ? '#dcfce7' : (feedback.type === 'suboptimal' ? '#fef9c3' : '#fee2e2');
+            pill.style.color = feedback.type === 'optimal' ? '#15803d' : (feedback.type === 'suboptimal' ? '#854d0e' : '#b91c1c');
+
+            gsap.from(panel, { opacity: 0, y: 20, duration: 0.4 });
+            
+            // Visual Effect
+            if (feedback.type === 'optimal') {
+                gsap.to(deviceMesh.rotation, { y: Math.PI * 4, duration: 1, ease: 'power2.inOut' });
+            } else {
+                gsap.to(deviceMesh.position, { x: 0.1, duration: 0.05, repeat: 5, yoyo: true });
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (deviceMesh) deviceMesh.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // Fullscreen
+        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        init();
+    </script>
+
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
+
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
 </body>
 </html>

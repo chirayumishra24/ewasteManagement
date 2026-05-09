@@ -1,422 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Collection Drive Planner | Skilizee E-Waste</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #07111b;
-      --panel: rgba(11, 23, 37, 0.92);
-      --panel-soft: rgba(16, 31, 48, 0.92);
-      --line: rgba(151, 211, 255, 0.14);
-      --text: #edf5ff;
-      --copy: #b5c5d8;
-      --muted: #7b8ea4;
-      --accent: #c17cff;
-      --good: #2bc1a6;
-      --warn: #f3a44a;
-      --alert: #ff6f61;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Drive Planner | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --page-bg: #f8fafc;
+            --surface: #ffffff;
+            --primary: #c17cff;
+            --text-primary: #1e293b;
+        }
 
-    * { box-sizing: border-box; }
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      background:
-        radial-gradient(circle at 15% 16%, rgba(193, 124, 255, 0.14), transparent 22%),
-        radial-gradient(circle at 82% 22%, rgba(43, 193, 166, 0.14), transparent 22%),
-        linear-gradient(180deg, #050c14 0%, #07111b 48%, #0b1827 100%);
-    }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
 
-    .shell {
-      max-width: 1360px;
-      margin: 0 auto;
-      padding: 18px;
-      display: grid;
-      gap: 16px;
-    }
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
 
-    .topbar,
-    .hero,
-    .panel,
-    .choice-btn,
-    .summary-card,
-    .metric-card {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--panel);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.26);
-      backdrop-filter: blur(16px);
-    }
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-    }
+        .choice-btn {
+            padding: 1.25rem;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+        .choice-btn:hover { transform: translateY(-2px); border-color: #e2e8f0; }
+        .choice-btn.active {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(193, 124, 255, 0.15);
+        }
 
-    .eyebrow,
-    .chip,
-    .metric-label,
-    .choice-btn span,
-    .summary-tag {
-      font-family: 'Chakra Petch', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
+        .meter-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(to right, #f3a44a, #c17cff, #2bc1a6);
+        }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-      gap: 16px;
-      padding: 20px;
-      background:
-        linear-gradient(145deg, rgba(10, 22, 36, 0.96), rgba(9, 17, 28, 0.88)),
-        radial-gradient(circle at top right, rgba(193, 124, 255, 0.14), transparent 18%);
-    }
+        .fullscreen-btn {
+             top: 24px; right: 24px; z-index: 100;
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            cursor: pointer; border: 0;
+        }
 
-    .hero h1 {
-      margin: 8px 0 12px;
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(2rem, 4vw, 3.35rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
+        .is-embedded main { padding-top: 2rem; }
 
-    .hero p,
-    .panel p,
-    .summary-card p,
-    .choice-btn small {
-      margin: 0;
-      color: var(--copy);
-      line-height: 1.65;
-    }
-
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .metric-card {
-      padding: 14px;
-      background: var(--panel-soft);
-    }
-
-    .metric-card strong {
-      display: block;
-      margin-top: 6px;
-      font-size: 1.05rem;
-    }
-
-    .planner-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
-      gap: 16px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 16px;
-    }
-
-    .option-section {
-      display: grid;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .option-section + .option-section {
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .option-section h3 {
-      margin: 0;
-      font-family: 'Sora', sans-serif;
-      font-size: 1.08rem;
-    }
-
-    .choice-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .choice-btn {
-      padding: 14px;
-      cursor: pointer;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-      text-align: left;
-      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-    }
-
-    .choice-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.14);
-    }
-
-    .choice-btn.active {
-      border-color: rgba(193, 124, 255, 0.4);
-      background: rgba(193, 124, 255, 0.12);
-    }
-
-    .choice-btn strong {
-      display: block;
-      margin: 7px 0 4px;
-      font-size: 0.98rem;
-    }
-
-    .dashboard {
-      display: grid;
-      gap: 12px;
-    }
-
-    .score-card {
-      padding: 18px;
-      border-radius: 20px;
-      background:
-        linear-gradient(145deg, rgba(13, 28, 45, 0.96), rgba(9, 17, 28, 0.88)),
-        radial-gradient(circle at top right, rgba(193, 124, 255, 0.14), transparent 18%);
-      border: 1px solid var(--line);
-    }
-
-    .score-card h2 {
-      margin: 8px 0 6px;
-      font-family: 'Sora', sans-serif;
-      font-size: 2.5rem;
-      line-height: 1;
-    }
-
-    .meter {
-      margin-top: 14px;
-      height: 10px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .meter span {
-      display: block;
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--good), var(--warn));
-      transition: width 0.35s ease;
-    }
-
-    .summary-stack {
-      display: grid;
-      gap: 10px;
-    }
-
-    .summary-card {
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .summary-card h4 {
-      margin: 8px 0 6px;
-      font-family: 'Sora', sans-serif;
-    }
-
-    .summary-tag {
-      color: var(--accent);
-      background: rgba(193, 124, 255, 0.12);
-      padding: 4px 10px;
-      border-radius: 999px;
-      width: fit-content;
-    }
-
-    .launch-status {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px dashed rgba(255, 255, 255, 0.12);
-    }
-
-    .launch-status h3 {
-      margin: 0 0 8px;
-      font-family: 'Sora', sans-serif;
-    }
-
-    .fullscreen-btn {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(8, 18, 30, 0.88);
-      color: var(--accent);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .is-embedded .topbar,
-    .is-embedded .fullscreen-btn { display: none; }
-
-    @media (max-width: 980px) {
-      .hero,
-      .planner-grid,
-      .hero-metrics,
-      .choice-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .status-badge {
+            padding: 4px 12px; border-radius: 99px; font-size: 10px; font-weight: 700; text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
-  <button class="fullscreen-btn" id="toggle-fullscreen" aria-label="Toggle fullscreen">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-    </svg>
-  </button>
 
-  <div class="shell">
-    <header class="topbar">
-      <div>
-        <div class="eyebrow">Module 03 · Activity 3.2</div>
-        <strong>Collection Drive Planner</strong>
-      </div>
-      <div class="chip">Outreach · Logistics · Metrics</div>
-    </header>
+    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
+    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Planning Lanes -->
+            <div class="lg:col-span-2 space-y-8">
+                <section class="topic-card p-8">
+                    <h3 class="text-xl font-bold mb-6">1. Venue Selection</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="venue-grid">
+                        <button class="choice-btn" data-category="venue" data-id="school" data-score="20">
+                            <span class="text-2xl mb-2 block">🏫</span>
+                            <div class="font-bold">Local School</div>
+                            <p class="text-xs text-slate-500 mt-1">High participation, easy access for students/parents.</p>
+                        </button>
+                        <button class="choice-btn" data-category="venue" data-id="park" data-score="15">
+                            <span class="text-2xl mb-2 block">🌳</span>
+                            <div class="font-bold">Public Park</div>
+                            <p class="text-xs text-slate-500 mt-1">Visible to general public but harder to coordinate power.</p>
+                        </button>
+                    </div>
+                </section>
 
-    <section class="hero">
-      <div>
-        <div class="eyebrow">Planning Console</div>
-        <h1>Assemble A Launch-Ready Collection Drive</h1>
-        <p>
-          Choose a venue, recycler partner, bin setup, outreach channel, and staffing pattern. The planner scores how operationally ready the drive is and explains what is still missing.
-        </p>
-        <div class="hero-metrics">
-          <article class="metric-card">
-            <div class="metric-label">Goal</div>
-            <strong>Launch readiness</strong>
-            <p>The strongest plans balance access, sorting quality, and partner trust.</p>
-          </article>
-          <article class="metric-card">
-            <div class="metric-label">Inputs</div>
-            <strong>5 planning lanes</strong>
-            <p>Venue, partner, bins, outreach, and volunteers all affect the score.</p>
-          </article>
-          <article class="metric-card">
-            <div class="metric-label">Outcome</div>
-            <strong>Operational summary</strong>
-            <p>See whether the event is ready, risky, or still underbuilt.</p>
-          </article>
+                <section class="topic-card p-8">
+                    <h3 class="text-xl font-bold mb-6">2. Recycler Partner</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="partner-grid">
+                        <button class="choice-btn" data-category="partner" data-id="authorized" data-score="30">
+                            <span class="text-2xl mb-2 block">✅</span>
+                            <div class="font-bold">Certified Recycler</div>
+                            <p class="text-xs text-slate-500 mt-1">Full documentation and environmentally safe processing.</p>
+                        </button>
+                        <button class="choice-btn" data-category="partner" data-id="local" data-score="10">
+                            <span class="text-2xl mb-2 block">📦</span>
+                            <div class="font-bold">General Scrap Yard</div>
+                            <p class="text-xs text-slate-500 mt-1">Convenient pickup but lacks formal e-waste permits.</p>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="topic-card p-8">
+                    <h3 class="text-xl font-bold mb-6">3. Sorting Strategy</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="bins-grid">
+                        <button class="choice-btn" data-category="bins" data-id="multi" data-score="25">
+                            <span class="text-2xl mb-2 block">🗂️</span>
+                            <div class="font-bold">Multi-Category Bins</div>
+                            <p class="text-xs text-slate-500 mt-1">Separate bins for batteries, IT, and household tech.</p>
+                        </button>
+                        <button class="choice-btn" data-category="bins" data-id="single" data-score="5">
+                            <span class="text-2xl mb-2 block">🗑️</span>
+                            <div class="font-bold">Single Large Container</div>
+                            <p class="text-xs text-slate-500 mt-1">Higher risk of damage and toxic cross-contamination.</p>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="space-y-6">
+                <div class="topic-card p-8 sticky top-8">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Launch Readiness</div>
+                    <div class="text-5xl font-bold mb-4" id="score-text">0%</div>
+                    
+                    <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-8">
+                        <div id="score-bar" class="meter-fill" style="width: 0%"></div>
+                    </div>
+
+                    <div class="space-y-6" id="feedback-panel">
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <h4 class="text-sm font-bold mb-1" id="feedback-title">Awaiting Choices</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed" id="feedback-desc">
+                                Select a venue, partner, and sorting strategy to calculate your drive's potential impact.
+                            </p>
+                        </div>
+                        
+                        <div class="pt-6 border-t border-slate-100 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-medium text-slate-500">Environmental Score</span>
+                                <span class="status-badge bg-slate-100 text-slate-400" id="env-badge">TBD</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-medium text-slate-500">Community Outreach</span>
+                                <span class="status-badge bg-slate-100 text-slate-400" id="outreach-badge">TBD</span>
+                            </div>
+                        </div>
+
+                        <button id="launch-btn" class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl font-bold text-sm cursor-not-allowed transition-all">
+                            LAUNCH SIMULATION
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <aside class="panel">
-        <div class="eyebrow">What Strong Plans Include</div>
-        <div class="summary-stack" style="margin-top: 12px;">
-          <article class="summary-card">
-            <div class="summary-tag">Access</div>
-            <h4>Visible drop-off site</h4>
-            <p>People bring more devices when the location is easy to understand and reach.</p>
-          </article>
-          <article class="summary-card">
-            <div class="summary-tag">Safety</div>
-            <h4>Clear material separation</h4>
-            <p>Dedicated bins protect batteries, cables, and larger devices from becoming one mixed pile.</p>
-          </article>
-          <article class="summary-card">
-            <div class="summary-tag">Trust</div>
-            <h4>Certified recycler partner</h4>
-            <p>The handoff after the drive matters as much as the collection day itself.</p>
-          </article>
-        </div>
-      </aside>
-    </section>
+    </main>
 
-    <section class="planner-grid">
-      <div class="panel">
-        <div class="option-section" data-section="venue">
-          <h3>1. Venue</h3>
-          <div class="choice-grid" id="venue-grid"></div>
-        </div>
+    <script>
+        const state = {
+            venue: null,
+            partner: null,
+            bins: null
+        };
 
-        <div class="option-section" data-section="partner">
-          <h3>2. Recycler Partner</h3>
-          <div class="choice-grid" id="partner-grid"></div>
-        </div>
+        function init() {
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const cat = btn.dataset.category;
+                    const id = btn.dataset.id;
+                    
+                    // Update state
+                    state[cat] = id;
+                    
+                    // Update UI
+                    document.querySelectorAll(`[data-category="${cat}"]`).forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    calculate();
+                });
+            });
 
-        <div class="option-section" data-section="bins">
-          <h3>3. Sorting Setup</h3>
-          <div class="choice-grid" id="bins-grid"></div>
-        </div>
+            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
 
-        <div class="option-section" data-section="outreach">
-          <h3>4. Outreach Channel</h3>
-          <div class="choice-grid" id="outreach-grid"></div>
-        </div>
+        function calculate() {
+            let total = 0;
+            const choices = Object.values(state);
+            const activeChoices = choices.filter(c => c !== null);
+            
+            activeChoices.forEach(id => {
+                const btn = document.querySelector(`[data-id="${id}"]`);
+                total += parseInt(btn.dataset.score);
+            });
 
-        <div class="option-section" data-section="staff">
-          <h3>5. Volunteer Coverage</h3>
-          <div class="choice-grid" id="staff-grid"></div>
-        </div>
-      </div>
+            // Normalize to 100% (max possible is 20+30+25 = 75 in this simplified version, let's boost it)
+            const score = Math.round((total / 75) * 100);
+            
+            document.getElementById('score-text').textContent = score + '%';
+            document.getElementById('score-bar').style.width = score + '%';
 
-      <div class="dashboard">
-        <div class="score-card">
-          <div class="eyebrow">Launch Score</div>
-          <h2 id="score-value">0 / 100</h2>
-          <p id="score-copy">Start selecting options to build your drive blueprint.</p>
-          <div class="meter"><span id="score-meter"></span></div>
-        </div>
+            updateFeedback(score);
+        }
 
-        <div class="panel summary-stack">
-          <article class="summary-card">
-            <div class="summary-tag">Current Plan</div>
-            <h4 id="summary-title">No drive assembled yet</h4>
-            <p id="summary-copy">Choose one option from each planning lane to generate a complete field plan.</p>
-          </article>
-          <article class="summary-card">
-            <div class="summary-tag">Best Next Fix</div>
-            <h4 id="fix-title">Awaiting selections</h4>
-            <p id="fix-copy">The console will identify the biggest missing piece after each change.</p>
-          </article>
-        </div>
+        function updateFeedback(score) {
+            const title = document.getElementById('feedback-title');
+            const desc = document.getElementById('feedback-desc');
+            const launchBtn = document.getElementById('launch-btn');
+            const envBadge = document.getElementById('env-badge');
+            
+            if (score < 40) {
+                title.textContent = 'High Operational Risk';
+                desc.textContent = 'Your plan lacks a certified partner or a safe sorting strategy. This could lead to landfill leakage.';
+                envBadge.className = 'status-badge bg-rose-100 text-rose-600';
+                envBadge.textContent = 'POOR';
+            } else if (score < 80) {
+                title.textContent = 'Functional Draft';
+                desc.textContent = 'A solid foundation. Ensure your outreach messaging is clear to boost volume.';
+                envBadge.className = 'status-badge bg-amber-100 text-amber-600';
+                envBadge.textContent = 'STABLE';
+            } else {
+                title.textContent = 'Launch Ready';
+                desc.textContent = 'Perfect! You have selected high-visibility venues and high-integrity processing partners.';
+                envBadge.className = 'status-badge bg-emerald-100 text-emerald-600';
+                envBadge.textContent = 'EXCELLENT';
+                
+                launchBtn.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                launchBtn.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-600', 'shadow-lg');
+            }
+        }
 
-        <div class="launch-status" id="launch-status">
-          <div class="eyebrow">Status Feed</div>
-          <h3>Draft mode</h3>
-          <p>Your plan is still incomplete. Aim for a visible site, trusted recycler, separated bins, active outreach, and enough volunteers to guide participants.</p>
-        </div>
-      </div>
-    </section>
-  </div>
+        init();
+    </script>
 
-  <script src="./3-2-drive-planner.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('embedded') === 'true') {
-      document.body.classList.add('is-embedded')
-    }
+    <script>
+        // Robust Fullscreen functionality
+        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) await el.requestFullscreen();
+                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+                } else {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
+                    else if (document.msExitFullscreen) await document.msExitFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
+            }
+        });
 
-    document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-      } else {
-        document.exitFullscreen()
-      }
-    })
-  </script>
+        // Embedded mode detection
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+    </script>
 </body>
 </html>

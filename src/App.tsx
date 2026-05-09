@@ -480,12 +480,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
           </div>
         </div>
         <div className="activity-iframe-container">
-          <iframe src={block.url} title={block.title} className="activity-iframe" allowFullScreen />
-          <div className="activity-iframe-overlay">
-            <a href={block.url} className="activity-action" target="_blank" rel="noopener noreferrer">
-              {block.ctaLabel ?? 'Open Fullscreen'}
-            </a>
-          </div>
+          <iframe src={block.url} title={block.title} className="activity-iframe" allowFullScreen allow="fullscreen" />
         </div>
       </section>
     )
