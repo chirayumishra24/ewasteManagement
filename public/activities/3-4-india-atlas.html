@@ -16,322 +16,69 @@
         }
     </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #f97316;
-            --text-primary: #1e293b;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        #canvas-container {
-            width: 100%;
-            height: calc(100vh - 80px);
-            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
-            position: relative;
-        }
-
-        .hub-label {
-            position: absolute;
-            background: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            pointer-events: none;
-            transform: translate(-50%, -100%);
-            border: 1px solid #e2e8f0;
-            white-space: nowrap;
-        }
-
-        .info-panel {
-            position: absolute;
-            bottom: 24px;
-            left: 24px;
-            width: 340px;
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            z-index: 20;
-            transform: translateY(120%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .info-panel.active { transform: translateY(0); }
-
-        .legend {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: white;
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            z-index: 10;
-        }
-
-        .fullscreen-btn {
-             top: 16px; right: 16px; z-index: 100;
-            width: 48px; height: 48px;
-            background: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-primary); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border: 0;
-        }
-
-        .is-embedded #canvas-container { height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: #fff7ed; overflow: hidden; }
+        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #fff7ed, #ffedd5); }
+        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 320px; }
+        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
+        .city-btn { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; text-align: left; transition: 0.2s; margin-top: 8px; }
+        .city-btn:hover { border-color: #f3a44a; transform: translateX(4px); }
+        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #f3a44a; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <main id="canvas-container" class="relative">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <div class="legend space-y-3">
-            <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-orange-500"></div>
-                <span class="text-[10px] font-bold text-slate-500">RECYCLING HUB</span>
+    <div id="canvas-container">
+        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+        <div class="hud space-y-4">
+            <div class="glass">
+                <h1 class="text-2xl font-bold text-orange-900">National Atlas</h1>
+                <p class="text-sm text-orange-800/60 mt-2">Explore e-waste hotspots across India's urban landscape.</p>
             </div>
-            <div class="flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-blue-400"></div>
-                <span class="text-[10px] font-bold text-slate-500">COLLECTION CENTER</span>
+            <div class="glass">
+                <button class="city-btn" onclick="highlightCity('Delhi', 5)">Delhi NCR</button>
+                <button class="city-btn" onclick="highlightCity('Mumbai', 4.5)">Mumbai</button>
+                <button class="city-btn" onclick="highlightCity('Bangalore', 3.8)">Bangalore</button>
             </div>
         </div>
-
-        <div class="info-panel" id="info-panel">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-2xl" id="h-icon">📍</div>
-                <button class="text-slate-300 hover:text-slate-500" onclick="hideInfo()">✕</button>
-            </div>
-            <h3 class="text-xl font-bold mb-1" id="h-name">Bengaluru Hub</h3>
-            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-4" id="h-type">Primary Technology Hub</p>
-            
-            <div class="space-y-4">
-                <div class="p-3 bg-slate-50 rounded-xl">
-                    <div class="text-[10px] font-bold text-slate-400 uppercase mb-1">Annual Capacity</div>
-                    <div class="text-lg font-bold text-slate-700" id="h-cap">45,000 MT</div>
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed" id="h-desc">
-                    As India's Silicon Valley, Bengaluru hosts some of the most advanced formal e-waste facilities, specializing in high-grade PCB recovery.
-                </p>
-                <div class="flex gap-2 pt-2">
-                    <button class="flex-1 bg-orange-600 text-white py-3 rounded-xl font-bold text-xs hover:bg-orange-700 transition-colors">EXPLORE FACILITIES</button>
-                </div>
-            </div>
-        </div>
-    </main>
+    </div>
 
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        const HUBS = [
-            { name: 'Bengaluru', pos: { x: 0.1, z: 0.8 }, type: 'Recycling Hub', cap: '45,000 MT', desc: 'India\'s leading tech city with integrated smelting and precious metal recovery plants.', icon: '🏙️' },
-            { name: 'Chennai', pos: { x: 0.3, z: 1.1 }, type: 'Recycling Hub', cap: '32,000 MT', desc: 'A major port city facilitating safe logistics for international-grade recycling standards.', icon: '⚓' },
-            { name: 'Jaipur', pos: { x: -0.8, z: -0.6 }, type: 'Collection Center', cap: '12,000 MT', desc: 'Growing cluster for authorized dismantling and sorting of consumer electronics.', icon: '🏰' },
-            { name: 'Delhi NCR', pos: { x: -0.5, z: -1.0 }, type: 'Primary Hub', cap: '58,000 MT', desc: 'Critical northern node bridging informal collection with large-scale formal refineries.', icon: '🏛️' },
-            { name: 'Mumbai', pos: { x: -1.2, z: 0.2 }, type: 'Refining Hub', cap: '28,000 MT', desc: 'Focused on industrial electronic waste and large-scale asset management.', icon: '🏢' },
-            { name: 'Hyderabad', pos: { x: -0.1, z: 0.4 }, type: 'Processing Node', cap: '18,000 MT', desc: 'Host to several emerging EPR-compliant dismantling units.', icon: '🔭' }
-        ];
-
-        let scene, camera, renderer, controls;
-        let pins = [];
-        const container = document.getElementById('canvas-container');
+        let scene, camera, renderer, map;
+        const bars = [];
 
         function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 5, 5);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.set(10, 10, 10);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.maxPolarAngle = Math.PI / 2.5;
-            controls.minDistance = 3;
-            controls.maxDistance = 8;
+            const controls = new OrbitControls(camera, renderer.domElement);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            
+            // Base Map
+            map = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({ color: 0xf3a44a, transparent: true, opacity: 0.2 }));
+            map.rotation.x = -Math.PI / 2;
+            scene.add(map);
 
-            // Lights
-            scene.add(new THREE.AmbientLight(0xffffff, 1));
-            const sun = new THREE.DirectionalLight(0xffffff, 1);
-            sun.position.set(5, 10, 5);
-            scene.add(sun);
-
-            createIndia();
-            createPins();
-            setupEvents();
             animate();
         }
 
-        function createIndia() {
-            // India Outline Plane
-            const geo = new THREE.PlaneGeometry(4, 5);
-            // In a real app we'd use a GeoJSON or a Texture. 
-            // For this high-fidelity mockup, I'll use a stylized shape.
-            const mat = new THREE.MeshStandardMaterial({ 
-                color: 0xf1f5f9, 
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.9
-            });
-            const plane = new THREE.Mesh(geo, mat);
-            plane.rotation.x = -Math.PI / 2;
-            scene.add(plane);
-
-            // Stylized Grid
-            const grid = new THREE.GridHelper(10, 20, 0xe2e8f0, 0xf1f5f9);
-            scene.add(grid);
-        }
-
-        function createPins() {
-            HUBS.forEach(h => {
-                const group = new THREE.Group();
-                group.position.set(h.pos.x * 2, 0, h.pos.z * 2);
-                
-                // Pin stem
-                const stemGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.4);
-                const stemMat = new THREE.MeshStandardMaterial({ color: 0xf97316 });
-                const stem = new THREE.Mesh(stemGeo, stemMat);
-                stem.position.y = 0.2;
-                group.add(stem);
-
-                // Pin head
-                const headGeo = new THREE.SphereGeometry(0.12);
-                const headMat = new THREE.MeshStandardMaterial({ 
-                    color: h.type.includes('Hub') ? 0xf97316 : 0x60a5fa,
-                    emissive: h.type.includes('Hub') ? 0xf97316 : 0x60a5fa,
-                    emissiveIntensity: 0.3
-                });
-                const head = new THREE.Mesh(headGeo, headMat);
-                head.position.y = 0.4;
-                head.userData = h;
-                group.add(head);
-
-                scene.add(group);
-                pins.push(head);
-
-                // CSS Label
-                const label = document.createElement('div');
-                label.className = 'hub-label';
-                label.textContent = h.name;
-                label.id = `label-${h.name}`;
-                container.appendChild(label);
-            });
-        }
-
-        function setupEvents() {
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2();
-
-            container.addEventListener('mousedown', (e) => {
-                const rect = container.getBoundingClientRect();
-                mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
-                mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
-
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(pins);
-
-                if (intersects.length > 0) {
-                    showInfo(intersects[0].object.userData);
-                }
-            });
-
-            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-        }
-
-        function showInfo(data) {
-            const panel = document.getElementById('info-panel');
-            document.getElementById('h-name').textContent = data.name;
-            document.getElementById('h-type').textContent = data.type;
-            document.getElementById('h-cap').textContent = data.cap;
-            document.getElementById('h-desc').textContent = data.desc;
-            document.getElementById('h-icon').textContent = data.icon;
-            panel.classList.add('active');
-        }
-
-        window.hideInfo = () => {
-            document.getElementById('info-panel').classList.remove('active');
+        window.highlightCity = (name, val) => {
+            const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, val), new THREE.MeshStandardMaterial({ color: 0xea580c }));
+            bar.position.set(Math.random() * 6 - 3, val/2, Math.random() * 6 - 3);
+            scene.add(bar);
+            gsap.from(bar.scale, { y: 0, duration: 1, ease: "power2.out" });
         };
 
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            
-            // Update Labels
-            pins.forEach(p => {
-                const vector = new THREE.Vector3();
-                p.getWorldPosition(vector);
-                vector.project(camera);
-
-                const x = (vector.x * 0.5 + 0.5) * container.clientWidth;
-                const y = (vector.y * -0.5 + 0.5) * container.clientHeight;
-
-                const label = document.getElementById(`label-${p.userData.name}`);
-                label.style.left = `${x}px`;
-                label.style.top = `${y - 15}px`;
-                
-                // Visibility check (if pin is behind camera)
-                label.style.display = vector.z > 1 ? 'none' : 'block';
-            });
-
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
-
+        function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

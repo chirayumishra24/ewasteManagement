@@ -3,396 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outreach Message Builder | Skilizee E-Waste</title>
+    <title>Campaign Hologram | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #c17cff;
-            --text-primary: #1e293b;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        }
-
-        .topic-card {
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .wizard-step {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .wizard-step.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .persona-btn {
-            padding: 1.5rem;
-            border-radius: 20px;
-            border: 2px solid #f1f5f9;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .persona-btn:hover { border-color: #e2e8f0; transform: translateY(-4px); }
-        .persona-btn.active { border-color: var(--primary); background: #faf5ff; }
-
-        .message-block {
-            padding: 1rem;
-            border-radius: 12px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            cursor: grab;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .message-block:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-
-        .poster-preview {
-            width: 100%;
-            aspect-ratio: 3/4;
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .step-indicator {
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; background: #f1f5f9; color: #94a3b8;
-            transition: all 0.3s;
-        }
-        .step-indicator.active { background: var(--primary); color: white; }
-        .step-indicator.done { background: #dcfce7; color: #15803d; }
-
-        .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #1e293b, #334155);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            cursor: pointer; border: 0;
-        }
-
+        body { font-family: 'Inter', sans-serif; background: #fdf4ff; overflow: hidden; }
+        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #fdf4ff, #fae8ff); }
+        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 320px; }
+        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
+        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #c17cff; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .msg-input { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-top: 8px; font-size: 14px; }
     </style>
 </head>
 <body>
-
-    <main class="relative max-w-5xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <!-- Progress Steps -->
-        <div class="flex justify-center items-center gap-4 mb-12">
-            <div class="step-indicator active" id="dot-1">1</div>
-            <div class="h-1 w-12 bg-slate-100 rounded-full"></div>
-            <div class="step-indicator" id="dot-2">2</div>
-            <div class="h-1 w-12 bg-slate-100 rounded-full"></div>
-            <div class="step-indicator" id="dot-3">3</div>
-        </div>
-
-        <div class="topic-card p-8 md:p-12 min-h-[500px]">
-            <!-- Step 1: Persona -->
-            <div class="wizard-step active" id="step-1">
-                <h2 class="text-3xl font-bold mb-2">Identify Your Audience</h2>
-                <p class="text-slate-500 mb-8">Who are you trying to reach? Different people care about different things.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <button class="persona-btn" data-persona="student">
-                        <div class="text-4xl mb-4">🎒</div>
-                        <h4 class="text-lg">Students</h4>
-                        <p class="text-xs text-slate-400 mt-2">Driven by impact and future vision.</p>
-                    </button>
-                    <button class="persona-btn" data-persona="parent">
-                        <div class="text-4xl mb-4">🏘️</div>
-                        <h4 class="text-lg">Parents</h4>
-                        <p class="text-xs text-slate-400 mt-2">Driven by safety and decluttering.</p>
-                    </button>
-                    <button class="persona-btn" data-persona="office">
-                        <div class="text-4xl mb-4">💼</div>
-                        <h4 class="text-lg">Office Workers</h4>
-                        <p class="text-xs text-slate-400 mt-2">Driven by efficiency and security.</p>
-                    </button>
-                </div>
+    <div id="canvas-container">
+        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+        <div class="hud space-y-4">
+            <div class="glass">
+                <h1 class="text-2xl font-bold text-purple-900">Campaign Hologram</h1>
+                <p class="text-sm text-purple-800/60 mt-2">Craft your message and broadcast it to the community.</p>
             </div>
-
-            <!-- Step 2: Message Selection -->
-            <div class="wizard-step" id="step-2">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-2">Build Your Message</h2>
-                        <p class="text-slate-500 mb-8">Select blocks that will resonate most with your audience.</p>
-                        <div class="space-y-3" id="message-bank">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                    <div class="bg-slate-50 p-6 rounded-2xl border-2 border-dashed border-slate-200">
-                        <h4 class="text-xs uppercase font-bold text-slate-400 mb-4">Your Selection (Max 3)</h4>
-                        <div class="space-y-3" id="selected-blocks">
-                            <p class="text-xs text-slate-400 text-center py-8">Select blocks to build your story.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 3: Preview -->
-            <div class="wizard-step" id="step-3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div class="poster-preview" id="poster-canvas">
-                        <div class="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded mb-6 self-start" id="poster-badge">Community Action</div>
-                        <h1 class="text-3xl font-black text-slate-900 leading-tight mb-8" id="poster-headline">Let's Clean Our Future</h1>
-                        <div class="space-y-6 flex-1" id="poster-content">
-                            <!-- Selected blocks appear here -->
-                        </div>
-                        <div class="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
-                            <div class="text-[10px] font-bold text-slate-400 uppercase">Skilizee E-Waste Project</div>
-                            <div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xl">♻️</div>
-                        </div>
-                    </div>
-                    <div class="space-y-6">
-                        <h2 class="text-3xl font-bold mb-2">Final Review</h2>
-                        <p class="text-slate-500 leading-relaxed">Your outreach material is ready for deployment. Check the alignment scores below.</p>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs font-bold mb-1">
-                                    <span>AUDIENCE ALIGNMENT</span>
-                                    <span id="score-align">0%</span>
-                                </div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div id="bar-align" class="h-full bg-purple-400 transition-all duration-500" style="width: 0%"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-xs font-bold mb-1">
-                                    <span>CALL TO ACTION</span>
-                                    <span id="score-cta">0%</span>
-                                </div>
-                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div id="bar-cta" class="h-full bg-emerald-400 transition-all duration-500" style="width: 0%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors">DOWNLOAD ASSET</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <div class="mt-12 pt-8 border-t border-slate-100 flex justify-between">
-                <button class="px-8 py-3 rounded-xl font-bold text-sm text-slate-400 hover:text-slate-600 disabled:opacity-30" id="prev-btn" disabled>BACK</button>
-                <button class="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all" id="next-btn">CONTINUE</button>
+            <div class="glass">
+                <label class="text-xs font-bold text-purple-400 uppercase">Message Body</label>
+                <textarea id="msg-text" class="msg-input h-24" placeholder="Enter drive details..."></textarea>
+                <button class="w-full bg-purple-600 text-white mt-4 p-3 rounded-xl font-bold" id="broadcast-btn">Broadcast Now</button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        const MESSAGES = {
-            student: [
-                { id: 's1', text: 'One phone contains enough gold to make a ring.', type: 'fact', weight: 10 },
-                { id: 's2', text: 'E-waste is the fastest growing waste stream in the world.', type: 'fact', weight: 8 },
-                { id: 's3', text: 'Lead from screens can leak into ground water.', type: 'hazard', weight: 10 },
-                { id: 's4', text: 'Bring your devices to the student lounge on Oct 14.', type: 'cta', weight: 15 }
-            ],
-            parent: [
-                { id: 'p1', text: 'Old laptops in storage are fire hazards if batteries swell.', type: 'hazard', weight: 15 },
-                { id: 'p2', text: 'Declutter your home and protect the planet simultaneously.', type: 'impact', weight: 10 },
-                { id: 'p3', text: 'Donated devices go to certified recyclers, not landfills.', type: 'trust', weight: 12 },
-                { id: 'p4', text: 'Drop off point open at the main gate every morning.', type: 'cta', weight: 15 }
-            ],
-            office: [
-                { id: 'o1', text: 'Data security starts with formal drive destruction.', type: 'trust', weight: 15 },
-                { id: 'o2', text: 'Certified recycling helps our company reach ESG goals.', type: 'impact', weight: 10 },
-                { id: 'o3', text: 'Reduce your operational overhead by clearing old tech.', type: 'impact', weight: 8 },
-                { id: 'o4', text: 'Book a corporate pickup for bulk recycling next Friday.', type: 'cta', weight: 15 }
-            ]
-        };
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        let currentStep = 1;
-        let activePersona = null;
-        let selectedMessages = [];
+        let scene, camera, renderer, holoPlane;
 
         function init() {
-            document.querySelectorAll('.persona-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    activePersona = btn.dataset.persona;
-                    document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    populateBank();
-                });
-            });
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 2, 5);
 
-            document.getElementById('next-btn').addEventListener('click', () => {
-                if (currentStep === 1 && !activePersona) return;
-                if (currentStep < 3) {
-                    currentStep++;
-                    updateWizard();
-                }
-            });
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            document.getElementById('prev-btn').addEventListener('click', () => {
-                if (currentStep > 1) {
-                    currentStep--;
-                    updateWizard();
-                }
-            });
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
 
-            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            
+            const floor = new THREE.GridHelper(10, 10, 0xd8b4fe, 0xf3e8ff);
+            scene.add(floor);
+
+            // Hologram Plane
+            const geo = new THREE.PlaneGeometry(3, 2);
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: 0xc17cff, 
+                transparent: true, 
+                opacity: 0.3, 
+                emissive: 0xc17cff, 
+                emissiveIntensity: 0.5,
+                side: THREE.DoubleSide
             });
+            holoPlane = new THREE.Mesh(geo, mat);
+            holoPlane.position.y = 1.5;
+            scene.add(holoPlane);
+
+            animate();
         }
 
-        function populateBank() {
-            const bank = document.getElementById('message-bank');
-            bank.innerHTML = MESSAGES[activePersona].map(msg => `
-                <div class="message-block" data-id="${msg.id}">
-                    ${msg.text}
-                </div>
-            `).join('');
+        document.getElementById('broadcast-btn').onclick = () => {
+            gsap.to(holoPlane.material, { opacity: 0.8, duration: 0.2, yoyo: true, repeat: 5 });
+            gsap.to(holoPlane.scale, { x: 1.1, y: 1.1, duration: 0.1, yoyo: true, repeat: 5 });
+        };
 
-            document.querySelectorAll('.message-block').forEach(el => {
-                el.addEventListener('click', () => toggleMessage(el.dataset.id));
-            });
+        function animate() {
+            requestAnimationFrame(animate);
+            holoPlane.rotation.y += 0.005;
+            renderer.render(scene, camera);
         }
-
-        function toggleMessage(id) {
-            const msg = MESSAGES[activePersona].find(m => m.id === id);
-            const idx = selectedMessages.findIndex(m => m.id === id);
-
-            if (idx === -1) {
-                if (selectedMessages.length >= 3) return;
-                selectedMessages.push(msg);
-            } else {
-                selectedMessages.splice(idx, 1);
-            }
-
-            renderSelected();
-            calculateScore();
-        }
-
-        function renderSelected() {
-            const container = document.getElementById('selected-blocks');
-            if (selectedMessages.length === 0) {
-                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">Select blocks to build your story.</p>';
-                return;
-            }
-
-            container.innerHTML = selectedMessages.map(m => `
-                <div class="message-block border-purple-100 bg-purple-50 text-purple-700">
-                    ${m.text}
-                </div>
-            `).join('');
-
-            // Sync to Poster
-            const posterContent = document.getElementById('poster-content');
-            posterContent.innerHTML = selectedMessages.map(m => `
-                <p class="text-sm text-slate-600 leading-relaxed font-medium">· ${m.text}</p>
-            `).join('');
-        }
-
-        function updateWizard() {
-            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-
-            // Update dots
-            for (let i = 1; i <= 3; i++) {
-                const dot = document.getElementById(`dot-${i}`);
-                if (i < currentStep) {
-                    dot.className = 'step-indicator done';
-                    dot.textContent = '✓';
-                } else if (i === currentStep) {
-                    dot.className = 'step-indicator active';
-                    dot.textContent = i;
-                } else {
-                    dot.className = 'step-indicator';
-                    dot.textContent = i;
-                }
-            }
-
-            document.getElementById('prev-btn').disabled = (currentStep === 1);
-            document.getElementById('next-btn').textContent = (currentStep === 3) ? 'DONE' : 'CONTINUE';
-        }
-
-        function calculateScore() {
-            let alignScore = 0;
-            let ctaScore = 0;
-
-            selectedMessages.forEach(m => {
-                alignScore += m.weight;
-                if (m.type === 'cta') ctaScore = 100;
-            });
-
-            // Scale to 100
-            const maxAlign = 42; // rough sum of top 3 weights
-            const finalAlign = Math.min(100, Math.round((alignScore / maxAlign) * 100));
-
-            document.getElementById('score-align').textContent = finalAlign + '%';
-            document.getElementById('bar-align').style.width = finalAlign + '%';
-            document.getElementById('score-cta').textContent = ctaScore + '%';
-            document.getElementById('bar-cta').style.width = ctaScore + '%';
-        }
-
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resource Radar | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>Sonar Triage | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
@@ -16,402 +16,91 @@
         }
     </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #2bc1a6;
-            --text-primary: #1e293b;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-        }
-
-        #radar-container {
-            width: 100%;
-            height: calc(100vh - 80px);
-            background: #0f172a;
-            position: relative;
-        }
-
-        .hud-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 320px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-blur: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 24px;
-            z-index: 10;
-        }
-
-        .detail-card {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            transform: translateX(120%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 20;
-        }
-        .detail-card.active { transform: translateX(0); }
-
-        .filter-btn {
-            padding: 8px 12px;
-            border-radius: 99px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
-            transition: all 0.2s;
-        }
-        .filter-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .scan-line {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 50%;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--primary));
-            transform-origin: left center;
-        }
-
-        .fullscreen-btn {
-             top: 16px; right: 16px; z-index: 100;
-            width: 48px; height: 48px;
-            background: rgba(255,255,255,0.1);
-            backdrop-blur: 8px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .is-embedded #radar-container { height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; overflow: hidden; }
+        #canvas-container { height: 100vh; position: relative; }
+        .scan-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.4)); pointer-events: none; }
+        .hud { position: absolute; bottom: 40px; left: 40px; z-index: 10; color: #22d3ee; font-family: monospace; }
+        .glass { background: rgba(0,20,40,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(34,211,238,0.2); border-radius: 12px; padding: 20px; }
+        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 50px; height: 50px; border-radius: 50%; border: 1px solid #22d3ee; color: #22d3ee; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <main id="radar-container" class="relative">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <!-- HUD -->
-        <div class="hud-panel space-y-6 text-white">
-            <div class="space-y-1">
-                <h3 class="text-sm font-bold uppercase tracking-widest text-white/40">Radar Scanning</h3>
-                <div class="font-mono text-xs text-emerald-400" id="scan-status">STATUS: OPERATIONAL</div>
-            </div>
-
-            <div class="space-y-4">
-                <h4 class="text-[10px] font-bold uppercase tracking-widest text-white/30">Type Filters</h4>
-                <div class="flex flex-wrap gap-2" id="type-filters">
-                    <button class="filter-btn active" data-type="recycler">Recycler</button>
-                    <button class="filter-btn active" data-type="dismantler">Dismantler</button>
-                    <button class="filter-btn active" data-type="collection">Collection</button>
-                    <button class="filter-btn active" data-type="repair">Repair</button>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <h4 class="text-[10px] font-bold uppercase tracking-widest text-white/30">Range Scan</h4>
-                <input type="range" id="range-slider" min="2" max="25" value="15" class="w-full accent-emerald-500">
-                <div class="flex justify-between text-[10px] font-mono text-white/40">
-                    <span>2KM</span>
-                    <span id="range-val">15KM</span>
-                    <span>25KM</span>
-                </div>
-            </div>
-
-            <div class="pt-4 border-t border-white/5">
-                <p class="text-[10px] text-white/40 leading-relaxed">
-                    Adjusting filters highlights regional gaps. Areas with 3+ diverse nodes within 5km show significantly higher formal disposal participation.
-                </p>
+    <div id="canvas-container">
+        <div class="scan-overlay"></div>
+        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+        <div class="hud space-y-4">
+            <div class="glass">
+                <div class="text-xl font-bold tracking-widest uppercase">Sonar Active</div>
+                <div class="text-xs opacity-60">Scanning regional nodes...</div>
+                <div class="mt-4 text-sm" id="radar-data">Nodes Found: 0</div>
             </div>
         </div>
-
-        <!-- Detail Card -->
-        <div class="detail-card" id="detail-card">
-            <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl" id="d-icon">📍</div>
-                <button class="text-slate-300 hover:text-slate-500" id="close-detail">✕</button>
-            </div>
-            <h3 class="text-xl font-bold mb-1" id="d-name">Facility Name</h3>
-            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-4" id="d-type">Authorized Recycler</p>
-            
-            <div class="space-y-4">
-                <div class="flex justify-between items-center py-2 border-b border-slate-50">
-                    <span class="text-xs text-slate-500">Distance</span>
-                    <span class="text-xs font-bold" id="d-dist">4.2 km</span>
-                </div>
-                <div class="space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-slate-400">Accepted Items</span>
-                    <p class="text-xs text-slate-600" id="d-items">Smartphones, Laptops, Batteries, Cables</p>
-                </div>
-                <div class="flex gap-2 pt-2">
-                    <button class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition-colors">GET DIRECTIONS</button>
-                </div>
-            </div>
-        </div>
-    </main>
+    </div>
 
     <script type="module">
         import * as THREE from 'three';
+        let scene, camera, renderer, scanRing;
+        const nodes = [];
 
-        // --- DATA ---
-        const FACILITIES = [
-            { id: 1, name: 'EcoCycle Rajasthan', type: 'recycler', dist: 4.2, angle: 45, icon: '🏢', items: 'All E-Waste, Data Destruction' },
-            { id: 2, name: 'Jaipur Dismantlers', type: 'dismantler', dist: 8.5, angle: 120, icon: '🏗️', items: 'IT Hardware, Consumer Electronics' },
-            { id: 3, name: 'City Collection Point', type: 'collection', dist: 2.1, angle: 200, icon: '📦', items: 'Batteries, Mobile Phones, Chargers' },
-            { id: 4, name: 'FixIt Hub', type: 'repair', dist: 3.5, angle: 30, icon: '🛠️', items: 'Smartphone Repair, Laptop Upgrades' },
-            { id: 5, name: 'Industrial Metals', type: 'recycler', dist: 18.0, angle: 280, icon: '🏭', items: 'Bulk Waste, Large Appliances' },
-            { id: 6, name: 'Safe-Cell Hub', type: 'collection', dist: 5.5, angle: 340, icon: '🔋', items: 'Li-ion Batteries, Lead Acid' },
-            { id: 7, name: 'North Jaipur Dismantler', type: 'dismantler', dist: 12.0, angle: 160, icon: '🏗️', items: 'Telecom Equipment' },
-            { id: 8, name: 'Tech Care Services', type: 'repair', dist: 6.2, angle: 80, icon: '🛠️', items: 'Motherboard Repair, Screen Swap' }
-        ];
-
-        // --- APP STATE ---
-        let scene, camera, renderer, sweepLine, blips = [];
-        let activeFilters = new Set(['recycler', 'dismantler', 'collection', 'repair']);
-        let maxRange = 15;
-        const container = document.getElementById('radar-container');
-
-        // --- INITIALIZATION ---
         function init() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 40, 0);
-            camera.lookAt(0, 0, 0);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 10, 0);
+            camera.lookAt(0,0,0);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Radar background (circles)
-            const circleMat = new THREE.LineBasicMaterial({ color: 0x1e293b });
-            for(let i=1; i<=5; i++) {
-                const geo = new THREE.RingGeometry(i * 5 - 0.05, i * 5, 64);
-                const ring = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0x1e293b, side: THREE.DoubleSide }));
-                ring.rotation.x = Math.PI / 2;
-                scene.add(ring);
-            }
+            // Grid
+            const grid = new THREE.GridHelper(10, 10, 0x22d3ee, 0x1e293b);
+            scene.add(grid);
 
-            // Crosshair
-            const crossMat = new THREE.LineBasicMaterial({ color: 0x1e293b });
-            const lineH = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-25,0,0), new THREE.Vector3(25,0,0)]);
-            const lineV = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,-25), new THREE.Vector3(0,0,25)]);
-            scene.add(new THREE.Line(lineH, crossMat));
-            scene.add(new THREE.Line(lineV, crossMat));
+            // Scanning Ring
+            const ringGeo = new THREE.RingGeometry(0.1, 0.2, 32);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+            scanRing = new THREE.Mesh(ringGeo, ringMat);
+            scanRing.rotation.x = Math.PI / 2;
+            scene.add(scanRing);
 
-            // Sweep Line
-            const sweepGeo = new THREE.PlaneGeometry(25, 1);
-            const sweepMat = new THREE.MeshBasicMaterial({ 
-                color: 0x10b981, 
-                transparent: true, 
-                opacity: 0.3,
-                side: THREE.DoubleSide 
-            });
-            sweepLine = new THREE.Mesh(sweepGeo, sweepMat);
-            sweepLine.rotation.x = Math.PI / 2;
-            sweepLine.position.x = 12.5; // Offset to rotate around center
-            const sweepGroup = new THREE.Group();
-            sweepGroup.add(sweepLine);
-            scene.add(sweepGroup);
-            window.sweepGroup = sweepGroup;
-
-            createBlips();
-            setupEvents();
+            spawnNodes();
             animate();
         }
 
-        function createBlips() {
-            blips.forEach(b => scene.remove(b.mesh));
-            blips = [];
-
-            FACILITIES.forEach(f => {
-                const geo = new THREE.SphereGeometry(0.4);
-                const mat = new THREE.MeshBasicMaterial({ 
-                    color: getBlipColor(f.type), 
-                    transparent: true, 
-                    opacity: 0 
-                });
-                const mesh = new THREE.Mesh(geo, mat);
-                
-                // Calculate position
-                const rad = (f.angle * Math.PI) / 180;
-                mesh.position.set(
-                    Math.cos(rad) * f.dist,
-                    0,
-                    Math.sin(rad) * f.dist
-                );
-                mesh.userData = f;
-                
-                scene.add(mesh);
-                blips.push({ mesh, data: f, lastScanned: 0 });
-            });
-        }
-
-        function getBlipColor(type) {
-            switch(type) {
-                case 'recycler': return 0x3b82f6;
-                case 'dismantler': return 0xf59e0b;
-                case 'collection': return 0x10b981;
-                case 'repair': return 0x8b5cf6;
-                default: return 0xffffff;
+        function spawnNodes() {
+            for(let i=0; i<5; i++) {
+                const node = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), new THREE.MeshBasicMaterial({ color: 0x22d3ee }));
+                node.position.set(Math.random() * 8 - 4, 0, Math.random() * 8 - 4);
+                node.visible = false;
+                scene.add(node);
+                nodes.push(node);
             }
-        }
-
-        function setupEvents() {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const type = btn.dataset.type;
-                    btn.classList.toggle('active');
-                    if (btn.classList.contains('active')) activeFilters.add(type);
-                    else activeFilters.delete(type);
-                    updateScore();
-                });
-            });
-
-            document.getElementById('range-slider').addEventListener('input', (e) => {
-                maxRange = parseInt(e.target.value);
-                document.getElementById('range-val').textContent = maxRange + 'KM';
-                updateScore();
-            });
-
-            const raycaster = new THREE.Raycaster();
-            const mouse = new THREE.Vector2();
-
-            container.addEventListener('mousedown', (e) => {
-                const rect = container.getBoundingClientRect();
-                mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
-                mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
-
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(blips.map(b => b.mesh));
-
-                if (intersects.length > 0) {
-                    showDetail(intersects[0].object.userData);
-                }
-            });
-
-            document.getElementById('close-detail').addEventListener('click', () => {
-                document.getElementById('detail-card').classList.remove('active');
-            });
-
-            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-        }
-
-        function showDetail(data) {
-            const card = document.getElementById('detail-card');
-            document.getElementById('d-name').textContent = data.name;
-            document.getElementById('d-type').textContent = data.type;
-            document.getElementById('d-dist').textContent = data.dist + ' km';
-            document.getElementById('d-items').textContent = data.items;
-            document.getElementById('d-icon').textContent = data.icon;
-            
-            card.classList.add('active');
-        }
-
-        function updateScore() {
-            const visible = FACILITIES.filter(f => activeFilters.has(f.type) && f.dist <= maxRange).length;
-            const score = Math.round((visible / FACILITIES.length) * 100);
-            document.getElementById('score-text').textContent = score + '%';
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            
-            if (window.sweepGroup) {
-                window.sweepGroup.rotation.y -= 0.02;
-                const currentAngle = ((-window.sweepGroup.rotation.y % (Math.PI * 2)) * 180 / Math.PI) % 360;
+            scanRing.scale.x += 0.05;
+            scanRing.scale.y += 0.05;
+            scanRing.material.opacity -= 0.005;
 
-                blips.forEach(b => {
-                    const isFiltered = activeFilters.has(b.data.type) && b.data.dist <= maxRange;
-                    
-                    if (!isFiltered) {
-                        b.mesh.material.opacity = 0;
-                        return;
-                    }
-
-                    // Check if sweep line passed over blip
-                    const diff = Math.abs(currentAngle - b.data.angle);
-                    if (diff < 5) {
-                        b.mesh.material.opacity = 1;
-                        b.lastScanned = Date.now();
-                    } else {
-                        // Fade out over time
-                        const elapsed = Date.now() - b.lastScanned;
-                        b.mesh.material.opacity = Math.max(0.2, 1 - (elapsed / 2000));
-                    }
-                });
+            if(scanRing.scale.x > 50) {
+                scanRing.scale.set(1,1,1);
+                scanRing.material.opacity = 0.5;
             }
 
+            nodes.forEach(n => {
+                const dist = n.position.length();
+                if(Math.abs(dist - (scanRing.scale.x * 0.15)) < 0.2) {
+                    n.visible = true;
+                }
+            });
+
+            document.getElementById('radar-data').textContent = `Nodes Found: ${nodes.filter(n => n.visible).length}`;
             renderer.render(scene, camera);
         }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
-
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

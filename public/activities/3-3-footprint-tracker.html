@@ -3,363 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Footprint Tracker | Skilizee E-Waste</title>
+    <title>Digital Shadow | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #10b981;
-            --text-primary: #1e293b;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-            color: white;
-        }
-
-        .topic-card {
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-            padding: 2rem;
-        }
-
-        .choice-card {
-            padding: 1.5rem;
-            border-radius: 16px;
-            border: 2px solid #f1f5f9;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-        .choice-card:hover { transform: translateY(-2px); border-color: #e2e8f0; }
-        .choice-card.active { border-color: var(--primary); background: #f0fdf4; }
-
-        #tree-svg {
-            width: 100%;
-            height: 400px;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
-        }
-
-        .leaf { fill: #10b981; opacity: 0; transform-origin: center; }
-        .trunk { stroke: #064e3b; stroke-width: 8; fill: none; stroke-linecap: round; }
-        .withered { fill: #94a3b8 !important; }
-
-        .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: rgba(255,255,255,0.2);
-            backdrop-blur: 8px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .is-embedded main { padding-top: 2rem; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; overflow: hidden; }
+        #canvas-container { height: 100vh; position: relative; background: #ffffff; }
+        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 300px; }
+        .glass { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border-radius: 20px; padding: 24px; border: 1px solid rgba(0,0,0,0.05); }
+        .habit-btn { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; text-align: left; transition: 0.2s; margin-top: 8px; }
+        .habit-btn:hover { border-color: #64748b; transform: scale(1.02); }
+        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #1e293b; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Left: Simulation Canvas -->
-            <div class="topic-card flex flex-col items-center justify-center bg-white min-h-[500px]">
-                <div id="tree-container" class="w-full relative">
-                    <svg id="tree-svg" viewBox="0 0 200 200">
-                        <!-- Trunk -->
-                        <path class="trunk" d="M100,180 Q100,140 100,100" id="main-trunk"></path>
-                        <path class="trunk" d="M100,120 Q80,100 60,80" id="branch-l" style="stroke-width: 4; opacity: 0;"></path>
-                        <path class="trunk" d="M100,120 Q120,100 140,80" id="branch-r" style="stroke-width: 4; opacity: 0;"></path>
-                        
-                        <!-- Leaves (Initial Group) -->
-                        <g id="leaves-group"></g>
-                    </svg>
-                    
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">
-                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sustainability Status</div>
-                        <div class="text-2xl font-bold text-emerald-600" id="s-status">SAPLING</div>
-                    </div>
-                </div>
-
-                <div class="w-full mt-12 grid grid-cols-3 gap-4 border-t pt-8 border-slate-50">
-                    <div class="text-center">
-                        <div class="text-xl font-bold text-slate-700" id="v-co2">0</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">CO2 SAVED (KG)</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-xl font-bold text-slate-700" id="v-waste">0</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">WASTE DIVERTED</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-xl font-bold text-slate-700" id="v-life">0</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">DEVICE LIFE (YRS)</div>
-                    </div>
-                </div>
+    <div id="canvas-container">
+        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+        <div class="hud space-y-4">
+            <div class="glass">
+                <h1 class="text-2xl font-bold text-slate-800">Digital Shadow</h1>
+                <p class="text-xs text-slate-500 mt-1">Watch your digital presence grow as you add online habits.</p>
             </div>
-
-            <!-- Right: Quiz / Actions -->
-            <div class="space-y-6">
-                <div class="topic-card">
-                    <div id="quiz-header">
-                        <h3 class="text-xl font-bold mb-1">Scenario 1: The Broken Screen</h3>
-                        <p class="text-sm text-slate-500 mb-8">Your 2-year-old smartphone has a cracked screen. What do you do?</p>
-                    </div>
-
-                    <div class="space-y-4" id="choices-container">
-                        <button class="choice-card w-full" data-impact="high" data-msg="You extended device life by 3 years!">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <div class="font-bold text-lg">Local Repair</div>
-                                    <p class="text-xs text-slate-500 mt-1">Replace only the screen at an authorized hub.</p>
-                                </div>
-                                <div class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded">BEST IMPACT</div>
-                            </div>
-                        </button>
-
-                        <button class="choice-card w-full" data-impact="low" data-msg="New manufacturing adds 80kg CO2.">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <div class="font-bold text-lg">Trade-In for New</div>
-                                    <p class="text-xs text-slate-500 mt-1">Discard the old one and buy the latest model.</p>
-                                </div>
-                                <div class="px-2 py-1 bg-rose-100 text-rose-700 text-[10px] font-bold rounded">HIGH FOOTPRINT</div>
-                            </div>
-                        </button>
-                        
-                        <button class="choice-card w-full" data-impact="mid" data-msg="Better than new, but still adds waste.">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <div class="font-bold text-lg">Buy Refurbished</div>
-                                    <p class="text-xs text-slate-500 mt-1">Give a second life to an existing device.</p>
-                                </div>
-                                <div class="px-2 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded">GOOD CHOICE</div>
-                            </div>
-                        </button>
-                    </div>
-                    
-                    <div id="result-feedback" class="mt-8 p-6 bg-slate-50 rounded-2xl hidden">
-                        <div class="flex gap-4 items-start">
-                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-xl" id="res-icon">✨</div>
-                            <div>
-                                <h4 class="font-bold text-sm" id="res-title">Decision Impact</h4>
-                                <p class="text-xs text-slate-600 mt-1" id="res-desc">Your choice saved 15kg of CO2 equivalent!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="topic-card bg-emerald-50 border-emerald-100">
-                    <h4 class="text-emerald-700 font-bold mb-2">Did you know?</h4>
-                    <p class="text-xs text-emerald-800/70 leading-relaxed">
-                        80% of a smartphone's carbon footprint comes from its manufacturing process. Extending its life from 2 to 4 years reduces its impact by 40%.
-                    </p>
-                </div>
+            <div class="glass">
+                <button class="habit-btn" onclick="adjustShadow(0.5)">Accept All Cookies</button>
+                <button class="habit-btn" onclick="adjustShadow(1.0)">Stay Logged In</button>
+                <button class="habit-btn" onclick="adjustShadow(-0.8)">Clear Browser Cache</button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        const SCENARIOS = [
-            {
-                title: "Scenario 1: The Broken Screen",
-                desc: "Your 2-year-old smartphone has a cracked screen. What do you do?",
-                choices: [
-                    { label: "Local Repair", sub: "Replace only the screen at an authorized hub.", impact: "high", val: 15, msg: "Excellent! You saved 15kg CO2 by avoiding a new purchase." },
-                    { label: "Trade-In for New", sub: "Discard the old one and buy the latest model.", impact: "low", val: -40, msg: "Manufacturing a new phone consumes 80kg CO2. Your footprint grew." },
-                    { label: "Buy Refurbished", sub: "Give a second life to an existing device.", impact: "mid", val: 8, msg: "Great choice! Refurbished tech is 70% better for the environment." }
-                ]
-            },
-            {
-                title: "Scenario 2: Slow Laptop",
-                desc: "Your laptop is getting slow. It takes 5 minutes to boot up.",
-                choices: [
-                    { label: "Upgrade RAM/SSD", sub: "A simple upgrade can make it 5x faster.", impact: "high", val: 25, msg: "Component upgrades are the most sustainable tech habit." },
-                    { label: "Recycle & Replace", sub: "Recycle properly and buy a newer laptop.", impact: "mid", val: 5, msg: "Recycling is good, but keeping it running is better." },
-                    { label: "Keep in Drawer", sub: "Buy a new one and store the old one 'just in case'.", impact: "low", val: -10, msg: "Hibernating e-waste is a lost resource opportunity." }
-                ]
-            }
-        ];
-
-        let currentScenario = 0;
-        let stats = { co2: 0, waste: 0, life: 2 };
-        let leafCount = 0;
+    <script type="module">
+        import * as THREE from 'three';
+        let scene, camera, renderer, shadow;
 
         function init() {
-            setupChoices();
-            createInitialLeaves();
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 2, 5);
 
-            document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    document.exitFullscreen();
-                }
-            });
-        }
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        function createInitialLeaves() {
-            const group = document.getElementById('leaves-group');
-            for(let i=0; i<12; i++) {
-                addLeaf();
-            }
-        }
-
-        function addLeaf(isWithered = false) {
-            const group = document.getElementById('leaves-group');
-            const leaf = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            leaf.setAttribute("class", "leaf" + (isWithered ? " withered" : ""));
-            leaf.setAttribute("r", "4");
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
             
-            // Random position around branches
-            const angle = Math.random() * Math.PI * 2;
-            const dist = 10 + Math.random() * 30;
-            const x = 100 + Math.cos(angle) * dist;
-            const y = 80 + Math.sin(angle) * dist;
-            
-            leaf.setAttribute("cx", x);
-            leaf.setAttribute("cy", y);
-            group.appendChild(leaf);
-            
-            gsap.to(leaf, { 
-                opacity: 0.8, 
-                scale: 1, 
-                duration: 1, 
-                delay: Math.random() * 0.5,
-                ease: "back.out"
-            });
+            shadow = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 1), new THREE.MeshStandardMaterial({ color: 0x1e293b, transparent: true, opacity: 0.8 }));
+            scene.add(shadow);
+
+            animate();
         }
 
-        function setupChoices() {
-            const s = SCENARIOS[currentScenario];
-            document.getElementById('quiz-header').innerHTML = `
-                <h3 class="text-xl font-bold mb-1">${s.title}</h3>
-                <p class="text-sm text-slate-500 mb-8">${s.desc}</p>
-            `;
+        window.adjustShadow = (val) => {
+            const target = Math.max(0.5, shadow.scale.x + val);
+            gsap.to(shadow.scale, { x: target, y: target, z: target, duration: 1, ease: "power2.out" });
+            gsap.to(shadow.material, { opacity: Math.min(1, 0.2 + (target * 0.2)), duration: 1 });
+        };
 
-            const container = document.getElementById('choices-container');
-            container.innerHTML = s.choices.map(c => `
-                <button class="choice-card w-full" data-impact="${c.impact}" data-val="${c.val}" data-msg="${c.msg}">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-bold text-lg">${c.label}</div>
-                            <p class="text-xs text-slate-500 mt-1">${c.sub}</p>
-                        </div>
-                    </div>
-                </button>
-            `).join('');
-
-            container.querySelectorAll('.choice-card').forEach(btn => {
-                btn.addEventListener('click', () => handleChoice(btn));
-            });
+        function animate() {
+            requestAnimationFrame(animate);
+            shadow.rotation.y += 0.005;
+            renderer.render(scene, camera);
         }
-
-        function handleChoice(btn) {
-            const val = parseInt(btn.dataset.val);
-            const msg = btn.dataset.msg;
-            const impact = btn.dataset.impact;
-
-            // Update Stats
-            stats.co2 += val;
-            if (impact === 'high') { stats.waste += 1; stats.life += 3; }
-            else if (impact === 'mid') { stats.waste += 0.5; stats.life += 1; }
-            
-            updateUI();
-            growTree(impact);
-
-            // Feedback
-            const feedback = document.getElementById('result-feedback');
-            feedback.classList.remove('hidden');
-            document.getElementById('res-desc').textContent = msg;
-            document.getElementById('res-icon').textContent = impact === 'high' ? '🌳' : (impact === 'mid' ? '🌿' : '🍂');
-
-            // Move to next or finish
-            btn.parentElement.style.pointerEvents = 'none';
-            setTimeout(() => {
-                currentScenario++;
-                if (currentScenario < SCENARIOS.length) {
-                    feedback.classList.add('hidden');
-                    btn.parentElement.style.pointerEvents = 'auto';
-                    setupChoices();
-                } else {
-                    document.getElementById('quiz-header').innerHTML = `
-                        <h3 class="text-xl font-bold mb-1">Simulated Impact Summary</h3>
-                        <p class="text-sm text-slate-500 mb-8">You've seen how tech decisions multiply across a lifetime.</p>
-                    `;
-                    document.getElementById('choices-container').innerHTML = `
-                        <button onclick="location.reload()" class="w-full py-4 bg-emerald-500 text-white rounded-xl font-bold">RESTART SIMULATION</button>
-                    `;
-                }
-            }, 3000);
-        }
-
-        function growTree(impact) {
-            if (impact === 'high') {
-                for(let i=0; i<8; i++) addLeaf();
-                gsap.to('#main-trunk', { strokeWidth: '+=1', duration: 1 });
-            } else if (impact === 'mid') {
-                for(let i=0; i<3; i++) addLeaf();
-            } else {
-                for(let i=0; i<5; i++) addLeaf(true);
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('v-co2').textContent = stats.co2;
-            document.getElementById('v-waste').textContent = stats.waste.toFixed(1) + ' units';
-            document.getElementById('v-life').textContent = stats.life + ' yrs';
-            
-            const status = document.getElementById('s-status');
-            if (stats.co2 > 30) { status.textContent = 'OAK'; status.className = 'text-2xl font-bold text-emerald-800'; }
-            else if (stats.co2 > 10) { status.textContent = 'MATURE'; status.className = 'text-2xl font-bold text-emerald-600'; }
-            else if (stats.co2 < 0) { status.textContent = 'WITHERED'; status.className = 'text-2xl font-bold text-rose-400'; }
-        }
-
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>
