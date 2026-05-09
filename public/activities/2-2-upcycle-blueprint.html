@@ -20,13 +20,18 @@
         #canvas-container { height: 500px; background: #1e1b4b; border-radius: 20px; position: relative; overflow: hidden; }
         .blueprint-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
         .blueprint-card:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .fullscreen-btn { position: absolute; top: 16px; right: 16px; z-index: 50; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body class="p-6">
     <div class="max-w-6xl mx-auto space-y-6">
         <h1 class="text-3xl font-bold text-center">Upcycle Blueprint Designer</h1>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div id="canvas-container" class="lg:col-span-2"></div>
+            <div id="canvas-container" class="lg:col-span-2">
+                <button class="fullscreen-btn" onclick="document.getElementById('canvas-container').requestFullscreen()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                </button>
+            </div>
             <div class="space-y-4">
                 <div class="blueprint-card" data-type="planter">
                     <h4 class="font-bold">CRT monitor Planter</h4>
