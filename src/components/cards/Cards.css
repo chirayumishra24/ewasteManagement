@@ -55,7 +55,7 @@
 .card-hero-container {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: auto;
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 1.5rem;
@@ -63,9 +63,9 @@
 }
 
 .card-hero-image {
+  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   transition: transform 0.5s ease;
 }
 
@@ -193,7 +193,6 @@
 /* Image Card Styles */
 .image-card {
   position: relative;
-  min-height: 350px;
   overflow: hidden;
   border-radius: 8px;
   margin-bottom: 2rem;

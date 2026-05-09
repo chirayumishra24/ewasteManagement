@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inside the Machine: Layer Explorer | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/"
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --page-bg: #f8f7f3;
+            --surface: #ffffff;
+            --surface-soft: #f5f7fa;
+            --primary: #2f7fbe;
+            --primary-light: #5ba3d9;
+            --text-primary: #1e293b;
+            --text-muted: #64748b;
+            --accent-valuable: #059669;
+            --accent-hazardous: #dc2626;
+            --accent-bulk: #d97706;
+            --bg-valuable: #ecfdf5;
+            --bg-hazardous: #fef2f2;
+            --bg-bulk: #fffbeb;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .topic-card {
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .material-card {
+            background: var(--surface);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px;
+            padding: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .btn-layer {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--surface-soft);
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-layer:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-layer.active {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 4px 12px rgba(47, 127, 190, 0.1);
+        }
+
+        .btn-layer.peeled .status-icon::after {
+            content: '✓';
+            color: var(--accent-valuable);
+            font-weight: bold;
+        }
+
+        .progress-bar-wrap {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .pill {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .pill-valuable { background: var(--bg-valuable); color: var(--accent-valuable); }
+        .pill-hazardous { background: var(--bg-hazardous); color: var(--accent-hazardous); }
+        .pill-bulk { background: var(--bg-bulk); color: var(--accent-bulk); }
+
+        #three-canvas-container {
+            width: 100%;
+            height: 500px;
+            background: var(--page-bg);
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 16px rgba(47, 127, 190, 0.3);
+            cursor: pointer;
+            border: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .fullscreen-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Scroll Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 0%;
+            background: var(--primary);
+            z-index: 1000;
+        }
+
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(20px); }
+
+        @media (max-width: 1024px) {
+            #three-canvas-container { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="scroll-progress"></div>
+
+    <button class="fullscreen-btn" id="toggle-fullscreen" title="Toggle Fullscreen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <header class="header-gradient py-12 px-6 text-center text-white mb-8">
+        <div class="max-w-4xl mx-auto">
+            <p class="uppercase tracking-[0.2em] font-bold text-white/80 text-sm mb-3">Module 01 · Activity 1.2</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Inside the Machine</h1>
+            <p class="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+                Peel apart a smartphone layer by layer to discover the hidden materials that make it work—and why it's worth recovering.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3 mt-8">
+                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">📱 Composition</span>
+                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">🔬 60 Elements</span>
+                <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full font-semibold border border-white/30">⚗️ 3 Categories</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 space-y-8 pb-20">
+        <!-- Progress Bar Section -->
+        <section class="topic-card p-6 md:p-8 fade-in">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-bold uppercase tracking-wider text-muted">Discovery Progress</span>
+                        <span class="text-lg font-bold" id="progress-text">0 / 25 Elements Found</span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div id="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-center">
+                        <div class="pill pill-valuable mb-1" id="count-valuable">0</div>
+                        <span class="text-[10px] uppercase font-bold text-muted">Valuable</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="pill pill-hazardous mb-1" id="count-hazardous">0</div>
+                        <span class="text-[10px] uppercase font-bold text-muted">Hazardous</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="pill pill-bulk mb-1" id="count-bulk">0</div>
+                        <span class="text-[10px] uppercase font-bold text-muted">Bulk</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D Explorer Section -->
+        <section class="topic-card p-4 md:p-6 fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_2fr] gap-6">
+                <!-- Controls -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold mb-4 px-2">Layer Control</h3>
+                    <div id="layer-buttons" class="space-y-3">
+                        <button class="btn-layer" data-layer="0">
+                            <span class="flex items-center gap-3">
+                                <span class="text-xl">🪟</span>
+                                <div>
+                                    <p class="font-bold">Screen Glass</p>
+                                    <p class="text-xs text-muted">Protective outer layer</p>
+                                </div>
+                            </span>
+                            <span class="status-icon"></span>
+                        </button>
+                        <button class="btn-layer" data-layer="1">
+                            <span class="flex items-center gap-3">
+                                <span class="text-xl">📺</span>
+                                <div>
+                                    <p class="font-bold">Display Panel</p>
+                                    <p class="text-xs text-muted">Pixels & backlighting</p>
+                                </div>
+                            </span>
+                            <span class="status-icon"></span>
+                        </button>
+                        <button class="btn-layer" data-layer="2">
+                            <span class="flex items-center gap-3">
+                                <span class="text-xl">🧩</span>
+                                <div>
+                                    <p class="font-bold">Circuit Board</p>
+                                    <p class="text-xs text-muted">The processor & memory</p>
+                                </div>
+                            </span>
+                            <span class="status-icon"></span>
+                        </button>
+                        <button class="btn-layer" data-layer="3">
+                            <span class="flex items-center gap-3">
+                                <span class="text-xl">🔋</span>
+                                <div>
+                                    <p class="font-bold">Battery</p>
+                                    <p class="text-xs text-muted">Lithium-ion power core</p>
+                                </div>
+                            </span>
+                            <span class="status-icon"></span>
+                        </button>
+                        <button class="btn-layer" data-layer="4">
+                            <span class="flex items-center gap-3">
+                                <span class="text-xl">🛡️</span>
+                                <div>
+                                    <p class="font-bold">Back Casing</p>
+                                    <p class="text-xs text-muted">Metal / plastic chassis</p>
+                                </div>
+                            </span>
+                            <span class="status-icon"></span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 flex gap-3 px-2">
+                        <button id="btn-peel-all" class="flex-1 bg-[var(--primary)] text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] active:scale-[0.98] transition-transform">Peel All</button>
+                        <button id="btn-reset" class="px-6 border-2 border-slate-200 py-3 rounded-xl font-bold text-muted hover:bg-slate-50 transition-colors">Reset</button>
+                    </div>
+                </div>
+
+                <!-- 3D Canvas -->
+                <div class="relative">
+                    <div id="three-canvas-container">
+                        <!-- Three.js will inject canvas here -->
+                        <div id="canvas-loading" class="absolute inset-0 flex items-center justify-center bg-slate-50 rounded-2xl z-10">
+                            <div class="text-center">
+                                <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+                                <p class="font-bold text-muted">Loading 3D Machine...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center pointer-events-none">
+                        <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-muted border border-black/5">Drag to rotate · Scroll to zoom</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Materials Grid Section -->
+        <section class="space-y-6 fade-in" id="discovery-section">
+            <div class="flex items-end justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold">Materials Discovery</h2>
+                    <p class="text-muted">Explore the elements revealed by peeling layers.</p>
+                </div>
+                <div class="flex gap-2 text-xs font-bold uppercase tracking-wider">
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Valuable</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Hazardous</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Bulk</span>
+                </div>
+            </div>
+
+            <div id="materials-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <!-- Cards will be injected here -->
+                <div id="empty-state" class="col-span-full py-20 text-center bg-white/50 border-2 border-dashed border-slate-200 rounded-2xl">
+                    <p class="text-xl mb-2 opacity-50">🔬</p>
+                    <p class="text-muted font-medium">Select a layer to begin the dissection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
+            <div class="topic-card p-6 flex flex-col items-center text-center">
+                <span class="text-3xl mb-4">🧪</span>
+                <h4 class="text-lg mb-2 text-[var(--primary)]">Complex Chemistry</h4>
+                <p class="text-sm text-muted">A single smartphone contains over 60 different elements from the periodic table.</p>
+            </div>
+            <div class="topic-card p-6 flex flex-col items-center text-center">
+                <span class="text-3xl mb-4">💰</span>
+                <h4 class="text-lg mb-2 text-[var(--primary)]">Hidden Value</h4>
+                <p class="text-sm text-muted">1 tonne of smartphones contains more gold than 1 tonne of gold ore from a mine.</p>
+            </div>
+            <div class="topic-card p-6 flex flex-col items-center text-center">
+                <span class="text-3xl mb-4">📈</span>
+                <h4 class="text-lg mb-2 text-[var(--primary)]">The Opportunity</h4>
+                <p class="text-sm text-muted">Only 17% of e-waste is formally recycled. Urban mining could unlock billions in value.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
+        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
+        <p class="text-muted">Digital Dissection Activity · Chapter 1.2</p>
+    </footer>
+
+    <script type="module" src="./1-2-layer-explorer.js"></script>
+    <script>
+        // Check for embedded mode
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+            // Hide header and fullscreen toggle
+            document.querySelector('header').style.display = 'none';
+            document.getElementById('toggle-fullscreen').style.display = 'none';
+            // Reduce main padding
+            document.querySelector('main').style.paddingTop = '2rem';
+        }
+
+        // Fullscreen Toggle
+        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    gsap.to(entry.target, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Scroll progress
+        window.addEventListener('scroll', () => {
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (window.scrollY / totalScroll) * 100;
+            document.getElementById('scroll-progress').style.height = scrollPercent + '%';
+        });
+    </script>
+</body>
+</html>

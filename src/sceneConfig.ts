@@ -76,38 +76,38 @@ export type SceneConfig = {
 export const sceneConfig: SceneConfig = {
   colors: {
     // Terrain
-    terrainBase: '#f7ecd7',
-    terrainTrace: '#2f9f88',
-    terrainVia: '#c77f35',
+    terrainBase: '#091522',
+    terrainTrace: '#2bc1a6',
+    terrainVia: '#f3a44a',
 
     // Devices
-    deviceBody: '#cbd4d4',
-    deviceScreen: '#db6d3f',
-    deviceMetal: '#6f8188',
+    deviceBody: '#9fb0ba',
+    deviceScreen: '#ff7f5e',
+    deviceMetal: '#5f7386',
 
     // Particles
-    hazeStart: '#fff8ed',
-    hazeEnd: '#eef8ed',
-    spark: '#d99b38',
+    hazeStart: '#07111b',
+    hazeEnd: '#112437',
+    spark: '#ffc26a',
 
     // Ribbons
-    ribbonMetal: '#c99328',
-    ribbonPlastic: '#6ea2b4',
-    ribbonGlass: '#f6fbf8',
+    ribbonMetal: '#f3a44a',
+    ribbonPlastic: '#61b8ff',
+    ribbonGlass: '#d8e6f0',
 
     // Vortex
-    vortexRing: '#d96f3a',
-    vortexGlow: '#f0c77a',
+    vortexRing: '#ff7f5e',
+    vortexGlow: '#ffd48a',
 
     // Atmosphere
-    fogNear: '#fff5e8',
-    fogFar: '#f8ead7',
-    skyGradientTop: '#fffaf1',
-    skyGradientBottom: '#f4e8d2',
+    fogNear: '#07111b',
+    fogFar: '#0d1c2d',
+    skyGradientTop: '#08111b',
+    skyGradientBottom: '#112236',
     // Conveyor Station Colors
-    stationCollection: '#5d8ea0',
-    stationSorting: '#d9a129',
-    stationRecycling: '#2f9f88',
+    stationCollection: '#61b8ff',
+    stationSorting: '#f3a44a',
+    stationRecycling: '#2bc1a6',
   },
   camera: {
     position: [0, 7.4, 19.5],
@@ -139,10 +139,10 @@ export const sceneConfig: SceneConfig = {
     mobileDeviceCount: 8,
   },
   postprocessing: {
-    desktopBloom: 0.28,
-    mobileBloom: 0.12,
-    reducedMotionBloom: 0.06,
-    noiseOpacity: 0.012,
-    vignetteDarkness: 0.26,
+    desktopBloom: 0.36,
+    mobileBloom: 0.18,
+    reducedMotionBloom: 0.08,
+    noiseOpacity: 0.018,
+    vignetteDarkness: 0.34,
   },
 }

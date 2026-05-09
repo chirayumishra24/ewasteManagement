@@ -3,56 +3,33 @@ export type ChapterImage = {
   alt: string
 }
 
-export type ChapterBlock =
-  | {
-      type: 'paragraph'
-      content: string
-      emphasis?: boolean
-    }
-  | {
-      type: 'imageGrid'
-      images: ChapterImage[]
-      columns?: 'two' | 'three'
-    }
-  | {
-      type: 'bulletList'
-      items: string[]
-    }
-  | {
-      type: 'numberedList'
-      items: string[]
-    }
-  | {
-      type: 'quote'
-      content: string
-      author?: string
-    }
-  | {
-      type: 'video'
-      title: string
-      url: string
-      note?: string
-    }
-  | {
-      type: 'interactive3d'
-      activityId:
-        | 'hazard-xray'
-        | 'device-autopsy'
-        | 'urban-mine-valuator'
-        | 'lifespan-lab'
-        | 'upcycle-forge'
-        | 'smelter-pipeline'
-        | 'recycler-radar'
-        | 'drive-simulator'
-        | 'data-shredder'
-        | 'india-policy-map'
-      title: string
-    }
-
 export type ChapterPulse = {
   label: string
   value: string
 }
+
+export type ChapterMetric = {
+  label: string
+  value: string
+  detail: string
+}
+
+export type ChapterThemeKey =
+  | 'hub'
+  | 'hazard'
+  | 'diagnostic'
+  | 'recovery'
+  | 'maintenance'
+  | 'upcycle'
+  | 'recycling'
+  | 'mapping'
+  | 'action'
+  | 'privacy'
+  | 'policy'
+
+export type ChapterLayout = 'hub' | 'steps' | 'split' | 'bento' | 'dashboard' | 'atlas'
+
+export type HeroVariant = 'spotlight' | 'signal' | 'diagnostic' | 'atlas'
 
 export type RobotAssembly = {
   part: 'head' | 'torso' | 'mobility'
@@ -62,13 +39,68 @@ export type RobotAssembly = {
   reward: string
 }
 
+export type StatGridItem = {
+  label: string
+  value: string
+  detail: string
+}
+
+export type TimelineItem = {
+  step: string
+  title: string
+  detail: string
+}
+
+export type ComparisonItem = {
+  title: string
+  leftLabel: string
+  leftValue: string
+  rightLabel: string
+  rightValue: string
+  insight: string
+}
+
+export type ResourceLink = {
+  label: string
+  href: string
+  description: string
+  external?: boolean
+}
+
+export type LineChartSeries = {
+  label: string
+  values: number[]
+  accentColor: string
+  detail: string
+  valuePrefix?: string
+  valueSuffix?: string
+  decimals?: number
+}
+
+export type ChapterBlock =
+  | { type: 'paragraph'; content: string; emphasis?: boolean }
+  | { type: 'quote'; content: string; author?: string }
+  | { type: 'bulletList'; items: string[] }
+  | { type: 'numberedList'; items: string[] }
+  | { type: 'imageGrid'; images: ChapterImage[]; columns?: 'one' | 'two' | 'three' }
+  | { type: 'video'; url: string; title: string; note?: string }
+  | { type: 'activity'; url: string; title: string; summary?: string; ctaLabel?: string }
+  | { type: 'statGrid'; items: StatGridItem[] }
+  | { type: 'timeline'; items: TimelineItem[] }
+  | { type: 'comparison'; items: ComparisonItem[] }
+  | { type: 'callout'; eyebrow?: string; title: string; content: string; tone?: 'signal' | 'alert' | 'success' | 'neutral' }
+  | { type: 'resourceLinks'; items: ResourceLink[] }
+  | { type: 'lineChart'; eyebrow?: string; title: string; summary: string; labels: string[]; series: LineChartSeries[]; note?: string }
+
 export type ChapterTab = {
   id: string
   label: string
+  navLabel: string
   title: string
   summary: string
   robotNote: string
   heroImage?: string
+  heroVariant?: HeroVariant
   readingTime?: number
   accentColor?: string
   pulses: ChapterPulse[]
@@ -78,122 +110,178 @@ export type ChapterTab = {
 export type CourseChapter = {
   id: string
   moduleLabel: string
+  navLabel: string
   title: string
   strapline: string
   summary: string
   robotStatus: string
   scrapFact: string
   accentColor: string
+  themeKey: ChapterThemeKey
+  layout: ChapterLayout
+  featuredMetrics: ChapterMetric[]
   assembly: RobotAssembly
   tabs: ChapterTab[]
 }
+
+const p = (content: string, emphasis = false): ChapterBlock => ({ type: 'paragraph', content, emphasis })
+const q = (content: string, author?: string): ChapterBlock => ({ type: 'quote', content, author })
+const bullets = (...items: string[]): ChapterBlock => ({ type: 'bulletList', items })
+const steps = (...items: string[]): ChapterBlock => ({ type: 'numberedList', items })
+const stats = (...items: StatGridItem[]): ChapterBlock => ({ type: 'statGrid', items })
+const timeline = (...items: TimelineItem[]): ChapterBlock => ({ type: 'timeline', items })
+const compare = (...items: ComparisonItem[]): ChapterBlock => ({ type: 'comparison', items })
+const callout = (title: string, content: string, tone: 'signal' | 'alert' | 'success' | 'neutral' = 'signal', eyebrow = 'Salvage Lab'): ChapterBlock => ({
+  type: 'callout',
+  title,
+  content,
+  tone,
+  eyebrow,
+})
+const resources = (...items: ResourceLink[]): ChapterBlock => ({ type: 'resourceLinks', items })
+const lineChart = (
+  title: string,
+  summary: string,
+  labels: string[],
+  series: LineChartSeries[],
+  note?: string,
+  eyebrow = 'Trend Scan',
+): ChapterBlock => ({
+  type: 'lineChart',
+  title,
+  summary,
+  labels,
+  series,
+  note,
+  eyebrow,
+})
+const activity = (title: string, url: string, summary: string, ctaLabel = 'Launch Lab'): ChapterBlock => ({
+  type: 'activity',
+  title,
+  url,
+  summary,
+  ctaLabel,
+})
+const video = (title: string, url: string, note?: string): ChapterBlock => ({ type: 'video', title, url, note })
 
 export const chapters: CourseChapter[] = [
   {
     id: '1-0',
     moduleLabel: 'Orientation',
+    navLabel: 'Start',
     title: 'E-Waste Management: Tech Tidy-Up',
-    strapline: 'System initialization. Review the mission parameters and the blueprint for regional recovery.',
+    strapline: 'Mission control for the full salvage campaign: what the course covers, how the robot rebuilds, and where each module takes you next.',
     summary:
-      'This orientation phase establishes the core objectives of the Tech Tidy-Up mission, outlining the roadmap from understanding the crisis to executing a community-wide action plan.',
-    robotStatus: 'Core systems loading. Objective matrix synchronized.',
-    scrapFact: 'Every successful mission starts with a clear schematic. Your goal is to recover 100% of the knowledge stream.',
-    accentColor: '#3498db',
+      'Use orientation as the course hub. It frames the crisis, previews the learning path, and turns the final project into a concrete community action brief.',
+    robotStatus: 'Mission control calibrated. Salvage bay online.',
+    scrapFact: 'A well-run recovery chain starts with classification, not collection.',
+    accentColor: '#61b8ff',
+    themeKey: 'hub',
+    layout: 'hub',
+    featuredMetrics: [
+      { label: 'Course shape', value: '10 chapters', detail: 'From hazard mapping to action planning.' },
+      { label: 'Core outcome', value: 'Local action', detail: 'Learners finish with a usable outreach plan.' },
+      { label: 'System lens', value: 'Toxic + valuable', detail: 'Every device is both risk and resource.' },
+    ],
     assembly: {
       part: 'head',
-      title: 'Neural Processor',
-      schematic: 'Logic Core + Memory',
-      summary: 'Establishing the mission goal allows the robot to synchronize its objective matrix and prioritize recovery tasks.',
-      reward: 'Unlocks the Course Syllabus and Final Project blueprint.',
+      title: 'Mission Core',
+      schematic: 'Logic Core + Memory Grid',
+      summary: 'Orientation synchronizes the robot with the full recovery brief before any dismantling begins.',
+      reward: 'Unlocks the roadmap, launch links, and final project objective.',
     },
     tabs: [
       {
         id: 'overview',
         label: 'Mission',
-        title: 'The Mission Goal',
-        summary: 'Defining the purpose of our tech recovery operation.',
-        robotNote: 'Mission parameters locked: Educate on environmental and economic impacts. Develop actionable strategies for resource recovery.',
-        accentColor: '#3498db',
+        navLabel: 'Mission',
+        title: 'Why This Course Exists',
+        summary: 'Frame e-waste as a systems problem that connects materials, health, infrastructure, and design choices.',
+        robotNote: 'R.U.S.T-01 boots with one instruction: stop valuable materials from becoming toxic liabilities.',
+        heroVariant: 'spotlight',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'Priority', value: 'Environmental Impact' },
-          { label: 'Objective', value: 'Resource Recovery' },
-          { label: 'Status', value: 'Initializing' },
+          { label: 'Priority', value: 'Environmental safety' },
+          { label: 'Operating mode', value: 'Salvage lab' },
+          { label: 'Final output', value: 'Community action plan' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Welcome to the Tech Tidy-Up initiative. Our primary objective is to educate you on the severe environmental and economic impacts of electronic waste.',
-            emphasis: true,
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Through this course, you will develop actionable strategies for responsible device disposal and resource recovery, transforming "junk" back into valuable components.',
-          },
-          {
-            type: 'quote',
-            content:
-              'By the end of this mission, you will have the knowledge to organize and lead e-waste awareness in your own community.',
-            author: 'Command Protocol',
-          },
+          callout('Mission brief', 'This course teaches learners how to identify e-waste, understand its material logic, and turn that knowledge into safer local action.'),
+          p('Electronic waste is one of the fastest-growing waste streams in the world. The problem is not just volume. It is the combination of hazardous substances, rapid obsolescence, weak collection systems, and wasted recoverable materials.'),
+          stats(
+            { label: 'Hazard layer', value: 'Heavy metals', detail: 'Lead, mercury, cadmium, and brominated compounds create direct health risks.' },
+            { label: 'Value layer', value: 'Urban mine', detail: 'Gold, copper, lithium, palladium, and aluminum are already concentrated inside devices.' },
+            { label: 'Skill outcome', value: 'Actionable literacy', detail: 'Learners finish able to sort, explain, and mobilize others.' },
+          ),
+          q('The point is not only to throw less away. The point is to understand the system well enough to intervene in it.', 'Mission protocol'),
         ],
       },
       {
-        id: 'syllabus',
+        id: 'roadmap',
         label: 'Roadmap',
-        title: 'The Recovery Roadmap',
-        summary: 'A breakdown of the three core modules ahead.',
-        robotNote: 'Scanning module structures. 10 chapters identified. Total resource recovery projected at 98%.',
-        accentColor: '#2980b9',
+        navLabel: 'Roadmap',
+        title: 'Three Modules, One Recovery Chain',
+        summary: 'See how the course moves from diagnosis to the 3Rs to real-world action.',
+        robotNote: 'The robot only rebuilds if the work happens in sequence: identify, recover, then organize change.',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Module 1', value: 'The Problem' },
-          { label: 'Module 2', value: 'The 3Rs' },
-          { label: 'Module 3', value: 'Action Plan' },
+          { label: 'Module 1', value: 'Read the waste stream' },
+          { label: 'Module 2', value: 'Extend, reuse, recycle' },
+          { label: 'Module 3', value: 'Act locally' },
         ],
         blocks: [
-          {
-            type: 'numberedList',
-            items: [
-              'Module 1: The E-Waste Problem - Defining the dump, toxic chemicals, and precious metal value.',
-              'Module 2: Reduce, Reuse, Recycle - Strategies for lifecycle extension and industrial recovery methods.',
-              'Module 3: Action for Change - Local resources, community collection drives, and digital citizenship.',
-            ],
-          },
+          timeline(
+            { step: '01', title: 'Map the problem', detail: 'Define e-waste, identify device categories, and understand toxic versus recoverable components.' },
+            { step: '02', title: 'Work the 3Rs', detail: 'Reduce early disposal, reuse working hardware, and understand formal recycling pathways.' },
+            { step: '03', title: 'Build local action', detail: 'Locate certified networks, organize collection drives, and translate policy into public practice.' },
+          ),
+          resources(
+            { label: 'Launch Module 1', href: '/1-1', description: 'Enter the hazard and materials chapters that establish the problem.' },
+            { label: 'Launch Module 2', href: '/2-1', description: 'Move into maintenance, reuse, and industrial recovery decisions.' },
+            { label: 'Launch Module 3', href: '/3-1', description: 'Open the regional map, drive planning, and digital citizenship sequence.' },
+          ),
         ],
       },
       {
         id: 'project',
         label: 'Final Project',
-        title: 'The E-Waste Action Plan',
-        summary: 'Your capstone mission to educate others.',
-        robotNote: 'Final output: A campaign to educate the sector. Format options: Video, Presentation, or Infographic.',
-        accentColor: '#1abc9c',
+        navLabel: 'Project',
+        title: 'The Community Action Build',
+        summary: 'Turn course knowledge into a communication asset or small-scale local campaign.',
+        robotNote: 'The robot is not fully rebuilt until the knowledge leaves the lab and changes behavior outside it.',
+        heroVariant: 'signal',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Format', value: 'Multi-Media' },
-          { label: 'Target', value: 'Peer Network' },
-          { label: 'Goal', value: 'Awareness' },
+          { label: 'Formats', value: 'Video / deck / infographic' },
+          { label: 'Audience', value: 'School, family, neighborhood' },
+          { label: 'Goal', value: 'Safer disposal behavior' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Your final project is the creation of a comprehensive E-Waste Action Plan. This is your chance to take everything you’ve learned and use it to educate your peers.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Identify a specific community target (school, neighborhood, or family).',
-              'Choose your medium: Create a high-impact video, a detailed presentation, or an engaging infographic.',
-              'Focus on proper handling: Teach others how to identify, sort, and dispose of e-waste safely.',
-            ],
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Course Outcome: By mastering these strategies, you will contribute to global resource recovery and protect the ecosystem from toxic electronic pollution.',
-            emphasis: true,
-          },
+          compare(
+            {
+              title: 'Weak awareness campaign',
+              leftLabel: 'Looks like',
+              leftValue: 'Facts only, no clear next step',
+              rightLabel: 'Stronger version',
+              rightValue: 'Specific sorting, drop-off, and action instructions',
+              insight: 'The project should reduce confusion, not just raise concern.',
+            },
+            {
+              title: 'Weak event concept',
+              leftLabel: 'Looks like',
+              leftValue: 'A generic collection drive idea',
+              rightLabel: 'Stronger version',
+              rightValue: 'A drive with partners, bins, outreach, and reporting metrics',
+              insight: 'Treat the final output as an operational plan, not only a poster.',
+            },
+          ),
+          bullets(
+            'Choose a real audience and define the behavior you want to change.',
+            'Explain what counts as e-waste, why informal dumping is dangerous, and what certified recovery looks like.',
+            'Include a practical action layer: where to store, sort, donate, repair, or drop off devices safely.',
+          ),
+          callout('Completion standard', 'A strong final project makes the local recovery chain feel possible, specific, and worth participating in.', 'success', 'Capstone'),
         ],
       },
     ],
@@ -201,150 +289,135 @@ export const chapters: CourseChapter[] = [
   {
     id: '1-1',
     moduleLabel: 'Module 01',
+    navLabel: '1.1',
     title: 'The Digital Dump: Defining E-Waste',
-    strapline: 'Wake the robot and identify what counts as electronic waste before it poisons the yard.',
+    strapline: 'Start with recognition. If people cannot identify the waste stream, they cannot interrupt it.',
     summary:
-      'This chapter frames e-waste as both a hazardous waste stream and a stockpile of reusable materials. It sets the baseline for why careless disposal is dangerous and why recovery matters.',
-    robotStatus: 'Optics cracked, hazard sensors online.',
-    scrapFact: 'Global e-waste keeps rising by roughly 3-4% every year.',
-    accentColor: '#f26b3a',
+      'This chapter introduces e-waste as both a hazard source and a material reserve, then follows its impact from household disposal to global trade routes.',
+    robotStatus: 'Optics repaired. Hazard scan running.',
+    scrapFact: 'Global e-waste generation continues to climb faster than formal recycling capacity.',
+    accentColor: '#ff8b4d',
+    themeKey: 'hazard',
+    layout: 'steps',
+    featuredMetrics: [
+      { label: 'Waste trend', value: '3-4% annual rise', detail: 'Growth is driven by upgrades, obsolescence, and weak return systems.' },
+      { label: 'Core tension', value: 'Toxic + valuable', detail: 'The same device can poison ecosystems and still hold premium materials.' },
+      { label: 'Trade pattern', value: 'Cross-border flow', detail: 'Processing often shifts toward regions with weaker safeguards.' },
+    ],
     assembly: {
       part: 'head',
       title: 'Vision Module',
       schematic: 'Head + optics',
-      summary: 'Learners identify what e-waste is, so the robot earns its eyes, sensor brow, and first live scan.',
-      reward: 'Unlocks toxic-material detection.',
+      summary: 'This chapter gives the robot its first reliable scan of the waste stream.',
+      reward: 'Unlocks contamination and trade-route detection.',
     },
     tabs: [
       {
         id: 'overview',
         label: 'Overview',
-        title: 'The Rise of the Digital Dump',
-        summary:
-          'Define e-waste clearly, then show why discarded electronics are both a toxin source and a material bank.',
-        robotNote: 'RUST-01 flags every broken device as a split identity: threat on the outside, resources on the inside.',
+        navLabel: 'Overview',
+        title: 'The Waste Stream Has a Name',
+        summary: 'Define e-waste precisely and establish why disposal choices matter before recovery begins.',
+        robotNote: 'A cracked phone is never only junk. It is a casing full of chemistry, labor, and value.',
         heroImage: '/images/ewaste_overview_hero.png',
+        heroVariant: 'spotlight',
         readingTime: 3,
-        accentColor: '#f26b3a',
+        accentColor: '#ff8b4d',
         pulses: [
-          { label: 'Growth', value: '3-4% each year' },
-          { label: 'Core tension', value: 'Toxic + valuable' },
-          { label: 'Mission', value: 'Name the waste stream' },
+          { label: 'Definition', value: 'Discarded electronics' },
+          { label: 'Risk', value: 'Leak, burn, contaminate' },
+          { label: 'Opportunity', value: 'Recover and reuse' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Electronic waste, or e-waste, refers to discarded electrical or electronic devices that have reached the end of their useful life or become obsolete. It is one of the fastest-growing waste streams in the world, driven by rapid technological shifts and constant upgrades.',
-            emphasis: true,
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Millions of tonnes of electronics are discarded every year. Many contain hazardous substances such as lead, mercury, cadmium, and chromium, which can leak into soil and water when devices are dumped or broken apart without control.',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'At the same time, e-waste is not just rubbish. Phones, computers, and appliances contain precious metals and rare materials that can be recovered and reused, cutting demand for fresh mining.',
-          },
-          {
-            type: 'quote',
-            content:
-              'E-waste is the fastest-growing domestic waste stream in the world. We are essentially throwing away a gold mine every single day.',
-            author: 'Global E-waste Monitor',
-          },
+          p('Electronic waste includes electrical and electronic devices that are obsolete, broken, or discarded before their materials are safely recovered. That covers everything from chargers and phones to refrigerators and monitors.', true),
+          callout('Why definition matters', 'If households treat electronics like ordinary trash, hazardous substances move into air, soil, and water long before formal recycling can intervene.', 'alert'),
+          stats(
+            { label: 'Toxic substances', value: 'Lead / mercury / cadmium', detail: 'Improper disposal creates persistent contamination pathways.' },
+            { label: 'Material value', value: 'Gold / copper / rare inputs', detail: 'Recovery reduces pressure on virgin mining systems.' },
+            { label: 'Behavior driver', value: 'Upgrade culture', detail: 'Many devices leave use while still technically functional.' },
+          ),
+          q('We are not only throwing away devices. We are throwing away concentrated materials and exporting risk.', 'Global E-waste framing'),
         ],
       },
       {
         id: 'examples',
         label: 'Examples',
-        title: 'From Pocket to Pile',
-        summary:
-          'Map the everyday devices that slide into the e-waste stream and show how normal upgrades create abnormal waste volume.',
-        robotNote: 'The robot’s memory bank is full of dead screens, chargers, printers, mixers, and consoles. Waste starts at home long before the landfill.',
+        navLabel: 'Examples',
+        title: 'From Pocket Gadget to Waste Pile',
+        summary: 'Map the devices that most often enter the stream and the upgrade habits that keep the stream growing.',
+        robotNote: 'The dump begins in ordinary rooms: desks, kitchens, classrooms, repair drawers, and forgotten shelves.',
         heroImage: '/images/ewaste_examples_hero.png',
-        accentColor: '#29a383',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
         pulses: [
           { label: 'Source zones', value: 'Home + office' },
-          { label: 'Common trigger', value: 'Obsolescence' },
-          { label: 'Reality check', value: 'Not always broken' },
+          { label: 'Trigger', value: 'Obsolescence' },
+          { label: 'Reminder', value: 'Not always broken' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'What Is E-Waste?',
-            url: 'https://youtu.be/HQZjouMTH08',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Common electronics that contribute to the e-waste stream come from households, schools, offices, and service industries. They can be grouped by function and scale.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'IT and communication: computers, laptops, monitors, tablets, and smartphones.',
-              'Consumer electronics: televisions, DVD players, gaming consoles, and audio systems.',
-              'Large appliances: refrigerators, washing machines, air conditioners, and ovens.',
-              'Small gadgets: microwaves, toasters, kettles, and hair dryers.',
-              'Office equipment: printers, scanners, fax machines, and photocopiers.',
-            ],
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Many of these items are thrown away because something newer appears, not because the original item has stopped working. Planned obsolescence and status-driven upgrades accelerate the pileup.',
-          },
+          video('What Is E-Waste?', 'https://youtu.be/HQZjouMTH08'),
+          bullets(
+            'IT and communication devices such as phones, laptops, tablets, routers, and monitors.',
+            'Consumer electronics such as televisions, cameras, speakers, and gaming consoles.',
+            'Large and small appliances such as refrigerators, microwaves, kettles, and hair dryers.',
+            'Office equipment such as printers, scanners, photocopiers, and backup hardware.',
+          ),
+          compare(
+            {
+              title: 'Why devices get discarded',
+              leftLabel: 'Common story',
+              leftValue: 'Broken beyond repair',
+              rightLabel: 'More frequent reality',
+              rightValue: 'Still usable but replaced by a newer model',
+              insight: 'Obsolescence pressure is a major driver of e-waste volume.',
+            },
+          ),
         ],
       },
       {
         id: 'impact',
         label: 'Impact',
+        navLabel: 'Impact',
         title: 'Toxic Legacy',
-        summary:
-          'Shift from identification to consequence: what exactly leaks, burns, or accumulates when e-waste is mishandled.',
-        robotNote: 'RUST-01 runs a contamination scan: one bad dump site can push heavy metals into air, water, food, and bodies.',
+        summary: 'Follow the environmental and health consequences of dumping, dismantling, and open burning.',
+        robotNote: 'Once the casing fails, heavy metals do not stay in the pile. They travel.',
         heroImage: '/images/ewaste_impact_hero.png',
+        heroVariant: 'signal',
         readingTime: 4,
-        accentColor: '#d94d3f',
+        accentColor: '#ff5e5e',
         pulses: [
+          { label: 'Exposure', value: 'Air + water + soil' },
           { label: 'Hazard class', value: 'Heavy metals' },
-          { label: 'Failure mode', value: 'Dump or burn' },
-          { label: 'Recovery path', value: 'Urban mining' },
+          { label: 'Safer path', value: 'Formal recovery' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'E-Waste Explained by a Sustainability Expert',
-            url: 'https://youtu.be/_Y2ePj3wr8M',
-            note: 'Watch 0:20 to 1:14.',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Improper e-waste disposal causes lasting environmental damage. When electronics are buried or burned, toxic compounds move into groundwater, soil, and air.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Lead: found in older monitors and solder, linked to neurological damage.',
-              'Mercury: present in some displays, able to bioaccumulate through food chains.',
-              'Cadmium: used in batteries and chips, highly toxic and carcinogenic.',
-              'Brominated flame retardants: found in plastic casings and linked to hormonal disruption.',
-            ],
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Formal recycling and urban mining can recover a large share of the materials inside devices, reducing both pollution and pressure on virgin extraction.',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'hazard-xray',
-            title: 'Hazard X-Ray Scanner',
-          },
+          video('E-Waste Explained by a Sustainability Expert', 'https://youtu.be/_Y2ePj3wr8M', 'Watch 0:20 to 1:14.'),
+          bullets(
+            'Lead from older displays and solder can damage nervous systems and development.',
+            'Mercury and cadmium can move through water and food chains and remain hazardous for long periods.',
+            'Open burning releases toxic fumes and pushes contamination directly into nearby communities.',
+          ),
+          callout('Recovery logic', 'Formal dismantling and urban mining reduce both contamination and demand for fresh extraction.', 'success'),
+        ],
+      },
+      {
+        id: 'global-flow',
+        label: 'Global Flow',
+        navLabel: 'Flow',
+        title: 'The International Trade of E-Waste',
+        summary: 'Trace how discarded electronics move from consumption centers into informal or poorly regulated processing hubs.',
+        robotNote: 'Waste often follows the path of weakest enforcement. That is why trade routes matter as much as bins.',
+        heroVariant: 'atlas',
+        accentColor: '#61b8ff',
+        pulses: [
+          { label: 'Origins', value: 'High-consumption regions' },
+          { label: 'Destinations', value: 'Processing hotspots' },
+          { label: 'Risk mode', value: 'Informal channels' },
+        ],
+        blocks: [
+          p('Cross-border movement is a defining feature of modern e-waste. Some shipments move through legal second-hand channels, but a substantial share still ends up in informal processing systems.'),
+          activity('The Global Flow Map', '/activities/1-1-global-flow.html?embedded=true', 'Trace formal and shadow routes, inspect hotspots, and compare where risk accumulates in the trade network.', 'Open Flow Lab'),
+          q('Where regulation is weak, the environmental cost of convenience is usually paid by someone else.', 'Trade-route note'),
         ],
       },
     ],
@@ -352,96 +425,96 @@ export const chapters: CourseChapter[] = [
   {
     id: '1-2',
     moduleLabel: 'Module 01',
+    navLabel: '1.2',
     title: 'Types and Composition of E-Waste',
-    strapline: 'Open the robot chassis and sort the scrap by category, scale, and material makeup.',
+    strapline: 'Classification turns the pile into a system. Composition turns the system into a recovery map.',
     summary:
-      'This chapter breaks e-waste into classes and compositions so learners can see what kinds of devices exist and what each device is actually made of.',
-    robotStatus: 'Chest plate open, sorting arm responsive.',
-    scrapFact: 'A single electronic device can contain dozens of different elements.',
-    accentColor: '#2f7fbe',
+      'The chapter sorts devices into recognizable groups, then opens them up as layered material assemblies with different value and hazard profiles.',
+    robotStatus: 'Sorting arm stable. Diagnostic visor online.',
+    scrapFact: 'A single device can contain dozens of elements with radically different recovery pathways.',
+    accentColor: '#61b8ff',
+    themeKey: 'diagnostic',
+    layout: 'split',
+    featuredMetrics: [
+      { label: 'Device classes', value: '10 broad groups', detail: 'Classification supports collection, storage, and policy design.' },
+      { label: 'Element span', value: 'Up to 60 elements', detail: 'Phones and laptops are dense material stacks, not simple objects.' },
+      { label: 'Recovery lens', value: 'Bulk / precious / hazardous', detail: 'Material categories shape recycling method and risk.' },
+    ],
     assembly: {
       part: 'torso',
       title: 'Sorting Core',
-      schematic: 'Torso + arms',
-      summary: 'Learners sort devices and decode their material layers, so the robot gets its chest core and repair arms.',
-      reward: 'Unlocks classifying and dismantling mode.',
+      schematic: 'Torso + triage arm',
+      summary: 'This chapter gives the robot a chassis-level understanding of what it is actually handling.',
+      reward: 'Unlocks material-layer diagnostics.',
     },
     tabs: [
       {
         id: 'categories',
         label: 'Categories',
+        navLabel: 'Classes',
         title: 'The 10 Classes of Electronic Waste',
-        summary:
-          'Sort devices by use case so the pile becomes legible instead of chaotic.',
-        robotNote: 'The broken robot can only rebuild if it sorts first. Classification is the first repair tool.',
+        summary: 'Use device classing to support safer collection design and clearer public communication.',
+        robotNote: 'Classification is not academic. It determines what can be stacked, stored, repaired, or dismantled together.',
         heroImage: '/images/ewaste_categories_hero.png',
-        accentColor: '#2f7fbe',
+        heroVariant: 'diagnostic',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'Sorting lens', value: 'Function + scale' },
-          { label: 'Device span', value: 'Appliances to tools' },
-          { label: 'Use case', value: 'Collection systems' },
+          { label: 'System use', value: 'Collection design' },
+          { label: 'Sorting logic', value: 'Function + scale' },
+          { label: 'Outcome', value: 'Less chaos' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'International bodies classify e-waste in slightly different ways, but a common system groups devices by how they are used and where they appear in daily life.',
-          },
-          {
-            type: 'numberedList',
-            items: [
-              'Large household appliances, such as refrigerators and washing machines.',
-              'Small household appliances, such as vacuum cleaners and irons.',
-              'IT and telecommunications equipment, such as computers and phones.',
-              'Consumer equipment, such as televisions and cameras.',
-              'Lighting equipment, such as lamps and LED units.',
-              'Electrical and electronic tools, such as drills and saws.',
-              'Toys, leisure, and sports equipment, such as consoles and gym devices.',
-              'Medical devices, such as ventilators and dialysis machines.',
-              'Monitoring and control instruments, such as smoke detectors and thermostats.',
-              'Automatic dispensers, such as vending machines.',
-            ],
-          },
+          p('International standards vary, but the most useful grouping system sorts electronics by use type and scale. That makes public education, pickup design, and safe storage easier.'),
+          steps(
+            'Large household appliances such as refrigerators and washing machines.',
+            'Small appliances such as irons, vacuum cleaners, and kettles.',
+            'IT and telecom equipment such as laptops, routers, and phones.',
+            'Consumer electronics such as televisions, cameras, and audio gear.',
+            'Lighting units, electrical tools, toys, medical devices, control instruments, and automatic dispensers.',
+          ),
+          callout('Operational benefit', 'When people understand the categories, collection points can separate hazards earlier and reduce damage to recoverable equipment.', 'signal'),
         ],
       },
       {
         id: 'composition',
         label: 'Composition',
+        navLabel: 'Layers',
         title: 'What Is Inside the Scrap?',
-        summary:
-          'Move from the outside shell to the material DNA: bulk matter, precious metals, and toxic compounds.',
-        robotNote: 'Every cracked gadget is a layered inventory sheet. The trick is seeing materials, not just shapes.',
-        accentColor: '#df9d2f',
+        summary: 'Move from category to composition and treat each device like a layered inventory sheet.',
+        robotNote: 'Every shell hides a stack: structure, circuitry, energy storage, rare inputs, and toxic residues.',
+        heroVariant: 'diagnostic',
         readingTime: 5,
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Element count', value: 'Up to 60' },
-          { label: 'Value layer', value: 'Gold and palladium' },
-          { label: 'Risk layer', value: 'Lead and mercury' },
+          { label: 'Bulk layer', value: 'Glass / plastic / aluminum' },
+          { label: 'Value layer', value: 'Gold / silver / palladium' },
+          { label: 'Risk layer', value: 'Lead / mercury / arsenic' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'A single piece of electronic waste can contain up to 60 different elements from the periodic table. Those elements can be grouped into three broad buckets.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Bulk materials, including iron, aluminum, plastics, and glass.',
-              'Precious metals, such as gold, silver, palladium, and platinum.',
-              'Hazardous substances, including lead, mercury, arsenic, and cadmium.',
+          stats(
+            { label: 'Bulk materials', value: 'High volume', detail: 'Iron, aluminum, plastics, and glass dominate physical mass.' },
+            { label: 'Precious metals', value: 'High value', detail: 'Gold, silver, palladium, and platinum drive urban mining economics.' },
+            { label: 'Hazardous inputs', value: 'High risk', detail: 'Heavy metals and flame retardants require controlled handling.' },
+          ),
+          lineChart(
+            'Toxic Load Rises as Global E-Waste Grows',
+            'This trend tracks the size of the global e-waste stream, which matters because every additional wave of discarded electronics carries more lead, mercury, cadmium, and flame-retardant material into the handling system.',
+            ['2010', '2019', '2022', '2030*'],
+            [
+              {
+                label: 'Global e-waste generated',
+                values: [34, 53.6, 62, 82],
+                accentColor: '#61b8ff',
+                detail: 'The higher the waste volume climbs, the larger the pool of toxic components that must be collected, depolluted, and processed safely.',
+                valueSuffix: ' Mt',
+                decimals: 1,
+              },
             ],
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Urban mining recovers these materials with far less energy than conventional extraction. In some cases, recycling electronics is more resource-efficient than digging new ore from the ground.',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'device-autopsy',
-            title: '3D Device Autopsy',
-          },
+            'Source context: ITU and UNITAR report 34 Mt in 2010, 62 Mt in 2022, and a projection of 82 Mt by 2030; WHO reports 53.6 Mt for 2019. The 2030 point is a projection, not an observed value.',
+            'Hazard Scan',
+          ),
+          p('Urban mining works because electronics contain material concentrations that are often richer than natural ore bodies. The challenge is not scarcity of value. It is access, sorting, and safe extraction.'),
+          activity('Inside the Machine: Layer Explorer', '/activities/1-2-layer-explorer.html?embedded=true', 'Peel a smartphone layer by layer and classify the materials hidden inside each component.', 'Open Diagnostic Lab'),
         ],
       },
     ],
@@ -449,91 +522,129 @@ export const chapters: CourseChapter[] = [
   {
     id: '1-3',
     moduleLabel: 'Module 01',
+    navLabel: '1.3',
     title: 'Urban Mining: The Value of Waste',
-    strapline: 'Turn the scrapyard into a resource map and show why the broken robot is worth salvaging.',
+    strapline: 'Once you see the material density inside discarded electronics, the dump starts to look like inventory.',
     summary:
-      'This chapter reframes e-waste from burden to opportunity by focusing on recoverable metals, circular design, and the economic logic of urban mining.',
-    robotStatus: 'Core reactor visible, salvage protocol armed.',
-    scrapFact: 'Old electronics can hold metal concentrations richer than many mined ores.',
-    accentColor: '#3c8f73',
+      'Urban mining reframes e-waste as a resource system: concentrated metals, circular design, and economic value that is currently being lost.',
+    robotStatus: 'Core reactor visible. Recovery math active.',
+    scrapFact: 'Electronics can contain richer metal concentrations than many mined ores.',
+    accentColor: '#2bc1a6',
+    themeKey: 'recovery',
+    layout: 'bento',
+    featuredMetrics: [
+      { label: 'Value signal', value: '$62.5B yearly', detail: 'The global e-waste stream contains massive unrecovered value.' },
+      { label: 'Recovery gap', value: 'Low formal share', detail: 'Much of that value is still lost through informal or absent systems.' },
+      { label: 'Design lesson', value: 'Waste is stock', detail: 'Recovery improves when devices are designed for disassembly.' },
+    ],
     assembly: {
       part: 'mobility',
       title: 'Salvage Drive',
       schematic: 'Legs + wheel base',
-      summary: 'Learners see value in the waste stream, so the robot earns movement and becomes ready to work the yard.',
-      reward: 'Unlocks full salvage deployment.',
+      summary: 'This chapter gives the robot a reason to move: the pile is worth recovering.',
+      reward: 'Unlocks salvage deployment mode.',
     },
     tabs: [
       {
         id: 'metals',
         label: 'Metals',
+        navLabel: 'Metals',
         title: 'Hidden Gold in Everyday Devices',
-        summary:
-          'Show that high-value materials are already concentrated inside the gadgets people throw away.',
-        robotNote: 'The robot looks ruined from the outside, but its circuits still hide premium metals worth recovering.',
-        accentColor: '#df9d2f',
+        summary: 'Treat common electronics like compressed mineral deposits that already exist above ground.',
+        robotNote: 'R.U.S.T-01 sees phones, laptops, and boards as pre-sorted ore with wires attached.',
+        heroVariant: 'spotlight',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Key hook', value: 'Phones as ore' },
-          { label: 'Value signal', value: 'High concentration' },
-          { label: 'Lesson', value: 'Waste is inventory' },
+          { label: 'Hook', value: 'Phones as ore' },
+          { label: 'Reason', value: 'High metal density' },
+          { label: 'Implication', value: 'Waste is inventory' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Modern electronics are concentrated material systems. A tonne of smartphones can contain more gold than a tonne of gold ore, which makes discarded devices economically important as well as environmentally important.',
-            emphasis: true,
-          },
-          {
-            type: 'paragraph',
-            content:
-              'That hidden density of valuable metals is what makes urban mining viable. E-waste is not just something to remove; it is something to process with precision.',
-          },
-          {
-            type: 'quote',
-            content:
-              'The city’s trash stream is often richer than the mine. Recovery begins when we stop treating devices as dead objects.',
-            author: 'Salvage brief',
-          },
+          p('A tonne of smartphones can contain more gold than a tonne of mined gold ore. That is why urban mining matters: the material density is already concentrated by manufacturing.', true),
+          q('Recovery begins when we stop describing electronics as dead objects and start describing them as stored materials.', 'Salvage brief'),
+          compare(
+            {
+              title: 'Extraction logic',
+              leftLabel: 'Traditional mining',
+              leftValue: 'Dig new ore, move massive earth, refine low concentrations',
+              rightLabel: 'Urban mining',
+              rightValue: 'Recover from devices where materials are already concentrated',
+              insight: 'The waste stream can often be a more efficient source than the ground.',
+            },
+          ),
         ],
       },
       {
         id: 'value',
         label: 'Value',
+        navLabel: 'Value',
         title: 'Why Recycled Tech Is Worth Billions',
-        summary:
-          'Connect resource recovery to economics, jobs, and the circular economy so the chapter lands beyond environmental messaging.',
-        robotNote: 'RUST-01 projects the balance sheet: what looks like a dump is also a market, a labor system, and a design problem.',
-        accentColor: '#3c8f73',
+        summary: 'Connect the environmental argument to resource security, jobs, and circular design.',
+        robotNote: 'The scrapyard has a balance sheet. Recovery is ecology plus economics plus labor design.',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Global value', value: '$62.5B yearly' },
-          { label: 'System gap', value: 'Low formal recovery' },
-          { label: 'Design horizon', value: 'Circular economy' },
+          { label: 'Global value', value: '$62.5B / year' },
+          { label: 'System loss', value: 'Under-recovered' },
+          { label: 'Long-term model', value: 'Circular economy' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'The global value of e-waste is estimated at more than $62.5 billion each year, but only a fraction is recovered through formal systems. That means the world is losing both materials and money.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Circular economy: design products so they can be disassembled, repaired, and recovered more easily.',
-              'Resource security: reduce dependence on volatile mining supply chains.',
-              'Job creation: formal recycling creates skilled work in collection, sorting, dismantling, and processing.',
+          bullets(
+            'Formal recycling protects workers while recovering saleable metals and materials.',
+            'Circular design lowers dependence on volatile raw-material supply chains.',
+            'Repairability and disassembly decisions made at design stage determine how much value can be recovered later.',
+          ),
+          lineChart(
+            'Annual Metal Price Motion in the Recovery Market',
+            'Use the selector to compare World Bank annual averages for metals that strongly shape urban-mining economics.',
+            ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+            [
+              {
+                label: 'Gold',
+                values: [1269.2267, 1392.4983, 1770.2542, 1799.6292, 1800.6025, 1942.6658, 2387.7025, 3441.5058],
+                accentColor: '#f3c969',
+                detail: 'Gold remains the headline value metal in dense components such as boards and contacts, even when the physical quantity per device is small.',
+                valuePrefix: '$',
+                valueSuffix: '/toz',
+                decimals: 2,
+              },
+              {
+                label: 'Copper',
+                values: [6529.7983, 6010.145, 6173.7708, 9317.05, 8822.3658, 8490.2908, 9142.14, 9947.305],
+                accentColor: '#ff8b4d',
+                detail: 'Copper is the bulk-recovery workhorse in wires, motors, and boards, so its market swings strongly affect large-volume recovery economics.',
+                valuePrefix: '$',
+                valueSuffix: '/mt',
+                decimals: 2,
+              },
+              {
+                label: 'Silver',
+                values: [15.7137, 16.2176, 20.5366, 25.1646, 21.7944, 23.3986, 28.2692, 39.8047],
+                accentColor: '#9fd6ff',
+                detail: 'Silver matters in contacts and conductive paths, and its rising price still improves the case for formal recovery.',
+                valuePrefix: '$',
+                valueSuffix: '/toz',
+                decimals: 2,
+              },
+              {
+                label: 'Aluminum',
+                values: [2108.475, 1794.4883, 1703.9867, 2472.8483, 2705.0192, 2255.7392, 2419.0167, 2631.6958],
+                accentColor: '#2bc1a6',
+                detail: 'Aluminum is lower-margin than precious metals, but its sheer volume makes it important in large-scale collection and dismantling streams.',
+                valuePrefix: '$',
+                valueSuffix: '/mt',
+                decimals: 2,
+              },
             ],
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Urban mining is strongest when collection, design, and policy work together. Recovery is not just a technical act; it is a systems decision.',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'urban-mine-valuator',
-            title: 'Urban Mine Valuator',
-          },
+            'Source context: World Bank Commodity Price Data (The Pink Sheet), annual nominal averages, historical dataset updated January 6, 2026.',
+            'Market Monitor',
+          ),
+          stats(
+            { label: 'Jobs', value: 'Skilled recovery', detail: 'Collection, triage, dismantling, and materials processing all create formal work.' },
+            { label: 'Security', value: 'Local material stock', detail: 'Recovered metals reduce pressure on imported virgin inputs.' },
+            { label: 'Policy need', value: 'Collection + design + enforcement', detail: 'Value is lost when only one part of the chain is formalized.' },
+          ),
+          activity('Gold Rush Calculator', '/activities/1-3-gold-rush.html?embedded=true', 'Estimate the metals, market value, and environmental savings inside a local device collection.', 'Open Value Lab'),
         ],
       },
     ],
@@ -541,116 +652,103 @@ export const chapters: CourseChapter[] = [
   {
     id: '2-1',
     moduleLabel: 'Module 02',
+    navLabel: '2.1',
     title: 'The First R: Reduce!',
-    strapline: 'Extend the mission life of every component. Maintenance is the ultimate survival protocol.',
+    strapline: 'The cheapest e-waste to manage is the e-waste that never gets created in the first place.',
     summary:
-      'Strategies for device longevity, mindful hardware management, and responsible disposal to minimize the growing e-waste footprint.',
-    robotStatus: 'Durability protocols active. Battery health optimized.',
-    scrapFact: 'Keeping a smartphone for 5 years instead of 2 can reduce its carbon footprint by roughly 50%.',
-    accentColor: '#2ecc71',
+      'This chapter treats reduction as a maintenance discipline: keep devices alive longer, optimize performance, and avoid unnecessary replacement cycles.',
+    robotStatus: 'Durability plating active. Thermal load stable.',
+    scrapFact: 'Extending a phone’s life from two years to five can dramatically lower its lifetime footprint.',
+    accentColor: '#53d18d',
+    themeKey: 'maintenance',
+    layout: 'steps',
+    featuredMetrics: [
+      { label: 'Core principle', value: 'Delay disposal', detail: 'Every extra year of use lowers replacement demand.' },
+      { label: 'User lever', value: 'Maintenance + upgrades', detail: 'Many replacements are preventable with care and minor repairs.' },
+      { label: 'System outcome', value: 'Lower throughput', detail: 'Reducing new purchases shrinks future waste volume upstream.' },
+    ],
     assembly: {
       part: 'torso',
       title: 'Longevity Plating',
-      schematic: 'Reinforced Torso',
-      summary: 'Learners apply maintenance protocols, so the robot gets reinforced plating and heat sinks.',
-      reward: 'Unlocks durability scan.',
+      schematic: 'Reinforced torso shell',
+      summary: 'Reduce gives the robot the discipline to survive longer before re-entering the recovery chain.',
+      reward: 'Unlocks lifecycle extension mode.',
     },
     tabs: [
       {
         id: 'longevity',
         label: 'Longevity',
+        navLabel: 'Care',
         title: 'Extending the Life of Your Devices',
-        summary: 'Physical and habitual strategies to keep hardware running longer.',
-        robotNote: 'R.U.S.T-01 survives on maintenance. A clean circuit is a long-lived circuit.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102318-1.png',
-        accentColor: '#2ecc71',
+        summary: 'Handle physical care as a climate and waste intervention, not just a convenience habit.',
+        robotNote: 'A clean port, healthy battery, and cool operating temperature are anti-waste decisions.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102318-1.png',
+        heroVariant: 'signal',
+        accentColor: '#53d18d',
         pulses: [
-          { label: 'Battery', value: '20-80% rule' },
-          { label: 'Cleaning', value: 'Dust prevention' },
-          { label: 'Protection', value: 'Cases & screens' },
+          { label: 'Battery', value: 'Charge gently' },
+          { label: 'Heat', value: 'Avoid overload' },
+          { label: 'Protection', value: 'Prevent damage' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Strategies for extending the life of devices and resisting unnecessary upgrades include regular physical maintenance and smart usage habits.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Regular Maintenance: Keep devices clean, avoid overheating, and protect them with cases and screen protectors to physically extend lifespan.',
-              'Smart Usage Habits: Avoid intensive continuous use that strains devices. Take breaks and manage workload to prevent overheating and wear.',
-              'Good Charging Practices: Use optimized charging modes, avoid overcharging/unplug when fully charged, and keep battery levels between 20%-80%.',
-            ],
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'lifespan-lab',
-            title: 'Device Lifespan Simulator',
-          },
+          timeline(
+            { step: '01', title: 'Protect the shell', detail: 'Use cases, screen protection, and careful storage to reduce physical damage.' },
+            { step: '02', title: 'Reduce thermal stress', detail: 'Avoid constant overheating, heavy charging strain, and blocked vents.' },
+            { step: '03', title: 'Manage the battery', detail: 'Use optimized charging, avoid deep cycling when possible, and replace degraded batteries before replacing the device.' },
+          ),
+          callout('Reduction mindset', 'Maintenance is not glamorous, but it is one of the highest-impact ways to cut waste before recycling ever begins.', 'success'),
         ],
       },
       {
         id: 'optimization',
         label: 'Optimization',
+        navLabel: 'Optimize',
         title: 'Software & Hardware Upgrades',
-        summary: 'How to keep performance high without replacing the entire unit.',
-        robotNote: 'Don’t scrap the core just because the shell is scratched. Upgrade the internals instead.',
-        accentColor: '#3498db',
+        summary: 'Use targeted upgrades and lighter software habits to delay full replacement.',
+        robotNote: 'Do not scrap a chassis because one module slowed down. Replace the weak link first.',
+        heroVariant: 'diagnostic',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'OS Care', value: 'Mindful updates' },
-          { label: 'Storage', value: 'Clear unused apps' },
-          { label: 'Hardware', value: 'RAM & Battery' },
+          { label: 'Software', value: 'Remove drag' },
+          { label: 'Repair', value: 'Swap weak parts' },
+          { label: 'Upgrade', value: 'RAM / storage / battery' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'E-Waste Explained By A Sustainability Expert',
-            url: 'https://youtu.be/_Y2ePj3wr8M',
-            note: 'Watch 5:41 to 6:23; 6:29 to 6:45; 6:49 to 7:21 for expert 3R strategies.',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Mindful software management and targeted hardware upgrades can breathe new life into older machines.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Mindful Software Updates: Only update software when necessary to avoid overloading hardware; delete unused apps to free memory and improve performance.',
-              'Repair and Upgrade: Repair broken components like screens or batteries, and upgrade parts such as RAM or storage instead of replacing the entire device.',
-            ],
-          },
+          video('E-Waste Explained By A Sustainability Expert', 'https://youtu.be/_Y2ePj3wr8M', 'Watch 5:41 to 7:21 for practical reduce strategies.'),
+          compare(
+            {
+              title: 'Performance drop',
+              leftLabel: 'Default reaction',
+              leftValue: 'Buy a new device',
+              rightLabel: 'Smarter reaction',
+              rightValue: 'Clean storage, update selectively, replace the failing component',
+              insight: 'Optimization often restores usefulness without restarting the full manufacturing cycle.',
+            },
+          ),
         ],
       },
       {
-        id: 'lifestyle',
+        id: 'lifecycle',
         label: 'Lifecycle',
+        navLabel: 'Handover',
         title: 'The Final Handover',
-        summary: 'What to do when a device finally reaches its end-of-life.',
-        robotNote: 'When R.U.S.T-01 finally powers down, every bolt and wire should go back into the cycle.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102318-2.png',
-        accentColor: '#e67e22',
+        summary: 'Know the moment when reduction ends and reuse or formal recycling should take over.',
+        robotNote: 'If the mission cannot continue locally, the device should still leave service through a clean pathway.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102318-2.png',
+        heroVariant: 'signal',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Minimalism', value: 'Digital health' },
-          { label: 'Donation', value: 'Functional reuse' },
-          { label: 'Recycling', value: 'Certified centers' },
+          { label: 'Donate', value: 'If functional' },
+          { label: 'Repair first', value: 'If feasible' },
+          { label: 'Recycle last', value: 'If irrecoverable' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Adopting a sustainable digital lifestyle means knowing when to donate and how to recycle responsibly.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Sustainable Digital Lifestyle: Adopt digital minimalism by limiting unnecessary digital consumption, reducing screen time, and avoiding habitual upgrades.',
-              'Donation and Recycling: Donate functional devices for reuse or recycle responsibly when devices reach end-of-life to reduce waste.',
-            ],
-          },
+          bullets(
+            'Adopt digital minimalism and resist upgrade pressure that is driven by novelty rather than need.',
+            'Donate or transfer functional devices into second-life use before classifying them as waste.',
+            'When useful life genuinely ends, move the device into certified recycling instead of storage limbo or general trash.',
+          ),
+          callout('Decision rule', 'Reduce delays the waste stream. It does not justify hoarding dead devices forever.', 'neutral'),
         ],
       },
     ],
@@ -658,109 +756,104 @@ export const chapters: CourseChapter[] = [
   {
     id: '2-2',
     moduleLabel: 'Module 02',
+    navLabel: '2.2',
     title: 'The Second R: Reuse!',
-    strapline: 'Don’t scrap it—reprogram it. Every dead device is a prototype for something new.',
+    strapline: 'A device does not need to return to its original job to stay useful.',
     summary:
-      'Innovative ways to give old electronic devices a new life through creative repurposing and DIY upcycling.',
-    robotStatus: 'Creative sub-processors online. Aesthetic sensors calibrated.',
-    scrapFact: 'Repurposing electronics can prevent thousands of tons of lead and mercury from entering landfills annually.',
-    accentColor: '#9b59b6',
+      'Reuse reframes old electronics as adaptable tools: security cameras, media stations, creative hardware, and DIY components with second lives.',
+    robotStatus: 'Adaptive chassis active. Creative pathways unlocked.',
+    scrapFact: 'Reuse delays disposal while extracting more value from the energy and materials already invested in a device.',
+    accentColor: '#c17cff',
+    themeKey: 'upcycle',
+    layout: 'bento',
+    featuredMetrics: [
+      { label: 'Reuse logic', value: 'Function shift', detail: 'The second life does not need to match the first one.' },
+      { label: 'Best candidates', value: 'Still-usable hardware', detail: 'Older phones, tablets, laptops, and speakers often retain strong utility.' },
+      { label: 'Skill gain', value: 'Creative salvage', detail: 'Learners practice seeing capability, not just age.' },
+    ],
     assembly: {
       part: 'mobility',
       title: 'Adaptive Chassis',
       schematic: 'Multi-tool limb',
-      summary: 'Learners repurpose old tech, so the robot gets a multi-tool attachment for diverse tasks.',
+      summary: 'Reuse gives the robot new jobs instead of sending it straight to the furnace.',
       reward: 'Unlocks upcycling toolkit.',
     },
     tabs: [
       {
         id: 'smartDevices',
         label: 'Smart Devices',
+        navLabel: 'Phones',
         title: 'Phones & Tablets',
-        summary: 'Turning yesterday’s mobile tech into today’s utility tools.',
-        robotNote: 'A phone with a cracked screen can still see. Use its eyes for security.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102408-3.png',
-        accentColor: '#9b59b6',
+        summary: 'Repurpose mobile hardware as fixed-function tools instead of letting it drift into drawers.',
+        robotNote: 'A phone with a cracked shell can still see, display, stream, measure, and connect.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102408-3.png',
+        heroVariant: 'spotlight',
+        accentColor: '#c17cff',
         pulses: [
-          { label: 'Security', value: 'Cam repurpose' },
-          { label: 'Kitchen', value: 'Digital recipes' },
-          { label: 'Learning', value: 'Kids tools' },
+          { label: 'Security', value: 'Camera reuse' },
+          { label: 'Home utility', value: 'Display station' },
+          { label: 'Learning', value: 'Education device' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Old smartphones and tablets are highly capable computers that can be repurposed for specific home tasks.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Old smartphones can be turned into home security cameras, digital photo frames, or DIY projectors.',
-              'Tablets make excellent digital recipe books, educational tools for kids, or art canvases when mounted or used creatively.',
-            ],
-          },
+          bullets(
+            'Turn older phones into security cameras, timers, media controllers, or digital photo frames.',
+            'Convert tablets into recipe displays, reading devices, study tools, or dedicated art canvases.',
+            'Reuse is strongest when the second-life task is narrow and dependable.',
+          ),
+          callout('Reuse rule', 'Pick jobs that suit the device’s remaining strengths rather than expecting it to perform like a new flagship device.', 'signal'),
         ],
       },
       {
         id: 'computing',
         label: 'Computing',
+        navLabel: 'Laptops',
         title: 'Laptops & Infrastructure',
-        summary: 'Repurposing heavier hardware for specialized server and media tasks.',
-        robotNote: 'Old laptops have built-in UPS (batteries) and screens. They make perfect dedicated stations.',
-        accentColor: '#3498db',
+        summary: 'Use older computing hardware as dedicated stations instead of all-purpose daily machines.',
+        robotNote: 'Old laptops already contain a screen, keyboard, and backup battery. That makes them excellent fixed-function terminals.',
+        heroVariant: 'diagnostic',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'Media', value: 'Home center' },
-          { label: 'Gaming', value: 'Retro console' },
-          { label: 'Network', value: 'Internet radio' },
+          { label: 'Media', value: 'Playback station' },
+          { label: 'Server use', value: 'Dedicated node' },
+          { label: 'Network', value: 'Router hacks' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Laptops and routers often have years of life left in them if used as dedicated devices.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Old laptops can be repurposed as media centers, retro gaming consoles, digital signage, or dedicated music stations.',
-              'Wireless routers can be modified into internet radios.',
-            ],
-          },
+          compare(
+            {
+              title: 'Old laptop strategy',
+              leftLabel: 'Bad fit',
+              leftValue: 'Expect it to replace a modern workstation',
+              rightLabel: 'Good fit',
+              rightValue: 'Assign one role such as media center, signage, archive, or retro console',
+              insight: 'Dedicated use extends relevance without demanding top performance.',
+            },
+          ),
+          bullets(
+            'Reuse heavier hardware as home media units, offline archives, school kiosks, signage, or low-intensity lab terminals.',
+            'Older routers and audio hardware can still serve in niche networking and radio roles.',
+          ),
         ],
       },
       {
         id: 'artistic',
         label: 'Artistic Upcycling',
+        navLabel: 'Art',
         title: 'Tech to Art',
-        summary: 'Using the physical components of electronics for aesthetic and functional decor.',
-        robotNote: 'The beauty of a circuit board isn’t just in its logic, but in its geometry.',
-        accentColor: '#e74c3c',
+        summary: 'Use the physical material language of electronics in design, decor, and DIY projects.',
+        robotNote: 'Circuit boards do not lose their geometry when they lose their software.',
+        heroVariant: 'signal',
+        accentColor: '#ff6f61',
         pulses: [
-          { label: 'Jewelry', value: 'Circuit boards' },
-          { label: 'Furniture', value: 'CRT pet beds' },
-          { label: 'Gardening', value: 'Speaker planters' },
+          { label: 'Circuit art', value: 'Jewelry + decor' },
+          { label: 'Furniture', value: 'CRT repurpose' },
+          { label: 'DIY culture', value: 'Visible salvage' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Creative reuse and upcycling approaches reduce e-waste, encourage sustainability, and allow for fun DIY projects.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Circuit boards and keyboard keys can be reused for art, jewelry, clocks, or decorative pieces.',
-              'CRT monitors can become fish tanks or pet beds after careful dismantling.',
-              'Broken speakers can be upcycled into planters, and floppy disks can be reused as retro notebook covers.',
-            ],
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'upcycle-forge',
-            title: 'Upcycle Forge',
-          },
+          bullets(
+            'Turn circuit boards and keyboard keys into framed art, clocks, jewelry, or decorative objects.',
+            'Reuse large casings carefully in furniture or planter projects after safe dismantling.',
+            'Treat artistic reuse as a gateway habit that helps learners see discarded hardware as designed material, not only waste.',
+          ),
         ],
       },
     ],
@@ -768,120 +861,95 @@ export const chapters: CourseChapter[] = [
   {
     id: '2-3',
     moduleLabel: 'Module 02',
+    navLabel: '2.3',
     title: 'The Third R: Recycle!',
-    strapline: 'Complete the loop. Melt the past to forge the future.',
+    strapline: 'When reuse ends, controlled recovery begins. Recycling is industrial precision, not symbolic disposal.',
     summary:
-      'The industrial process for recycling e-waste: safely recovering valuable materials through sorting, shredding, and smelting.',
-    robotStatus: 'Recycling protocols engaged. Material recovery optimized.',
-    scrapFact: 'Smelting e-waste at 1200°C allows for nearly 100% recovery of copper and precious metals.',
-    accentColor: '#e74c3c',
+      'The chapter follows e-waste through formal recycling systems and adds a decision lab that helps learners sort scenarios into reduce, reuse, or recycle pathways.',
+    robotStatus: 'Recovery furnace primed. Separation systems active.',
+    scrapFact: 'Controlled separation and refining can recover large shares of copper and precious metals while containing toxic residues.',
+    accentColor: '#ff6f61',
+    themeKey: 'recycling',
+    layout: 'dashboard',
+    featuredMetrics: [
+      { label: 'System path', value: 'Sort → shred → separate → refine', detail: 'Formal recycling is a chain, not a single act.' },
+      { label: 'Critical filter', value: 'Remove hazards early', detail: 'Batteries and toxic components must leave the stream before bulk processing.' },
+      { label: 'Decision skill', value: 'Pick the right R', detail: 'Not every device should go straight to the recycler.' },
+    ],
     assembly: {
       part: 'mobility',
       title: 'Recycling Core',
-      schematic: 'Smelting Unit',
-      summary: 'Learners master industrial recycling, so the robot earns its high-temperature recovery core.',
-      reward: 'Unlocks material separation mode.',
+      schematic: 'Smelting and separation unit',
+      summary: 'This chapter gives the robot its formal end-of-life processing logic.',
+      reward: 'Unlocks lifecycle decision lab.',
     },
     tabs: [
       {
         id: 'process',
         label: 'Process',
+        navLabel: 'Process',
         title: 'Safe Disposal Methods',
-        summary: 'The journey of e-waste through modern recycling facilities.',
-        robotNote: 'The shredder is the start of a second life. Everything is sorted before it’s reborn.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102449-4.png',
-        accentColor: '#e67e22',
+        summary: 'Track the industrial chain that turns mixed electronic scrap into separated material streams.',
+        robotNote: 'Formal recycling starts with triage. If hazardous items stay mixed in, the whole chain gets dirtier and more dangerous.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102449-4.png',
+        heroVariant: 'signal',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Temp', value: '1200°C furnace' },
-          { label: 'Sorting', value: 'Manual + Mech' },
-          { label: 'Output', value: 'Resale metals' },
+          { label: 'Front end', value: 'Collection + sorting' },
+          { label: 'Middle', value: 'Dismantle + shred' },
+          { label: 'Back end', value: 'Separate + refine' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'I went down a rabbit hole trying to recycle all my tech waste',
-            url: 'https://youtu.be/i03W6cdnlx8',
-            note: 'Watch 1:32 to 2:09 and 5:00 to 14:25 for a deep dive into the recycling process.',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'The industrial process for recycling e-waste involves several key steps to safely recover valuable materials through smelting and separation.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Collection and Sorting: E-waste is collected then manually sorted to remove hazardous items like batteries. Reusable components are separated early.',
-              'Dismantling and Shredding: Devices are dismantled; remaining e-waste is shredded into small pieces to facilitate material separation.',
-              'Mechanical Separation: Magnetic separation extracts ferrous metals. Eddy current separation sorts copper and aluminum. Water separation distinguishes plastics.',
-            ],
-          },
+          video('I went down a rabbit hole trying to recycle all my tech waste', 'https://youtu.be/i03W6cdnlx8', 'Watch 1:32 to 2:09 and 5:00 to 14:25.'),
+          timeline(
+            { step: '01', title: 'Collect and triage', detail: 'Remove batteries, reusable parts, and hazardous items before bulk processing.' },
+            { step: '02', title: 'Dismantle and shred', detail: 'Break devices into fractions that mechanical systems can actually separate.' },
+            { step: '03', title: 'Separate the streams', detail: 'Use magnetic, eddy-current, density, and manual techniques to isolate materials.' },
+          ),
+          activity('Lifecycle Decision Lab', '/activities/2-3-lifecycle-lab.html?embedded=true', 'Sort realistic device scenarios into Reduce, Reuse, or Recycle and see the environmental and value impact of your choices.', 'Open Lifecycle Lab'),
         ],
       },
       {
         id: 'smelting',
         label: 'Smelting',
+        navLabel: 'Smelting',
         title: 'High-Temp Refining',
-        summary: 'Recovering pure metals from complex electronic scrap.',
-        robotNote: 'Fire is the final purifier. Molten gold flows while the slag burns away.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102449-5.jpeg',
-        accentColor: '#c0392b',
+        summary: 'Understand how mixed metal fractions become purified, market-ready outputs.',
+        robotNote: 'The furnace is not the whole story. It only works because earlier sorting prevented the worst contamination from entering blindly.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102449-5.jpeg',
+        heroVariant: 'spotlight',
+        accentColor: '#ff6f61',
         pulses: [
-          { label: 'Furnace', value: '1200°C' },
-          { label: 'Separation', value: 'Slag vs Metal' },
-          { label: 'Purity', value: 'Electrolysis' },
+          { label: 'Heat', value: '1200°C' },
+          { label: 'Split', value: 'Metal vs slag' },
+          { label: 'Refining', value: 'Purity upgrades' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Smelting and Refining: Metal fractions are melted at high temperatures in furnaces. Plastics burn off as slag on top, while metals like copper settle below.',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'The molten metal is refined in converters to remove impurities. Precious metals like gold and silver are isolated through electrolysis and chemical processes.',
-          },
+          p('High-temperature processing separates recoverable metals from other fractions. Copper-rich material settles while lighter residues form slag and gases that must be controlled.'),
+          p('Final purity often depends on downstream electrolysis and chemical refining, especially for precious metals such as gold and silver.'),
         ],
       },
       {
         id: 'recovery',
         label: 'Recovery',
+        navLabel: 'Recovery',
         title: 'Circular Economy & SDGs',
-        summary: 'Final output and environmental protection protocols.',
-        robotNote: 'Closing the loop is the ultimate goal. Every atom back in its place.',
-        accentColor: '#16a085',
+        summary: 'Connect recycling outputs to broader environmental protection and responsible production goals.',
+        robotNote: 'The loop only closes if recovered materials return to production instead of disappearing into weak markets or unsafe dumping.',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Metals', value: 'Resale quality' },
-          { label: 'Plastics', value: 'Pelletized' },
-          { label: 'Byproducts', value: 'Safely captured' },
+          { label: 'Outputs', value: 'Metals + plastics' },
+          { label: 'Protection', value: 'Captured toxins' },
+          { label: 'Goal', value: 'Closed loops' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'This multi-stage process ensures toxic components are safely managed and valuable metals are efficiently recovered, supporting environmental protection.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Material Recovery: Refined metals meet purity standards for resale or reuse in manufacturing.',
-              'Plastics: Cleaned and pelletized for recycling.',
-              'Hazardous Management: Toxic byproducts like cadmium are captured to avoid environmental contamination.',
-            ],
-          },
-          {
-            type: 'quote',
-            content:
-              'Formal recycling and urban mining are critical to achieving the UN Sustainable Development Goals (SDGs) for responsible consumption and production.',
-            author: 'Global E-waste Monitor',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'smelter-pipeline',
-            title: 'Recycling Smelter Pipeline',
-          },
+          bullets(
+            'Recovered metals re-enter manufacturing when purity standards and collection economics align.',
+            'Cleaned plastics can be pelletized and reused in selected applications.',
+            'Toxic residues must be contained so that recycling does not simply become another form of pollution transfer.',
+          ),
+          q('Formal recycling and urban mining are critical to responsible consumption because they convert disposal into a controlled material loop.', 'Global E-waste framing'),
         ],
       },
     ],
@@ -889,112 +957,95 @@ export const chapters: CourseChapter[] = [
   {
     id: '3-1',
     moduleLabel: 'Module 03',
+    navLabel: '3.1',
     title: 'Mapping Local Resources',
-    strapline: 'Locate the nearest salvage node. The yard is only as clean as your last drop-off.',
+    strapline: 'Knowledge becomes useful when learners can point to an actual drop-off, partner, or collection node nearby.',
     summary:
-      'Practical ways to find certified local e-waste collection sites, authorized recyclers, and community collection events.',
-    robotStatus: 'Satellite uplink active. Local coordinates acquired.',
-    scrapFact: 'There are over 100 authorized e-waste recyclers in Rajasthan alone, providing professional salvage services.',
-    accentColor: '#3498db',
+      'This chapter turns regional e-waste infrastructure into a practical dashboard: directories, events, and the Rajasthan map feed.',
+    robotStatus: 'Mapping uplink locked. Regional scan active.',
+    scrapFact: 'A trusted drop-off network is one of the biggest gaps between awareness and action.',
+    accentColor: '#61b8ff',
+    themeKey: 'mapping',
+    layout: 'dashboard',
+    featuredMetrics: [
+      { label: 'User need', value: 'Specific destinations', detail: 'People dispose safely when they know exactly where and how.' },
+      { label: 'Regional lens', value: 'Rajasthan focus', detail: 'The chapter keeps local examples visible instead of generic.' },
+      { label: 'Action bridge', value: 'Map + contact + timing', detail: 'Awareness must convert into a reachable route.' },
+    ],
     assembly: {
       part: 'head',
       title: 'Mapping Uplink',
-      schematic: 'Advanced Sensor Array',
-      summary: 'Learners find local drop-off points, so the robot earns a high-gain antenna and GPS module.',
-      reward: 'Unlocks local facility lookup.',
+      schematic: 'Sensor mast + GPS stack',
+      summary: 'This chapter gives the robot a local map instead of a global abstraction.',
+      reward: 'Unlocks facility lookup and event planning context.',
     },
     tabs: [
       {
         id: 'directories',
         label: 'Directories',
+        navLabel: 'Directories',
         title: 'Authorized Recyclers',
-        summary: 'How to use service platforms and government lists to find trusted recyclers.',
-        robotNote: 'Don’t just dump the scrap in any yard. Use the authenticated map to find official processing zones.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102537-6.png',
-        accentColor: '#3498db',
+        summary: 'Use public databases and service directories to find facilities that are actually certified.',
+        robotNote: 'The nearest option is not automatically the safest option. Authentication matters.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102537-6.png',
+        heroVariant: 'atlas',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'Network', value: 'Authorized only' },
-          { label: 'Tools', value: 'Justdial & Official Lists' },
-          { label: 'Region', value: 'Rajasthan focus' },
+          { label: 'Filter', value: 'Authorized only' },
+          { label: 'Sources', value: 'Directories + govt lists' },
+          { label: 'Need', value: 'Verification' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'To find certified local e-waste collection sites and authorized recyclers, you can use local directories and official government databases to ensure safe disposal.',
-            emphasis: true,
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Service Platforms: Use platforms like Justdial to find certified recyclers such as ETCO E-Waste Recycler or Refresh Technology in Jaipur offering authorized pick-up.',
-              'Government Lists: Check environmental department websites (like the Rajasthan Environment Department) for updated lists of authorized dismantlers and refurbishers.',
-            ],
-          },
+          resources(
+            { label: 'Justdial recycler search', href: 'https://www.justdial.com', description: 'Use regional searches to locate pickup and authorized recycler listings.', external: true },
+            { label: 'Rajasthan environment resources', href: 'https://environment.rajasthan.gov.in/', description: 'Check official networks and environmental references where available.', external: true },
+            { label: 'Refresh local facility list', href: 'https://chirayumishra24.github.io/Map/rajasthan-ewaste-map.html', description: 'Open the linked map feed for a fast Rajasthan scan.', external: true },
+          ),
+          callout('Verification rule', 'Before disposal, confirm certification, accepted device categories, and whether batteries or data-bearing devices need special handling.', 'alert'),
         ],
       },
       {
         id: 'events',
         label: 'Events',
+        navLabel: 'Events',
         title: 'Drives & Drop-offs',
-        summary: 'Participating in local campaigns and municipal disposal programs.',
-        robotNote: 'October 14th is International E-Waste Day. It’s the peak maintenance window for the whole yard.',
-        accentColor: '#e67e22',
+        summary: 'Use seasonal campaigns and municipal points to lower the friction of safe disposal.',
+        robotNote: 'A collection drive is strongest when timing, signage, and partner credibility all align.',
+        heroVariant: 'signal',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Event', value: 'Oct 14th E-Waste Day' },
-          { label: 'Drop-off', value: 'Municipal facilities' },
-          { label: 'Awareness', value: 'Regional campaigns' },
+          { label: 'Peak date', value: 'Oct 14' },
+          { label: 'Sites', value: 'Municipal + school' },
+          { label: 'Function', value: 'Convenience + awareness' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Beyond permanent facilities, community drives and seasonal events offer convenient ways to dispose of small gadgets responsibly while raising awareness.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Collection Drives: Look for events promoted around International E-Waste Day (October 14th) for convenient regional drop-off locations.',
-              'Municipal Points: Contact local waste management authorities for permanent drop-off points at solid waste facilities or large electronic stores.',
-            ],
-          },
+          timeline(
+            { step: '01', title: 'Watch seasonal campaigns', detail: 'International E-Waste Day and local civic drives create visible drop-off windows.' },
+            { step: '02', title: 'Confirm accepted materials', detail: 'Different drives may separate batteries, cables, large appliances, and data-bearing devices.' },
+            { step: '03', title: 'Publicize clearly', detail: 'Participation rises when people know where, when, and what to bring.' },
+          ),
         ],
       },
       {
         id: 'interactive',
         label: 'Map Feed',
+        navLabel: 'Map',
         title: 'Interactive Resource Map',
-        summary: 'Live feed of authorized recyclers and dismantlers in the Rajasthan region.',
-        robotNote: 'The map feed is live. Every blue dot is a potential portal for material recovery.',
-        accentColor: '#27ae60',
+        summary: 'Use the Rajasthan map feed as a practical interface for regional action.',
+        robotNote: 'A blue dot on a map is only useful if the learner understands what kind of facility it represents.',
+        heroVariant: 'atlas',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Map Link', value: 'Rajasthan authorized' },
-          { label: 'Category', value: 'Recycler/Dismantler' },
-          { label: 'Status', value: 'Certified' },
+          { label: 'Region', value: 'Rajasthan' },
+          { label: 'Nodes', value: 'Recycler / dismantler' },
+          { label: 'Use', value: 'Nearest certified route' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Use the interactive Rajasthan E-Waste Map to find the nearest authorized recycler, dismantler, or refurbisher in your area.',
-            emphasis: true,
-          },
-          {
-            type: 'quote',
-            content:
-              'Always confirm the certification and environmental compliance of collection points before disposal. Trusted facilities ensure proper resource recovery.',
-            author: 'Disposal Protocol',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Access the authorized network feed here: https://chirayumishra24.github.io/Map/rajasthan-ewaste-map.html',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'recycler-radar',
-            title: 'Recycler Radar',
-          },
+          p('The map feed gives the chapter a live operational layer. Use it to compare distance, facility type, and local feasibility before recommending a disposal path.'),
+          resources(
+            { label: 'Open Rajasthan map feed', href: 'https://chirayumishra24.github.io/Map/rajasthan-ewaste-map.html', description: 'Browse authorized nodes and identify the nearest practical option.', external: true },
+          ),
+          q('Local trust matters. Safe disposal starts when the last mile is visible and verified.', 'Disposal protocol'),
         ],
       },
     ],
@@ -1002,120 +1053,97 @@ export const chapters: CourseChapter[] = [
   {
     id: '3-2',
     moduleLabel: 'Module 03',
+    navLabel: '3.2',
     title: 'The E-Waste Action Plan',
-    strapline: 'Assemble your crew. It’s time to scale the salvage operations to the whole sector.',
+    strapline: 'Awareness scales when logistics are real. This chapter turns concern into an executable community drive.',
     summary:
-      'A concrete step-by-step blueprint for organizing e-waste collection drives in schools and communities.',
-    robotStatus: 'Social protocols initialized. Community outreach sequence starting.',
-    scrapFact: 'A single community drive can divert over 5,000kg of e-waste from landfills in just one weekend.',
-    accentColor: '#9b59b6',
+      'The action plan chapter is a practical operations playbook for planning, running, and reporting an e-waste collection drive.',
+    robotStatus: 'Command lattice active. Outreach channels open.',
+    scrapFact: 'A well-run local drive can divert large amounts of waste in a very short time if the logistics are clear.',
+    accentColor: '#c17cff',
+    themeKey: 'action',
+    layout: 'steps',
+    featuredMetrics: [
+      { label: 'Planning lens', value: 'Before / during / after', detail: 'Strong drives are structured in phases, not improvised on the day.' },
+      { label: 'Critical inputs', value: 'Bins + partner + messaging', detail: 'Collection quality depends on operational design.' },
+      { label: 'Proof of impact', value: 'Metrics matter', detail: 'Reporting is how a one-time event becomes a repeatable program.' },
+    ],
     assembly: {
       part: 'torso',
       title: 'Command Module',
-      schematic: 'Multi-Terminal Hub',
-      summary: 'The robot gains a central command unit to coordinate multiple salvage drones (volunteers).',
-      reward: 'Unlocks community drive blueprint.',
+      schematic: 'Coordination hub',
+      summary: 'This chapter gives the robot the ability to coordinate people, not just materials.',
+      reward: 'Unlocks drive-planning simulator.',
     },
     tabs: [
       {
         id: 'prep',
         label: 'Preparation',
+        navLabel: 'Prep',
         title: 'Phase 1: Intel & Outreach',
-        summary: 'Planning, research, and raising awareness before the collection begins.',
-        robotNote: 'Intel is key. Research local protocols and partner with certified scrap-processing titans.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507103816-1.png',
-        accentColor: '#9b59b6',
+        summary: 'Define the purpose, partner network, and communications before the first item is collected.',
+        robotNote: 'A drive fails early when the partner, rules, or message are fuzzy.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507103816-1.png',
+        heroVariant: 'signal',
+        accentColor: '#c17cff',
         pulses: [
-          { label: 'Intel', value: 'Local Regs' },
-          { label: 'Network', value: 'Certified Partners' },
-          { label: 'Outreach', value: 'Flyers & Social' },
+          { label: 'Research', value: 'Local regulations' },
+          { label: 'Partner', value: 'Certified recycler' },
+          { label: 'Outreach', value: 'Clear message' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'Managing E-Waste',
-            url: 'https://youtu.be/dGxU4w1MDco',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Organizing a successful drive starts with clear goals and strong partnerships. You must identify your purpose and partner with certified management companies.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Planning: Identify your goals and research local regulations for hazardous waste handling.',
-              'Promotion: Create engaging materials explaining e-waste hazards to educate your participants.',
-              'Workshops: Organize pre-event presentations to build momentum before the collection day.',
-            ],
-          },
+          video('Managing E-Waste', 'https://youtu.be/dGxU4w1MDco'),
+          timeline(
+            { step: '01', title: 'Set the objective', detail: 'Choose the audience, the waste categories, and the event scope.' },
+            { step: '02', title: 'Secure the recycler', detail: 'Confirm pickup, accepted materials, and compliance needs before promotion begins.' },
+            { step: '03', title: 'Build awareness', detail: 'Use flyers, announcements, workshops, and short explainers to make the drive feel concrete.' },
+          ),
         ],
       },
       {
         id: 'execution',
         label: 'Execution',
+        navLabel: 'Run Day',
         title: 'Phase 2: The Collection',
-        summary: 'Setting up the drop-off zone and executing the drive safely.',
-        robotNote: 'Location matters. A high-traffic sector ensures maximum scrap intake.',
-        accentColor: '#e74c3c',
+        summary: 'Run the drop-off day like an operations system: layout, flow, labeling, staff, and storage.',
+        robotNote: 'Good logistics reduce contamination, queues, confusion, and damage to salvageable items.',
+        heroVariant: 'signal',
+        accentColor: '#ff6f61',
         pulses: [
-          { label: 'Zone', value: 'Accessible Site' },
-          { label: 'Sorting', value: 'Categorized Bins' },
-          { label: 'Crew', value: 'Volunteer Staff' },
+          { label: 'Site', value: 'Accessible + visible' },
+          { label: 'Sorting', value: 'Category bins' },
+          { label: 'Crew', value: 'Trained volunteers' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Success depends on a smooth drop-off experience. Ensure your site is accessible and your bins are clearly categorized for different waste types.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Collection Setup: Arrange safe bins for specific types (batteries, electronics, cords) at a convenient location.',
-              'Site Execution: Staff the site with volunteers to assist participants and maintain accurate intake records.',
-              'Safe Storage: Ensure all collected items are stored securely for transport to the processing facility.',
-            ],
-          },
+          bullets(
+            'Choose a high-traffic, easy-to-find site with enough space for intake and temporary storage.',
+            'Separate waste categories clearly so batteries, small devices, and cables do not become one mixed pile.',
+            'Assign volunteers to greeting, sorting, queue flow, and intake logging.',
+          ),
+          activity('Collection Drive Planner', '/activities/3-2-drive-planner.html?embedded=true', 'Assemble a collection site, partner, outreach channel, and staffing plan until the drive reaches launch readiness.', 'Open Planning Console'),
         ],
       },
       {
         id: 'impact',
         label: 'Impact',
+        navLabel: 'Aftermath',
         title: 'Phase 3: Post-Drive Metrics',
-        summary: 'Reporting results and fostering ongoing engagement.',
-        robotNote: 'Every kg diverted is a victory for the sector. Share the stats to boost morale for the next cycle.',
-        accentColor: '#27ae60',
+        summary: 'Process the material, report the results, and turn one event into a repeatable local habit.',
+        robotNote: 'Without reporting, a drive becomes a memory instead of a model.',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Processing', value: 'Recycler Coord' },
-          { label: 'Metrics', value: 'Impact Stats' },
-          { label: 'Engagement', value: 'Sustained Action' },
+          { label: 'Transport', value: 'Recycler handoff' },
+          { label: 'Reporting', value: 'Impact metrics' },
+          { label: 'Future cycle', value: 'Repeatable plan' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'The drive doesn’t end when the bins are full. Processing the waste and reporting the impact ensures long-term community commitment.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Data Processing: Calculate the total waste diverted from landfills and coordinate final transport with the recycler.',
-              'Feedback: Share the impact results via social media or reports to thank your volunteers and partners.',
-              'Sustained Change: Plan regular annual drives to create a permanent culture of responsible disposal.',
-            ],
-          },
-          {
-            type: 'quote',
-            content:
-              'This structured plan empowers schools and local groups to make a tangible environmental difference, fostering responsible consumption.',
-            author: 'Action Lead',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'drive-simulator',
-            title: 'Collection Drive Simulator',
-          },
+          stats(
+            { label: 'Diversion total', value: 'kg collected', detail: 'The clearest metric for landfill avoidance and community participation.' },
+            { label: 'Participation', value: 'People or households', detail: 'Shows whether outreach worked beyond the core volunteer circle.' },
+            { label: 'Continuity', value: 'Next date / next partner step', detail: 'Locks the event into a longer-term local rhythm.' },
+          ),
+          q('A drive becomes culture when the community can see what changed and what happens next.', 'Action lead'),
         ],
       },
     ],
@@ -1123,120 +1151,101 @@ export const chapters: CourseChapter[] = [
   {
     id: '3-3',
     moduleLabel: 'Module 03',
+    navLabel: '3.3',
     title: 'Digital Citizenship',
-    strapline: 'Secure your data stream. A responsible user protects both the planet and their digital ghost.',
+    strapline: 'Responsible tech use is not only about devices. It is also about the data habits that surround them.',
     summary:
-      'Mindful digital habits to lower your personal data footprint, enhance security, and become a responsible participant in the tech ecosystem.',
-    robotStatus: 'Firewall active. Data encryption protocols engaged.',
-    scrapFact: 'Every unused account and uncleaned cache is "digital e-waste"—consuming server energy and increasing your vulnerability.',
-    accentColor: '#16a085',
+      'This chapter frames digital citizenship as privacy, account hygiene, and responsible participation that reduces risk and needless digital overhead.',
+    robotStatus: 'Privacy shield deployed. Data ports hardened.',
+    scrapFact: 'Unused accounts, excessive cloud clutter, and weak security habits all create hidden operational waste.',
+    accentColor: '#2bc1a6',
+    themeKey: 'privacy',
+    layout: 'split',
+    featuredMetrics: [
+      { label: 'Privacy baseline', value: '2FA + strong passwords', detail: 'Simple controls prevent large classes of account compromise.' },
+      { label: 'Data hygiene', value: 'Delete what you do not need', detail: 'Unused accounts and clutter expand risk without adding value.' },
+      { label: 'Citizen role', value: 'Mindful participation', detail: 'Responsible users lower both exposure and wasteful digital behavior.' },
+    ],
     assembly: {
       part: 'mobility',
       title: 'Encryption Shield',
-      schematic: 'Hardened Logic Gates',
-      summary: 'The robot gains specialized shielding to protect its core data from external interference.',
-      reward: 'Unlocks privacy protocols.',
+      schematic: 'Hardened logic gates',
+      summary: 'Digital citizenship gives the robot a shield for the data layer around the hardware story.',
+      reward: 'Unlocks privacy control checklist.',
     },
     tabs: [
       {
         id: 'security',
         label: 'Privacy',
+        navLabel: 'Privacy',
         title: 'Hardening Your Digital Defenses',
-        summary: 'Essential settings and tools for protecting your personal information.',
-        robotNote: 'Tighten your privacy ports. A leak in the data stream is a vulnerability in the whole system.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104024-2.png',
-        accentColor: '#16a085',
+        summary: 'Treat basic security settings as part of responsible technology use.',
+        robotNote: 'A device that is physically maintained but digitally exposed is still vulnerable.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104024-2.png',
+        heroVariant: 'diagnostic',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Defense', value: '2FA Enabled' },
-          { label: 'Privacy', value: 'Settings Tightened' },
-          { label: 'Sharing', value: 'Selective Only' },
+          { label: 'Defense', value: '2FA' },
+          { label: 'Visibility', value: 'Privacy settings' },
+          { label: 'Discipline', value: 'Selective sharing' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'Digital Footprint & Security',
-            url: 'https://youtu.be/8pkv_T0a80g',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Being a responsible tech user starts with securing your own data. This reduces the energy consumption of data centers and protects your identity from digital pollution.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Selective Sharing: Be selective with personal info online. Avoid oversharing address or phone details unless necessary.',
-              'Privacy Settings: Regularly review and tighten privacy settings on social media platforms to limit profile visibility.',
-              'Authentication: Use strong, unique passwords for all accounts and enable two-factor authentication for added security.',
-            ],
-          },
+          video('Digital Footprint & Security', 'https://youtu.be/8pkv_T0a80g'),
+          bullets(
+            'Use strong, unique passwords and enable two-factor authentication on core accounts.',
+            'Review privacy settings regularly instead of accepting broad default exposure.',
+            'Share personal information only when there is a clear reason and trusted context.',
+          ),
         ],
       },
       {
         id: 'footprint',
         label: 'Footprint',
+        navLabel: 'Footprint',
         title: 'Minimizing Your Data Trace',
-        summary: 'Mindful habits to reduce the amount of tracked data you leave behind.',
-        robotNote: 'Delete the ghosts of unused accounts. Every byte saved is power preserved.',
-        accentColor: '#34495e',
+        summary: 'Reduce unnecessary data accumulation the same way you reduce unnecessary hardware churn.',
+        robotNote: 'Digital clutter is not harmless just because it is invisible.',
+        heroVariant: 'signal',
+        accentColor: '#7e8fa3',
         pulses: [
-          { label: 'Trace', value: 'Cookies Cleared' },
-          { label: 'Tunnel', value: 'VPN Active' },
-          { label: 'Ghosts', value: 'Accounts Deleted' },
+          { label: 'Trace', value: 'Cookies + cache' },
+          { label: 'Accounts', value: 'Delete unused' },
+          { label: 'Network', value: 'Secure connections' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'Your digital footprint is more than just social media. It includes every cookie, cache file, and unused account that consumes server resources.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Account Maintenance: Delete or deactivate unused online accounts to reduce data exposure and server energy load.',
-              'Connection Security: Use virtual private networks (VPNs) when browsing on public Wi-Fi to encrypt your connection.',
-              'Data Hygiene: Clear cookies, cache, and browsing history regularly, or use incognito mode to avoid storing local history.',
-            ],
-          },
+          compare(
+            {
+              title: 'Digital cleanup',
+              leftLabel: 'Passive habit',
+              leftValue: 'Keep old accounts and browsing clutter forever',
+              rightLabel: 'Responsible habit',
+              rightValue: 'Deactivate unused accounts, clear stored junk, and protect public browsing sessions',
+              insight: 'Data hygiene mirrors hardware hygiene: remove what no longer serves a purpose.',
+            },
+          ),
         ],
       },
       {
         id: 'mindfulness',
         label: 'Mindfulness',
+        navLabel: 'Mindfulness',
         title: 'Responsible Participation',
-        summary: 'Staying informed and cautious in the digital age.',
-        robotNote: 'The sector is always evolving. Stay informed to keep your shielding optimized.',
-        accentColor: '#2980b9',
+        summary: 'Stay cautious with links, permissions, and platform behavior as the digital environment keeps shifting.',
+        robotNote: 'The ecosystem changes. Responsible users adapt instead of assuming yesterday’s safe habit still works.',
+        heroVariant: 'signal',
+        accentColor: '#61b8ff',
         pulses: [
-          { label: 'Permissions', value: 'Limited' },
-          { label: 'Awareness', value: 'Phishing Check' },
-          { label: 'Update', value: 'Mindful Habits' },
+          { label: 'Phishing', value: 'Check links' },
+          { label: 'Apps', value: 'Limit permissions' },
+          { label: 'Awareness', value: 'Stay updated' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'A responsible citizen is an informed one. Staying cautious with links and permissions protects the integrity of the whole digital ecosystem.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Phishing Caution: Be cautious when clicking links in emails or unfamiliar websites to avoid identity theft.',
-              'App Permissions: Limit app permissions by only allowing access to necessary device functions like location or contacts.',
-              'Stay Informed: Stay updated on privacy practices and adapt your habits to maintain control over your personal data.',
-            ],
-          },
-          {
-            type: 'quote',
-            content:
-              'By adopting these mindful digital habits, users can lower personal data traces, enhance security, and become responsible participants in the digital age.',
-            author: 'Citizen Protocol',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'data-shredder',
-            title: 'Secure Data Shredder',
-          },
+          bullets(
+            'Approach unexpected links, attachments, and urgent messages with suspicion.',
+            'Grant apps only the permissions they genuinely need to function.',
+            'Keep learning how privacy norms and platform settings change over time.',
+          ),
+          q('Responsible participation means protecting both your own data and the broader trustworthiness of the digital environment.', 'Citizen protocol'),
         ],
       },
     ],
@@ -1244,125 +1253,101 @@ export const chapters: CourseChapter[] = [
   {
     id: '3-4',
     moduleLabel: 'Module 03',
+    navLabel: '3.4',
     title: 'E-Waste in India',
-    strapline: 'Regional focus. The world’s third-largest salvage hub is undergoing a core system update.',
+    strapline: 'Regional scale changes the problem. India is a major generator, a major recovery site, and a major policy laboratory.',
     summary:
-      'Deep dive into India’s status as a top e-waste generator, the challenges of the informal sector, and the 2022 Management Rules.',
-    robotStatus: 'Regional localization complete. Analyzing national grid protocols.',
-    scrapFact: 'India generates over 3.8 million metric tonnes of e-waste annually—enough to fill 10,000 Olympic swimming pools.',
-    accentColor: '#e67e22',
+      'This chapter studies India’s e-waste landscape through three lenses: national scale, the 2022 rules, and emerging infrastructure such as eco-parks and AI-assisted sorting.',
+    robotStatus: 'Regional framework loaded. Policy atlas active.',
+    scrapFact: 'India is one of the largest e-waste generators in the world, with vast gaps between formal systems and informal handling.',
+    accentColor: '#f3a44a',
+    themeKey: 'policy',
+    layout: 'atlas',
+    featuredMetrics: [
+      { label: 'Global rank', value: 'Top-tier generator', detail: 'India’s rapid digital expansion has made e-waste a major infrastructure challenge.' },
+      { label: 'System gap', value: 'Formal vs informal', detail: 'A large share of material still moves through unsafe informal channels.' },
+      { label: 'Policy lever', value: 'EPR rules 2022', detail: 'Producer responsibility is central to the current framework.' },
+    ],
     assembly: {
       part: 'mobility',
       title: 'Framework Reinforcement',
-      schematic: 'Industrial Grade Support',
-      summary: 'The robot gains heavy-duty structural reinforcements to handle the massive volumes of regional scrap.',
-      reward: 'Unlocks regional policy database.',
+      schematic: 'Industrial-grade support',
+      summary: 'This chapter gives the robot a national policy context for the recovery work it has been learning.',
+      reward: 'Unlocks regional policy atlas.',
     },
     tabs: [
       {
         id: 'status',
         label: 'Status',
+        navLabel: 'Status',
         title: 'A Global Scrap Giant',
-        summary: 'Understanding the scale of e-waste generation in Indian cities and states.',
-        robotNote: 'The volume is massive. 65 sectors contribute to over 60% of the total intake. We need high-capacity sorters.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-3.png',
-        accentColor: '#e67e22',
+        summary: 'Understand the scale, geography, and health burden of India’s e-waste stream.',
+        robotNote: 'At national scale, the challenge is no longer only awareness. It is throughput, infrastructure, and enforcement.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-3.png',
+        heroVariant: 'atlas',
+        accentColor: '#f3a44a',
         pulses: [
-          { label: 'Rank', value: '3rd Globally' },
+          { label: 'Rank', value: '3rd globally' },
           { label: 'Volume', value: '3.8 MMT/year' },
-          { label: 'Source', value: '65 Major Cities' },
+          { label: 'Concentration', value: '65 major cities' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'India E-Waste Status',
-            url: 'https://youtu.be/dGxU4w1MDco',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'India is now the world’s third-largest generator of e-waste, producing around 3.8 million metric tonnes annually. Rapid digital growth and increased device use have accelerated this trend.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Geographic Concentration: 65 cities generate over 60% of total waste, with just 10 states contributing 70%.',
-              'Sector Gap: Only about one-third is processed through formal channels. The rest is handled by the informal sector using unsafe methods.',
-              'Health Risks: Informal processing involving acid leaching and open burning poses severe environmental and health hazards.',
-            ],
-          },
+          video('India E-Waste Status', 'https://youtu.be/dGxU4w1MDco'),
+          stats(
+            { label: 'Urban concentration', value: '65 cities', detail: 'A large share of the stream is concentrated in high-population centers.' },
+            { label: 'Processing gap', value: 'Formal share limited', detail: 'Much of the stream still escapes regulated recovery.' },
+            { label: 'Health burden', value: 'Informal exposure', detail: 'Acid leaching and burning create severe local hazards.' },
+          ),
         ],
       },
       {
         id: 'rules',
         label: 'Policy',
+        navLabel: 'Rules',
         title: 'E-Waste Rules 2022',
-        summary: 'EPR targets and the new framework for producers and recyclers.',
-        robotNote: 'EPR (Extended Producer Responsibility) is a hard-coded directive. Manufacturers must track units from cradle to grave.',
-        heroImage: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-4.png',
-        accentColor: '#d35400',
+        summary: 'Read the current framework through the lens of accountability, digitized tracking, and enforcement friction.',
+        robotNote: 'Extended Producer Responsibility is the rule that tries to pull the entire chain into view.',
+        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-4.png',
+        heroVariant: 'atlas',
+        accentColor: '#ff6f61',
         pulses: [
           { label: 'Policy', value: 'Rules 2022' },
-          { label: 'Mandate', value: 'EPR Targets' },
-          { label: 'Tracking', value: 'Digitized' },
+          { label: 'Mandate', value: 'EPR targets' },
+          { label: 'Challenge', value: 'Compliance gap' },
         ],
         blocks: [
-          {
-            type: 'paragraph',
-            content:
-              'The Government of India introduced the E-Waste (Management) Rules 2022, mandating Extended Producer Responsibility (EPR) to ensure producers meet strict recycling targets.',
-          },
-          {
-            type: 'bulletList',
-            items: [
-              'Extended Responsibility: Producers are now legally responsible for ensuring their products reach certified recyclers.',
-              'Integration: Public institutions are being integrated into the formal disposal network for better compliance.',
-              'Enforcement Challenges: Lack of infrastructure, illegal imports, and low awareness still hinder effective management.',
-            ],
-          },
+          timeline(
+            { step: '01', title: 'Producer responsibility', detail: 'Manufacturers must ensure products reach authorized recyclers instead of disappearing after sale.' },
+            { step: '02', title: 'Tracking and targets', detail: 'Digitized systems aim to make compliance measurable instead of symbolic.' },
+            { step: '03', title: 'Enforcement challenge', detail: 'Infrastructure gaps, illegal movement, and low awareness still weaken outcomes.' },
+          ),
         ],
       },
       {
         id: 'innovation',
         label: 'Innovation',
+        navLabel: 'Innovation',
         title: 'Eco-Parks & AI',
-        summary: 'Using technology and infrastructure to bridge the formal-informal gap.',
-        robotNote: 'AI sub-routines are coming online. Sorting efficiency is projected to increase by 40% with automated recognition.',
-        accentColor: '#27ae60',
+        summary: 'Look at the infrastructure and technology experiments trying to formalize and scale the recovery chain.',
+        robotNote: 'Innovation matters when it connects access, worker safety, and material efficiency all at once.',
+        heroVariant: 'atlas',
+        accentColor: '#2bc1a6',
         pulses: [
-          { label: 'Node', value: 'Eco-Parks' },
-          { label: 'Clinic', value: 'Bhopal Pilot' },
-          { label: 'Tech', value: 'AI Sorting' },
+          { label: 'Infrastructure', value: 'Eco-parks' },
+          { label: 'Pilot model', value: 'Clinics + banks' },
+          { label: 'Tech layer', value: 'AI sorting' },
         ],
         blocks: [
-          {
-            type: 'video',
-            title: 'Fixing India’s E-Waste',
-            url: 'https://youtu.be/KxGbqRF3-_0',
-          },
-          {
-            type: 'paragraph',
-            content:
-              'Efforts like the development of e-waste eco-parks, clinics (e.g., in Bhopal), and e-waste banks aim to improve accessibility and recycling efficiency.',
-          },
+          video('Fixing India’s E-Waste', 'https://youtu.be/KxGbqRF3-_0'),
           {
             type: 'imageGrid',
+            columns: 'two',
             images: [
-              { src: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-5.png', alt: 'E-Waste Clinic' },
-              { src: '/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-6.png', alt: 'Eco-Park Layout' },
+              { src: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-5.png', alt: 'E-waste clinic concept' },
+              { src: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104106-6.png', alt: 'Eco-park layout reference' },
             ],
           },
-          {
-            type: 'quote',
-            content:
-              'Addressing these challenges presents an opportunity for India to foster sustainable development and recover valuable resources.',
-            author: 'Circular Economy Report',
-          },
-          {
-            type: 'interactive3d',
-            activityId: 'india-policy-map',
-            title: 'India Policy Heatmap',
-          },
+          callout('Strategic opportunity', 'India’s scale makes the challenge difficult, but it also makes successful formal recovery systems globally significant.', 'success'),
         ],
       },
     ],
@@ -1371,7 +1356,7 @@ export const chapters: CourseChapter[] = [
 
 export function toSkillizeeImageUrl(path: string) {
   const skillizeeAssetPrefix = 'https://login.skillizee.io'
-  return path.startsWith('http') ? path : `${skillizeeAssetPrefix}${path}`
+  return path.startsWith('http') || path.startsWith('/images/') ? path : `${skillizeeAssetPrefix}${path}`
 }
 
 export function toYouTubeEmbedUrl(url: string) {

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lifecycle Decision Lab | Skilizee E-Waste</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07111b;
+      --panel: rgba(11, 23, 37, 0.92);
+      --panel-soft: rgba(16, 31, 48, 0.92);
+      --line: rgba(151, 211, 255, 0.14);
+      --text: #edf5ff;
+      --copy: #b5c5d8;
+      --muted: #7b8ea4;
+      --reduce: #53d18d;
+      --reuse: #c17cff;
+      --recycle: #ff6f61;
+      --accent: #61b8ff;
+      --warning: #f3a44a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      background:
+        radial-gradient(circle at 14% 16%, rgba(97, 184, 255, 0.14), transparent 24%),
+        radial-gradient(circle at 88% 22%, rgba(243, 164, 74, 0.14), transparent 20%),
+        linear-gradient(180deg, #050c14 0%, #07111b 48%, #0b1827 100%);
+    }
+
+    .shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .topbar,
+    .hero,
+    .panel,
+    .scenario-card,
+    .decision-btn,
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+
+    .eyebrow,
+    .chip,
+    .metric-label,
+    .decision-btn span,
+    .scenario-tag,
+    .score-badge {
+      font-family: 'Chakra Petch', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .hero {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+      gap: 16px;
+      background:
+        linear-gradient(145deg, rgba(10, 22, 36, 0.96), rgba(9, 17, 28, 0.88)),
+        radial-gradient(circle at top right, rgba(97, 184, 255, 0.16), transparent 20%);
+    }
+
+    .hero h1 {
+      margin: 8px 0 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p,
+    .scenario-card p,
+    .panel p {
+      margin: 0;
+      color: var(--copy);
+      line-height: 1.65;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px;
+      background: var(--panel-soft);
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+
+    .scenario-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .scenario-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      background: var(--panel-soft);
+    }
+
+    .scenario-card.active {
+      border-color: rgba(97, 184, 255, 0.42);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(97, 184, 255, 0.12);
+    }
+
+    .scenario-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .scenario-head h3 {
+      margin: 6px 0 8px;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+    }
+
+    .scenario-tag {
+      color: var(--accent);
+      background: rgba(97, 184, 255, 0.12);
+      padding: 5px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .decision-btn {
+      border-radius: 16px;
+      padding: 14px 10px;
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+      text-align: left;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .decision-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .decision-btn strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 1rem;
+    }
+
+    .decision-reduce.active { border-color: rgba(83, 209, 141, 0.42); background: rgba(83, 209, 141, 0.1); }
+    .decision-reuse.active { border-color: rgba(193, 124, 255, 0.42); background: rgba(193, 124, 255, 0.1); }
+    .decision-recycle.active { border-color: rgba(255, 111, 97, 0.42); background: rgba(255, 111, 97, 0.1); }
+
+    .score-board {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-card {
+      padding: 18px;
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(13, 28, 45, 0.96), rgba(9, 17, 28, 0.88)),
+        radial-gradient(circle at top right, rgba(97, 184, 255, 0.14), transparent 18%);
+      border: 1px solid var(--line);
+    }
+
+    .score-card h2 {
+      margin: 8px 0 0;
+      font-size: 2.5rem;
+      font-family: 'Sora', sans-serif;
+      line-height: 1;
+    }
+
+    .score-badge {
+      color: var(--accent);
+    }
+
+    .meter {
+      margin-top: 14px;
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--reduce), var(--warning));
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .mini-stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mini-stat strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
+
+    .feedback {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
+    .feedback h3 {
+      margin: 0 0 8px;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .legend {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--copy);
+      font-size: 0.92rem;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex: none;
+    }
+
+    .dot.reduce { background: var(--reduce); }
+    .dot.reuse { background: var(--reuse); }
+    .dot.recycle { background: var(--recycle); }
+
+    .fullscreen-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(8, 18, 30, 0.88);
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .is-embedded .topbar,
+    .is-embedded .fullscreen-btn { display: none; }
+
+    @media (max-width: 980px) {
+      .hero,
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics,
+      .decision-grid,
+      .mini-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="fullscreen-btn" id="toggle-fullscreen" aria-label="Toggle fullscreen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+  </button>
+
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Module 02 · Activity 2.3</div>
+        <strong>Lifecycle Decision Lab</strong>
+      </div>
+      <div class="chip">Reduce · Reuse · Recycle</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Decision Engine</div>
+        <h1>Pick The Right R For The Right Device</h1>
+        <p>
+          Not every device should go straight to the recycler. Work through realistic e-waste cases and decide whether the best move is to extend use, repurpose the hardware, or send it into formal recycling.
+        </p>
+        <div class="hero-metrics">
+          <article class="stat">
+            <div class="metric-label">Mission</div>
+            <strong>6 scenarios</strong>
+            <p>Each one tests whether you can delay waste or route it cleanly.</p>
+          </article>
+          <article class="stat">
+            <div class="metric-label">Scoring</div>
+            <strong>3 points each</strong>
+            <p>Best choices preserve value and cut contamination risk.</p>
+          </article>
+          <article class="stat">
+            <div class="metric-label">Output</div>
+            <strong>Decision literacy</strong>
+            <p>Learn when to maintain, repurpose, or recycle.</p>
+          </article>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="eyebrow">Decision Legend</div>
+        <h3 style="margin: 8px 0 10px; font-family: 'Sora', sans-serif;">How To Think</h3>
+        <div class="legend">
+          <div class="legend-item"><span class="dot reduce"></span> <span><strong>Reduce</strong> when the device still works and needs care, repair, or lighter use.</span></div>
+          <div class="legend-item"><span class="dot reuse"></span> <span><strong>Reuse</strong> when the original job is over but the hardware still has a second-life role.</span></div>
+          <div class="legend-item"><span class="dot recycle"></span> <span><strong>Recycle</strong> when the device is beyond sensible recovery and should enter formal material processing.</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="lab-grid">
+      <div class="panel">
+        <div class="eyebrow">Scenario Queue</div>
+        <div class="scenario-list" id="scenario-list"></div>
+      </div>
+
+      <div class="score-board">
+        <div class="score-card">
+          <div class="score-badge">Readiness Score</div>
+          <h2 id="score-value">0 / 18</h2>
+          <p id="score-message" style="margin-top: 8px;">Start with the first scenario and choose the strongest recovery path.</p>
+          <div class="meter"><span id="score-meter"></span></div>
+        </div>
+
+        <div class="panel mini-stats">
+          <article class="mini-stat">
+            <div class="metric-label">Value preserved</div>
+            <strong id="value-saved">0</strong>
+          </article>
+          <article class="mini-stat">
+            <div class="metric-label">Hazard avoided</div>
+            <strong id="hazard-avoided">0</strong>
+          </article>
+          <article class="mini-stat">
+            <div class="metric-label">Best choices</div>
+            <strong id="correct-count">0</strong>
+          </article>
+          <article class="mini-stat">
+            <div class="metric-label">Scenarios left</div>
+            <strong id="remaining-count">6</strong>
+          </article>
+        </div>
+
+        <div class="feedback" id="feedback-panel">
+          <div class="eyebrow">Console Feedback</div>
+          <h3>Awaiting first decision</h3>
+          <p>Select one of the three R pathways on a scenario card. The console will explain what the stronger move looks like.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="./2-3-lifecycle-lab.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('embedded') === 'true') {
+      document.body.classList.add('is-embedded')
+    }
+
+    document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+      } else {
+        document.exitFullscreen()
+      }
+    })
+  </script>
+</body>
+</html>

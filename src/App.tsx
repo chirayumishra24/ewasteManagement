@@ -1,11 +1,45 @@
-import { Suspense, lazy, useEffect } from 'react'
-import type { CSSProperties } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { BrowserRouter as Router, Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import './App.css'
-import { chapters, toSkillizeeImageUrl, toYouTubeEmbedUrl, type ChapterBlock, type ChapterTab } from './courseData'
-import ActivityCanvas from './components/activities/ActivityCanvas'
+import {
+  chapters,
+  toSkillizeeImageUrl,
+  toYouTubeEmbedUrl,
+  type ChapterBlock,
+  type ChapterLayout,
+  type ChapterTab,
+  type ComparisonItem,
+  type CourseChapter,
+  type LineChartSeries,
+  type ResourceLink,
+  type StatGridItem,
+  type TimelineItem,
+} from './courseData'
 
 const EWasteBackground = lazy(() => import('./components/background/EWasteBackground'))
+
+function isExternalLink(href: string) {
+  return /^https?:\/\//.test(href)
+}
+
+function renderResourceLink(link: ResourceLink) {
+  if (link.external || isExternalLink(link.href)) {
+    return (
+      <a key={link.href} href={link.href} className="resource-link-card" target="_blank" rel="noopener noreferrer">
+        <strong>{link.label}</strong>
+        <span>{link.description}</span>
+      </a>
+    )
+  }
+
+  return (
+    <Link key={link.href} to={link.href} className="resource-link-card">
+      <strong>{link.label}</strong>
+      <span>{link.description}</span>
+    </Link>
+  )
+}
 
 function ScrapRobot({
   accentColor,
@@ -20,10 +54,11 @@ function ScrapRobot({
 
   return (
     <div className="robot-stage" style={{ '--chapter-accent': accentColor } as CSSProperties} aria-hidden="true">
+      <div className="robot-grid" />
       <div className="robot-splash robot-splash-one" />
       <div className="robot-splash robot-splash-two" />
       <div className="robot-shadow" />
-      <div className="robot-tag">SCRAP BOT</div>
+      <div className="robot-tag">R.U.S.T-01</div>
       <div className="robot-body">
         <div className={`robot-antenna ${hasHead ? 'assembled' : 'hologram'}`}>
           <span className="antenna-ball" />
@@ -64,67 +99,307 @@ function ScrapRobot({
         {!hasTorso && <div className="robot-scrap robot-scrap-two" />}
       </div>
       <div className="robot-caption">
-        <strong>R.U.S.T-01</strong>
-        <span>Reassembled Unit for Salvage Training</span>
+        <strong>Salvage Training Unit</strong>
+        <span>Rebuilds as the course progresses.</span>
       </div>
     </div>
   )
 }
 
-function AssemblyBay({
-  activeChapterId,
-  chapterIndex,
-}: {
-  activeChapterId: string
-  chapterIndex: number
-}) {
-  const activeChapter = chapters[chapterIndex]
+function getHeroSubtitle(chapter: CourseChapter) {
+  return chapter.strapline
+}
 
+function ChapterBriefing({ chapter }: { chapter: CourseChapter }) {
   return (
-    <div className="rail-card assembly-bay">
-      <div className="assembly-bay-head">
-        <span className="rail-label">Assembly Bay</span>
-        <div className="assembly-percent">{Math.round(((chapterIndex + 1) / chapters.length) * 100)}%</div>
+    <section className="chapter-briefing">
+      <div className="chapter-briefing-grid">
+        <article className="content-card chapter-briefing-lead">
+          <span className="rail-label">Chapter Briefing</span>
+          <h2>What this chapter is building</h2>
+          <p>{chapter.summary}</p>
+        </article>
+
+        <article className="content-card chapter-briefing-signal">
+          <span className="briefing-label">Status</span>
+          <strong>{chapter.robotStatus}</strong>
+        </article>
+
+        <article className="content-card chapter-briefing-signal">
+          <span className="briefing-label">Scrap fact</span>
+          <strong>{chapter.scrapFact}</strong>
+        </article>
       </div>
 
-      <article className="assembly-highlight">
-        <div className="assembly-highlight-icon">{chapterIndex + 1}</div>
-        <div>
-          <span className="assembly-kicker">Unlocked this chapter</span>
-          <h3>{activeChapter.assembly.title}</h3>
-          <p>{activeChapter.assembly.summary}</p>
+      <article className="content-card chapter-briefing-metrics">
+        <div className="chapter-briefing-head">
+          <span className="rail-label">Operational Lens</span>
+          <p>The cards below carry the practical context that used to overload the hero.</p>
+        </div>
+        <div className="chapter-briefing-metric-grid">
+          {chapter.featuredMetrics.map((metric) => (
+            <article key={`${metric.label}-${metric.value}`} className="chapter-briefing-metric">
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <p>{metric.detail}</p>
+            </article>
+          ))}
         </div>
       </article>
+    </section>
+  )
+}
 
-      <div className="assembly-track">
-        {chapters.map((entry, index) => {
-          const unlocked = index <= chapterIndex
-          const active = entry.id === activeChapterId
-
-          return (
-            <Link
-              key={entry.id}
-              to={`/${entry.id}`}
-              className={`assembly-link ${unlocked ? 'unlocked' : 'locked'} ${active ? 'active' : ''}`}
-              aria-current={active ? 'page' : undefined}
-            >
-              <span className="assembly-link-index">{String(index + 1).padStart(2, '0')}</span>
-              <span className="assembly-link-copy">
-                <strong>{entry.id}</strong>
-                <small>{entry.assembly.schematic}</small>
-              </span>
-              <span className="assembly-link-status">
-                {unlocked ? entry.assembly.reward : 'Locked'}
-              </span>
-            </Link>
-          )
-        })}
-      </div>
+function renderStatGrid(items: StatGridItem[]) {
+  return (
+    <div className="stat-grid-block">
+      {items.map((item) => (
+        <article key={`${item.label}-${item.value}`} className="stat-grid-item">
+          <span>{item.label}</span>
+          <strong>{item.value}</strong>
+          <p>{item.detail}</p>
+        </article>
+      ))}
     </div>
   )
 }
 
-function renderChapterBlock(block: ChapterBlock) {
+function renderTimeline(items: TimelineItem[]) {
+  return (
+    <section className="content-card timeline-card">
+      <div className="timeline-list">
+        {items.map((item) => (
+          <article key={`${item.step}-${item.title}`} className="timeline-item">
+            <span className="timeline-step">{item.step}</span>
+            <div>
+              <h4>{item.title}</h4>
+              <p>{item.detail}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function renderComparison(items: ComparisonItem[]) {
+  return (
+    <section className="comparison-stack">
+      {items.map((item) => (
+        <article key={item.title} className="content-card comparison-card">
+          <header>
+            <span className="comparison-label">Decision Compare</span>
+            <h4>{item.title}</h4>
+          </header>
+          <div className="comparison-grid">
+            <div className="comparison-column comparison-column-risk">
+              <span>{item.leftLabel}</span>
+              <strong>{item.leftValue}</strong>
+            </div>
+            <div className="comparison-column comparison-column-win">
+              <span>{item.rightLabel}</span>
+              <strong>{item.rightValue}</strong>
+            </div>
+          </div>
+          <p className="comparison-insight">{item.insight}</p>
+        </article>
+      ))}
+    </section>
+  )
+}
+
+function formatTrendValue(series: LineChartSeries, value: number) {
+  const decimals = series.decimals ?? (Number.isInteger(value) ? 0 : value < 10 ? 2 : 1)
+  const formatted = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value)
+
+  return `${series.valuePrefix ?? ''}${formatted}${series.valueSuffix ?? ''}`
+}
+
+function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineChart' }> }) {
+  const [activeSeriesIndex, setActiveSeriesIndex] = useState(0)
+  const [hoverIndex, setHoverIndex] = useState(block.labels.length - 1)
+  const activeSeries = block.series[activeSeriesIndex] ?? block.series[0]
+
+  if (!activeSeries) {
+    return null
+  }
+
+  const chartWidth = 100
+  const chartHeight = 100
+  const insetX = 7
+  const insetY = 10
+  const values = activeSeries.values
+  const maxValue = Math.max(...values)
+  const minValue = Math.min(...values)
+  const valueRange = Math.max(maxValue - minValue, 1)
+  const activePointIndex = Math.min(Math.max(hoverIndex, 0), values.length - 1)
+  const activeValue = values[activePointIndex]
+  const activeLabel = block.labels[activePointIndex]
+  const firstValue = values[0]
+  const lastValue = values[values.length - 1]
+  const netChange = lastValue - firstValue
+  const trendDirection = netChange >= 0 ? 'up' : 'down'
+  const stepX = values.length > 1 ? (chartWidth - insetX * 2) / (values.length - 1) : 0
+
+  const points = values.map((value, index) => {
+    const x = insetX + stepX * index
+    const y = insetY + ((maxValue - value) / valueRange) * (chartHeight - insetY * 2)
+    return { x, y }
+  })
+
+  const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
+  const firstPoint = points[0]
+  const lastPoint = points[points.length - 1]
+  const areaPath = `${linePath} L ${lastPoint.x} ${chartHeight - insetY / 2} L ${firstPoint.x} ${chartHeight - insetY / 2} Z`
+  const markerPoint = points[activePointIndex]
+  const yTicks = [maxValue, minValue + valueRange / 2, minValue]
+
+  return (
+    <section className="trend-card">
+      <div className="trend-card-head">
+        <div className="trend-copy">
+          <span className="media-pill">{block.eyebrow ?? 'Trend Scan'}</span>
+          <h4>{block.title}</h4>
+          <p className="media-note">{block.summary}</p>
+        </div>
+        <div className="trend-spotlight" style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}>
+          <span>{activeSeries.label}</span>
+          <strong>{formatTrendValue(activeSeries, activeValue)}</strong>
+          <p>{activeLabel}</p>
+        </div>
+      </div>
+
+      <div className="trend-series-switches" role="tablist" aria-label={block.title}>
+        {block.series.map((series, index) => (
+          <button
+            key={series.label}
+            type="button"
+            className={`trend-series-chip ${index === activeSeriesIndex ? 'active' : ''}`}
+            onClick={() => {
+              setActiveSeriesIndex(index)
+              setHoverIndex(block.labels.length - 1)
+            }}
+            style={{ '--trend-accent': series.accentColor } as CSSProperties}
+          >
+            <span className="trend-series-dot" />
+            {series.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="trend-chart-shell" onMouseLeave={() => setHoverIndex(block.labels.length - 1)}>
+        <div className="trend-y-axis">
+          {yTicks.map((tick, index) => (
+            <span key={`${activeSeries.label}-${tick}-${index}`}>{formatTrendValue(activeSeries, tick)}</span>
+          ))}
+        </div>
+
+        <div className="trend-chart-panel">
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="trend-chart" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id={`trend-gradient-${activeSeriesIndex}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={activeSeries.accentColor} stopOpacity="0.34" />
+                <stop offset="100%" stopColor={activeSeries.accentColor} stopOpacity="0" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {[20, 50, 80].map((y) => (
+              <line key={y} x1="0" y1={y} x2={chartWidth} y2={y} className="trend-grid-line" />
+            ))}
+
+            <path 
+              d={areaPath} 
+              className="trend-area" 
+              fill={`url(#trend-gradient-${activeSeriesIndex})`}
+            />
+            <path 
+              d={linePath} 
+              className="trend-line" 
+              filter="url(#glow)"
+              style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties} 
+            />
+
+            {points.map((point, index) => (
+              <g key={`${activeSeries.label}-${block.labels[index]}`}>
+                <circle
+                  cx={point.x}
+                  cy={point.y}
+                  r={index === hoverIndex ? 2.8 : 1.9}
+                  className={`trend-point ${index === hoverIndex ? 'active' : ''}`}
+                  style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}
+                  onMouseEnter={() => setHoverIndex(index)}
+                />
+              </g>
+            ))}
+          </svg>
+
+          <div
+            className="trend-tooltip"
+            style={
+              {
+                '--trend-accent': activeSeries.accentColor,
+                left: `${markerPoint.x}%`,
+                top: `${markerPoint.y}%`,
+              } as CSSProperties
+            }
+          >
+            <strong>{formatTrendValue(activeSeries, activeValue)}</strong>
+            <span>{activeLabel}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="trend-x-axis">
+        {block.labels.map((label, index) => (
+          <button
+            key={`${activeSeries.label}-${label}`}
+            type="button"
+            className={`trend-x-tick ${index === activePointIndex ? 'active' : ''}`}
+            onMouseEnter={() => setHoverIndex(index)}
+            onFocus={() => setHoverIndex(index)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="trend-insights">
+        <article className="trend-insight-card">
+          <span>Start point</span>
+          <strong>{formatTrendValue(activeSeries, firstValue)}</strong>
+          <p>{block.labels[0]}</p>
+        </article>
+        <article className="trend-insight-card">
+          <span>Latest point</span>
+          <strong>{formatTrendValue(activeSeries, lastValue)}</strong>
+          <p>{block.labels[block.labels.length - 1]}</p>
+        </article>
+        <article className={`trend-insight-card trend-insight-${trendDirection}`}>
+          <span>Net change</span>
+          <strong>
+            {netChange >= 0 ? '+' : '-'}
+            {formatTrendValue(activeSeries, Math.abs(netChange))}
+          </strong>
+          <p>{activeSeries.detail}</p>
+        </article>
+      </div>
+
+      {block.note && <p className="trend-note">{block.note}</p>}
+    </section>
+  )
+}
+
+function renderBlock(block: ChapterBlock): ReactNode {
   if (block.type === 'paragraph') {
     return (
       <section className={`content-card story-card ${block.emphasis ? 'story-card-emphasis' : ''}`}>
@@ -136,24 +411,82 @@ function renderChapterBlock(block: ChapterBlock) {
   if (block.type === 'quote') {
     return (
       <section className="content-card quote-card">
-        <span className="quote-badge">Robot Memory</span>
+        <span className="quote-badge">Lab Note</span>
         <p>{block.content}</p>
         {block.author && <cite>{block.author}</cite>}
       </section>
     )
   }
 
+  if (block.type === 'callout') {
+    return (
+      <section className={`content-card callout-card callout-${block.tone ?? 'signal'}`}>
+        {block.eyebrow && <span className="callout-eyebrow">{block.eyebrow}</span>}
+        <h4>{block.title}</h4>
+        <p>{block.content}</p>
+      </section>
+    )
+  }
+
   if (block.type === 'bulletList' || block.type === 'numberedList') {
-    const gridClassName = `scrap-grid scrap-grid-${block.items.length}`
+    const ListTag = block.type === 'numberedList' ? 'ol' : 'ul'
 
     return (
-      <section className={gridClassName}>
-        {block.items.map((item, index) => (
-          <article key={index} className="content-card scrap-card">
-            <div className="scrap-card-index">{String(index + 1).padStart(2, '0')}</div>
-            <p>{item}</p>
-          </article>
-        ))}
+      <section className={`content-card list-card ${block.type === 'numberedList' ? 'list-numbered' : ''}`}>
+        <ListTag>
+          {block.items.map((item, index) => (
+            <li key={`${item}-${index}`}>
+              <span className="list-index">{String(index + 1).padStart(2, '0')}</span>
+              <p>{item}</p>
+            </li>
+          ))}
+        </ListTag>
+      </section>
+    )
+  }
+
+  if (block.type === 'statGrid') {
+    return renderStatGrid(block.items)
+  }
+
+  if (block.type === 'timeline') {
+    return renderTimeline(block.items)
+  }
+
+  if (block.type === 'comparison') {
+    return renderComparison(block.items)
+  }
+
+  if (block.type === 'lineChart') {
+    return <LineChartCard block={block} />
+  }
+
+  if (block.type === 'resourceLinks') {
+    return (
+      <section className="resource-link-grid">
+        {block.items.map((item) => renderResourceLink(item))}
+      </section>
+    )
+  }
+
+  if (block.type === 'activity') {
+    return (
+      <section className="content-card activity-card">
+        <div className="activity-card-copy">
+          <span className="activity-pill">Interactive Lab</span>
+          <div>
+            <h4>{block.title}</h4>
+            {block.summary && <p>{block.summary}</p>}
+          </div>
+        </div>
+        <div className="activity-iframe-container">
+          <iframe src={block.url} title={block.title} className="activity-iframe" allowFullScreen />
+          <div className="activity-iframe-overlay">
+            <a href={block.url} className="activity-action" target="_blank" rel="noopener noreferrer">
+              {block.ctaLabel ?? 'Open Fullscreen'}
+            </a>
+          </div>
+        </div>
       </section>
     )
   }
@@ -163,7 +496,10 @@ function renderChapterBlock(block: ChapterBlock) {
       <section className="content-card media-card">
         <div className="media-card-head">
           <span className="media-pill">Signal Feed</span>
-          <h4>{block.title}</h4>
+          <div>
+            <h4>{block.title}</h4>
+            {block.note && <p className="media-note">{block.note}</p>}
+          </div>
         </div>
         <div className="media-frame">
           <iframe
@@ -174,21 +510,6 @@ function renderChapterBlock(block: ChapterBlock) {
             allowFullScreen
           />
         </div>
-        {block.note && <p className="media-note">{block.note}</p>}
-      </section>
-    )
-  }
-
-  if (block.type === 'interactive3d') {
-    return (
-      <section className="content-card interactive-card">
-        <div className="media-card-head">
-          <span className="media-pill">Active Simulation</span>
-          <h4>{block.title}</h4>
-        </div>
-        <div className="interactive-viewport">
-          <ActivityCanvas activityId={block.activityId} />
-        </div>
       </section>
     )
   }
@@ -196,7 +517,7 @@ function renderChapterBlock(block: ChapterBlock) {
   return (
     <section className={`image-grid ${block.columns ?? 'two'}`}>
       {block.images.map((image, index) => (
-        <figure key={index} className="content-card image-card">
+        <figure key={`${image.src}-${index}`} className="content-card image-card">
           <img src={toSkillizeeImageUrl(image.src)} alt={image.alt} loading="lazy" />
           <figcaption>{image.alt}</figcaption>
         </figure>
@@ -205,12 +526,12 @@ function renderChapterBlock(block: ChapterBlock) {
   )
 }
 
-function TopicPanel({ tab }: { tab: ChapterTab }) {
+function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout }) {
   return (
     <article
       id={`topic-${tab.id}`}
-      className="topic-panel"
-      style={{ '--topic-accent': tab.accentColor ?? '#f26b3a' } as CSSProperties}
+      className={`topic-panel topic-layout-${layout} topic-hero-${tab.heroVariant ?? 'signal'}`}
+      style={{ '--topic-accent': tab.accentColor ?? '#ff8b4d' } as CSSProperties}
     >
       <header className="topic-header">
         <div>
@@ -230,25 +551,43 @@ function TopicPanel({ tab }: { tab: ChapterTab }) {
 
       {tab.heroImage && (
         <div className="topic-banner">
-          <img src={tab.heroImage} alt={tab.title} />
+          <img src={toSkillizeeImageUrl(tab.heroImage)} alt={tab.title} />
         </div>
       )}
 
       <div className="pulse-strip">
         {tab.pulses.map((pulse) => (
-          <div key={pulse.label} className="pulse-card">
+          <div key={`${pulse.label}-${pulse.value}`} className="pulse-card">
             <span>{pulse.label}</span>
             <strong>{pulse.value}</strong>
           </div>
         ))}
       </div>
 
-      <div className="topic-blocks">
+      <div className={`topic-blocks topic-blocks-${layout}`}>
         {tab.blocks.map((block, index) => (
-          <div key={index}>{renderChapterBlock(block)}</div>
+          <div key={`${tab.id}-${index}`} className={`topic-block-slot topic-block-${block.type}`}>
+            {renderBlock(block)}
+          </div>
         ))}
       </div>
     </article>
+  )
+}
+
+function ChapterRail({ currentChapter }: { currentChapter: CourseChapter }) {
+  return (
+    <aside className="chapter-rail">
+      <section className="rail-card rail-assembly-card">
+        <span className="rail-label">Robot Upgrade</span>
+        <h3>{currentChapter.assembly.title}</h3>
+        <p>{currentChapter.assembly.summary}</p>
+        <div className="rail-assembly-meta">
+          <span>{currentChapter.assembly.schematic}</span>
+          <strong>{currentChapter.assembly.reward}</strong>
+        </div>
+      </section>
+    </aside>
   )
 }
 
@@ -256,53 +595,36 @@ function ChapterPage() {
   const { id } = useParams()
   const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
   const chapterIndex = chapters.findIndex((entry) => entry.id === chapter.id)
-  const progress = Math.round(((chapterIndex + 1) / chapters.length) * 100)
   const unlockedParts = chapters.slice(0, chapterIndex + 1).map((entry) => entry.assembly.part)
+  const previousChapter = chapterIndex > 0 ? chapters[chapterIndex - 1] : null
+  const nextChapter = chapterIndex < chapters.length - 1 ? chapters[chapterIndex + 1] : null
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: 'auto' })
   }, [chapter.id])
 
   return (
-    <div className="course-shell">
-      <header className="course-topbar">
-        <div className="course-brand">
-          <span className="brand-stamp">Skilizee E-Waste</span>
-          <strong>Broken Robot Lab</strong>
-        </div>
-        <div className="course-progress">
-          <span>Module progress</span>
-          <strong>{progress}%</strong>
-          <div className="course-progress-meter" aria-hidden="true">
-            <span style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-      </header>
-
+    <div
+      className={`course-shell chapter-theme-${chapter.themeKey}`}
+      style={{ '--chapter-accent': chapter.accentColor } as CSSProperties}
+    >
       <section className="hero-panel">
         <div className="hero-copy">
-          <span className="hero-kicker">{chapter.moduleLabel} · Chapter {chapter.id}</span>
+          <span className="hero-kicker">
+            {chapter.moduleLabel} · Chapter {chapter.id}
+          </span>
           <h1>{chapter.title}</h1>
-          <p className="hero-summary">{chapter.summary}</p>
-          <div className="hero-callouts">
-            <div className="hero-callout">
-              <span>Status</span>
-              <strong>{chapter.robotStatus}</strong>
-            </div>
-            <div className="hero-callout">
-              <span>Scrap fact</span>
-              <strong>{chapter.scrapFact}</strong>
-            </div>
-          </div>
-          <p className="hero-strapline">{chapter.strapline}</p>
-          <div className="hero-actions" aria-label="Chapter shortcuts">
+          <p className="hero-subtitle">{getHeroSubtitle(chapter)}</p>
+          <div className="hero-actions">
             <a href={`#topic-${chapter.tabs[0]?.id ?? 'overview'}`} className="hero-primary-link">
               Start lab scan
               <span aria-hidden="true">→</span>
             </a>
-            <a href="#assembly-bay" className="hero-secondary-link">
-              View robot build
-            </a>
+            {nextChapter && (
+              <Link to={`/${nextChapter.id}`} className="hero-secondary-link">
+                Next chapter
+              </Link>
+            )}
           </div>
         </div>
 
@@ -310,34 +632,103 @@ function ChapterPage() {
       </section>
 
       <div className="chapter-layout">
-        <aside className="chapter-rail">
-          <div id="assembly-bay">
-            <AssemblyBay activeChapterId={chapter.id} chapterIndex={chapterIndex} />
-          </div>
+        <ChapterRail currentChapter={chapter} />
 
-          <div className="rail-card">
-            <span className="rail-label">Learning Missions</span>
-            <div className="rail-text-nav">
+        <main className="chapter-stage">
+          <ChapterBriefing chapter={chapter} />
+
+          <section className="topic-jump-card">
+            <span className="rail-label">Chapter Sections</span>
+            <div className="topic-jump-links">
               {chapter.tabs.map((tab) => (
-              <a key={tab.id} href={`#topic-${tab.id}`} className="rail-text-link">
-                  <span className="rail-text-link-mark" aria-hidden="true">↳</span>
-                  <span className="rail-text-link-copy">
-                    <strong>{tab.label}</strong>
-                    <small>{tab.title}</small>
-                  </span>
+                <a key={tab.id} href={`#topic-${tab.id}`} className="topic-jump-link">
+                  <span>{tab.navLabel}</span>
+                  <strong>{tab.title}</strong>
                 </a>
               ))}
             </div>
-          </div>
-        </aside>
+          </section>
 
-        <main className="chapter-stage">
           {chapter.tabs.map((tab) => (
-            <TopicPanel key={tab.id} tab={tab} />
+            <TopicPanel key={tab.id} tab={tab} layout={chapter.layout} />
           ))}
+
+          <section className="chapter-pager">
+            {previousChapter ? (
+              <Link to={`/${previousChapter.id}`} className="chapter-nav-link">
+                <span>Previous</span>
+                <strong>{previousChapter.title}</strong>
+              </Link>
+            ) : (
+              <div className="chapter-nav-link chapter-nav-link-placeholder">
+                <span>Previous</span>
+                <strong>Orientation hub is the first stop</strong>
+              </div>
+            )}
+            {nextChapter ? (
+              <Link to={`/${nextChapter.id}`} className="chapter-nav-link">
+                <span>Next</span>
+                <strong>{nextChapter.title}</strong>
+              </Link>
+            ) : (
+              <div className="chapter-nav-link chapter-nav-link-placeholder">
+                <span>Course complete</span>
+                <strong>Move the final project into the real world</strong>
+              </div>
+            )}
+          </section>
         </main>
       </div>
     </div>
+  )
+}
+
+function FullscreenButton() {
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement))
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((error: Error) => {
+        console.error(`Error attempting to enable fullscreen: ${error.message}`)
+      })
+      return
+    }
+
+    document.exitFullscreen()
+  }
+
+  return (
+    <button
+      onClick={toggleFullscreen}
+      className="fullscreen-toggle"
+      title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+      aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+    >
+      {isFullscreen ? (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 3v5H3" />
+          <path d="M16 3v5h5" />
+          <path d="M8 21v-5H3" />
+          <path d="M16 21v-5h5" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M15 3h6v6" />
+          <path d="M9 21H3v-6" />
+          <path d="M21 3l-7 7" />
+          <path d="M3 21l7-7" />
+        </svg>
+      )}
+    </button>
   )
 }
 
@@ -345,17 +736,18 @@ function App() {
   return (
     <Router>
       <main className="page-shell">
+        <FullscreenButton />
         <div className="page-background" aria-hidden="true">
           <div className="page-background-tint" />
           <div className="page-background-scene">
-            <Suspense fallback={<div className="hero-scene-fallback">Loading scrapyard scene...</div>}>
+            <Suspense fallback={<div className="hero-scene-fallback">Loading salvage lab...</div>}>
               <EWasteBackground />
             </Suspense>
           </div>
         </div>
 
         <Routes>
-          <Route path="/" element={<Navigate to="/1-1" replace />} />
+          <Route path="/" element={<Navigate to="/1-0" replace />} />
           <Route path="/chapter/:id" element={<ChapterPage />} />
           <Route path="/:id" element={<ChapterPage />} />
         </Routes>

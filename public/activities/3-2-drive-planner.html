@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection Drive Planner | Skilizee E-Waste</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:wght@400;500;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07111b;
+      --panel: rgba(11, 23, 37, 0.92);
+      --panel-soft: rgba(16, 31, 48, 0.92);
+      --line: rgba(151, 211, 255, 0.14);
+      --text: #edf5ff;
+      --copy: #b5c5d8;
+      --muted: #7b8ea4;
+      --accent: #c17cff;
+      --good: #2bc1a6;
+      --warn: #f3a44a;
+      --alert: #ff6f61;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      background:
+        radial-gradient(circle at 15% 16%, rgba(193, 124, 255, 0.14), transparent 22%),
+        radial-gradient(circle at 82% 22%, rgba(43, 193, 166, 0.14), transparent 22%),
+        linear-gradient(180deg, #050c14 0%, #07111b 48%, #0b1827 100%);
+    }
+
+    .shell {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .topbar,
+    .hero,
+    .panel,
+    .choice-btn,
+    .summary-card,
+    .metric-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+
+    .eyebrow,
+    .chip,
+    .metric-label,
+    .choice-btn span,
+    .summary-tag {
+      font-family: 'Chakra Petch', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 16px;
+      padding: 20px;
+      background:
+        linear-gradient(145deg, rgba(10, 22, 36, 0.96), rgba(9, 17, 28, 0.88)),
+        radial-gradient(circle at top right, rgba(193, 124, 255, 0.14), transparent 18%);
+    }
+
+    .hero h1 {
+      margin: 8px 0 12px;
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.35rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p,
+    .panel p,
+    .summary-card p,
+    .choice-btn small {
+      margin: 0;
+      color: var(--copy);
+      line-height: 1.65;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .metric-card {
+      padding: 14px;
+      background: var(--panel-soft);
+    }
+
+    .metric-card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.05rem;
+    }
+
+    .planner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+
+    .option-section {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .option-section + .option-section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .option-section h3 {
+      margin: 0;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.08rem;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .choice-btn {
+      padding: 14px;
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+      text-align: left;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .choice-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .choice-btn.active {
+      border-color: rgba(193, 124, 255, 0.4);
+      background: rgba(193, 124, 255, 0.12);
+    }
+
+    .choice-btn strong {
+      display: block;
+      margin: 7px 0 4px;
+      font-size: 0.98rem;
+    }
+
+    .dashboard {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-card {
+      padding: 18px;
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(13, 28, 45, 0.96), rgba(9, 17, 28, 0.88)),
+        radial-gradient(circle at top right, rgba(193, 124, 255, 0.14), transparent 18%);
+      border: 1px solid var(--line);
+    }
+
+    .score-card h2 {
+      margin: 8px 0 6px;
+      font-family: 'Sora', sans-serif;
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .meter {
+      margin-top: 14px;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--good), var(--warn));
+      transition: width 0.35s ease;
+    }
+
+    .summary-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .summary-card {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .summary-card h4 {
+      margin: 8px 0 6px;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .summary-tag {
+      color: var(--accent);
+      background: rgba(193, 124, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .launch-status {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+    }
+
+    .launch-status h3 {
+      margin: 0 0 8px;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .fullscreen-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(8, 18, 30, 0.88);
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .is-embedded .topbar,
+    .is-embedded .fullscreen-btn { display: none; }
+
+    @media (max-width: 980px) {
+      .hero,
+      .planner-grid,
+      .hero-metrics,
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="fullscreen-btn" id="toggle-fullscreen" aria-label="Toggle fullscreen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+  </button>
+
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Module 03 · Activity 3.2</div>
+        <strong>Collection Drive Planner</strong>
+      </div>
+      <div class="chip">Outreach · Logistics · Metrics</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Planning Console</div>
+        <h1>Assemble A Launch-Ready Collection Drive</h1>
+        <p>
+          Choose a venue, recycler partner, bin setup, outreach channel, and staffing pattern. The planner scores how operationally ready the drive is and explains what is still missing.
+        </p>
+        <div class="hero-metrics">
+          <article class="metric-card">
+            <div class="metric-label">Goal</div>
+            <strong>Launch readiness</strong>
+            <p>The strongest plans balance access, sorting quality, and partner trust.</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">Inputs</div>
+            <strong>5 planning lanes</strong>
+            <p>Venue, partner, bins, outreach, and volunteers all affect the score.</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">Outcome</div>
+            <strong>Operational summary</strong>
+            <p>See whether the event is ready, risky, or still underbuilt.</p>
+          </article>
+        </div>
+      </div>
+      <aside class="panel">
+        <div class="eyebrow">What Strong Plans Include</div>
+        <div class="summary-stack" style="margin-top: 12px;">
+          <article class="summary-card">
+            <div class="summary-tag">Access</div>
+            <h4>Visible drop-off site</h4>
+            <p>People bring more devices when the location is easy to understand and reach.</p>
+          </article>
+          <article class="summary-card">
+            <div class="summary-tag">Safety</div>
+            <h4>Clear material separation</h4>
+            <p>Dedicated bins protect batteries, cables, and larger devices from becoming one mixed pile.</p>
+          </article>
+          <article class="summary-card">
+            <div class="summary-tag">Trust</div>
+            <h4>Certified recycler partner</h4>
+            <p>The handoff after the drive matters as much as the collection day itself.</p>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="planner-grid">
+      <div class="panel">
+        <div class="option-section" data-section="venue">
+          <h3>1. Venue</h3>
+          <div class="choice-grid" id="venue-grid"></div>
+        </div>
+
+        <div class="option-section" data-section="partner">
+          <h3>2. Recycler Partner</h3>
+          <div class="choice-grid" id="partner-grid"></div>
+        </div>
+
+        <div class="option-section" data-section="bins">
+          <h3>3. Sorting Setup</h3>
+          <div class="choice-grid" id="bins-grid"></div>
+        </div>
+
+        <div class="option-section" data-section="outreach">
+          <h3>4. Outreach Channel</h3>
+          <div class="choice-grid" id="outreach-grid"></div>
+        </div>
+
+        <div class="option-section" data-section="staff">
+          <h3>5. Volunteer Coverage</h3>
+          <div class="choice-grid" id="staff-grid"></div>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <div class="score-card">
+          <div class="eyebrow">Launch Score</div>
+          <h2 id="score-value">0 / 100</h2>
+          <p id="score-copy">Start selecting options to build your drive blueprint.</p>
+          <div class="meter"><span id="score-meter"></span></div>
+        </div>
+
+        <div class="panel summary-stack">
+          <article class="summary-card">
+            <div class="summary-tag">Current Plan</div>
+            <h4 id="summary-title">No drive assembled yet</h4>
+            <p id="summary-copy">Choose one option from each planning lane to generate a complete field plan.</p>
+          </article>
+          <article class="summary-card">
+            <div class="summary-tag">Best Next Fix</div>
+            <h4 id="fix-title">Awaiting selections</h4>
+            <p id="fix-copy">The console will identify the biggest missing piece after each change.</p>
+          </article>
+        </div>
+
+        <div class="launch-status" id="launch-status">
+          <div class="eyebrow">Status Feed</div>
+          <h3>Draft mode</h3>
+          <p>Your plan is still incomplete. Aim for a visible site, trusted recycler, separated bins, active outreach, and enough volunteers to guide participants.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="./3-2-drive-planner.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('embedded') === 'true') {
+      document.body.classList.add('is-embedded')
+    }
+
+    document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+      } else {
+        document.exitFullscreen()
+      }
+    })
+  </script>
+</body>
+</html>

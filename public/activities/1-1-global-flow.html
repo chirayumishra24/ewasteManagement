@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global E-Waste Flow | Skilizee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --page-bg: #f8f7f3;
+            --surface: #ffffff;
+            --primary: #2f7fbe;
+            --danger: #dc2626;
+            --ink: #1e293b;
+            --muted: #64748b;
+            --map-land: #e2e8f0;
+            --map-water: #ffffff;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fullscreen handling */
+        .is-embedded header { display: none; }
+        .is-embedded .main-container { padding-top: 1rem; height: 100%; }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d9 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .main-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #map-wrapper {
+            flex-grow: 1;
+            position: relative;
+            cursor: grab;
+            background: var(--map-water);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #map-wrapper:active { cursor: grabbing; }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            max-height: 85vh;
+        }
+
+        .land {
+            fill: var(--map-land);
+            stroke: #ffffff;
+            stroke-width: 0.5;
+            transition: fill 0.3s ease;
+        }
+
+        .land:hover {
+            fill: #cbd5e1;
+        }
+
+        /* Flow Lines */
+        .flow-line {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .flow-line.formal { stroke: var(--primary); }
+        .flow-line.informal { stroke: var(--danger); stroke-dasharray: 5, 5; }
+
+        /* Hotspots */
+        .hotspot {
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .hotspot-pulse {
+            fill: var(--danger);
+            opacity: 0.4;
+        }
+
+        .hotspot-core {
+            fill: var(--danger);
+        }
+
+        /* HUD & UI */
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 1.5rem;
+            z-index: 50;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--muted);
+            transition: color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .control-btn.active { color: var(--primary); }
+        .control-btn:hover { color: var(--ink); }
+
+        .info-panel {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transform: translateX(-120%);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 100;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .info-panel.active { transform: translateX(0); }
+
+        .info-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-val { font-weight: 700; color: var(--primary); display: block; }
+        .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+
+        #legend {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-size: 0.75rem;
+            z-index: 40;
+        }
+
+        .legend-item { display: flex; items-center gap: 0.5rem; margin-bottom: 0.5rem; }
+        .legend-line { width: 20px; height: 2px; }
+        .legend-line.formal { background: var(--primary); }
+        .legend-line.informal { border-top: 2px dashed var(--danger); }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 200;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="fullscreen-btn" id="toggle-fullscreen">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
+    <header>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] mb-1 opacity-80">Module 01 · Activity 1.1</p>
+        <h1 class="text-3xl font-bold">The Global Flow Map</h1>
+        <p class="text-sm opacity-90 mt-2">Trace the journey of e-waste from consumers to processing hubs.</p>
+    </header>
+
+    <div class="main-container">
+        <div id="info-panel" class="info-panel">
+            <div class="info-close" onclick="closeInfo()">✕</div>
+            <h3 id="info-title" class="text-xl font-bold text-slate-800 mb-1">Guiyu, China</h3>
+            <p id="info-region" class="text-xs font-bold text-primary uppercase tracking-wider mb-3">Guangdong Province</p>
+            <p id="info-desc" class="text-sm text-slate-600 leading-relaxed mb-4">
+                Historically the "e-waste capital of the world," Guiyu once processed millions of tons of electronics annually using informal methods.
+            </p>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-val" id="stat-impact">High</span>
+                    <span class="stat-label">Soil Impact</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-val" id="stat-labor">100k+</span>
+                    <span class="stat-label">Workers</span>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <p class="text-xs text-slate-400 italic">"Informal processing leads to heavy metal leaching into groundwater."</p>
+            </div>
+        </div>
+
+        <div id="legend">
+            <div class="legend-item">
+                <div class="legend-line formal"></div>
+                <span>Formal Exports (Tracked)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line informal"></div>
+                <span>Informal/Illegal (Shadow)</span>
+            </div>
+        </div>
+
+        <div id="map-wrapper">
+            <svg id="world-map" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
+                <!-- Map paths will be injected here for brevity in this tool call -->
+                <g id="map-countries"></g>
+                <g id="flow-lines"></g>
+                <g id="hotspots"></g>
+            </svg>
+        </div>
+
+        <div class="controls">
+            <div class="control-btn active" data-flow="all">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                Show All
+            </div>
+            <div class="control-btn" data-flow="formal">
+                <span class="w-2 h-2 rounded-full bg-[var(--primary)]"></span>
+                Formal Trade
+            </div>
+            <div class="control-btn" data-flow="informal">
+                <span class="w-2 h-2 rounded-full bg-[var(--danger)]"></span>
+                Shadow Routes
+            </div>
+            <div class="h-4 w-[1px] bg-slate-200"></div>
+            <div class="control-btn" onclick="animateFlow()">
+                <span>▶</span>
+                Replay Flow
+            </div>
+        </div>
+    </div>
+
+    <script src="./1-1-global-flow.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('embedded') === 'true') {
+            document.body.classList.add('is-embedded');
+        }
+
+        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        function closeInfo() {
+            document.getElementById('info-panel').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
