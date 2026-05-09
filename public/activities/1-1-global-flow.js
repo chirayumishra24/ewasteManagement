@@ -1,105 +1,233 @@
-// --- DATA: Simplified World Map (Low-poly paths) ---
-// For brevity, using a representative coordinate system for flows and hotspots.
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// --- DATA ---
 const HOTSPOTS = [
-    { id: 'ghana', name: 'Agbogbloshie, Ghana', region: 'Greater Accra', x: 485, y: 280, impact: 'Extreme', labor: '40k+', desc: 'Once the largest e-waste dump in Africa, known for hazardous open-air burning of cables to recover copper.' },
-    { id: 'guiyu', name: 'Guiyu, China', region: 'Guangdong', x: 805, y: 195, impact: 'High', labor: '100k+', desc: 'A historic hub where millions of circuit boards were processed. Recent formalization has shifted much of the informal work.' },
-    { id: 'delhi', name: 'Seelampur, India', region: 'New Delhi', x: 700, y: 205, impact: 'Very High', labor: '50k+', desc: 'Indias largest informal e-waste market, where thousands of people dismantle electronics by hand.' },
-    { id: 'lagos', name: 'Lagos, Nigeria', region: 'Alaba International', x: 505, y: 275, impact: 'High', labor: '25k+', desc: 'A major port of entry for "second-hand" electronics, many of which are non-functional and end up in dumps.' }
+    { id: 'ghana', name: 'Agbogbloshie, Ghana', region: 'Greater Accra', lat: 5.5, lon: -0.2, impact: 'Extreme', labor: '40k+', desc: 'Once the largest e-waste dump in Africa, known for hazardous open-air burning of cables to recover copper.' },
+    { id: 'guiyu', name: 'Guiyu, China', region: 'Guangdong', lat: 23.3, lon: 116.3, impact: 'High', labor: '100k+', desc: 'A historic hub where millions of circuit boards were processed. Recent formalization has shifted much of the informal work.' },
+    { id: 'delhi', name: 'Seelampur, India', region: 'New Delhi', lat: 28.6, lon: 77.2, impact: 'Very High', labor: '50k+', desc: 'Indias largest informal e-waste market, where thousands of people dismantle electronics by hand.' },
+    { id: 'lagos', name: 'Lagos, Nigeria', region: 'Alaba International', lat: 6.5, lon: 3.4, impact: 'High', labor: '25k+', desc: 'A major port of entry for "second-hand" electronics, many of which are non-functional and end up in dumps.' }
 ];
 
 const FLOWS = [
-    { from: [200, 140], to: [485, 280], type: 'informal' }, // USA -> Ghana
-    { from: [480, 110], to: [485, 280], type: 'formal' },   // EU -> Ghana
-    { from: [200, 140], to: [805, 195], type: 'formal' },   // USA -> China
-    { from: [850, 150], to: [805, 195], type: 'formal' },   // Japan -> China
-    { from: [480, 110], to: [700, 205], type: 'informal' }, // EU -> India
-    { from: [200, 140], to: [280, 190], type: 'formal' },   // USA -> Mexico
-    { from: [480, 110], to: [505, 275], type: 'informal' }  // EU -> Nigeria
+    { from: [37.7, -122.4], to: [5.5, -0.2], type: 'informal' }, // USA -> Ghana
+    { from: [51.5, -0.1], to: [5.5, -0.2], type: 'formal' },   // UK -> Ghana
+    { from: [37.7, -122.4], to: [23.3, 116.3], type: 'formal' },   // USA -> China
+    { from: [35.6, 139.6], to: [23.3, 116.3], type: 'formal' },   // Japan -> China
+    { from: [48.8, 2.3], to: [28.6, 77.2], type: 'informal' }, // EU -> India
+    { from: [37.7, -122.4], to: [19.4, -99.1], type: 'formal' },   // USA -> Mexico
+    { from: [52.5, 13.4], to: [6.5, 3.4], type: 'informal' }  // Germany -> Nigeria
 ];
 
-// --- DATA: Simplified World Map (Low-poly paths) ---
-const WORLD_PATH = "M204,117 L216,117 L226,127 L226,137 L216,147 L196,147 L186,137 L186,127 Z M470,100 L500,100 L510,110 L510,140 L490,160 L460,160 L450,140 L450,110 Z M460,250 L490,250 L510,270 L510,310 L490,330 L460,330 L440,310 L440,270 Z M650,180 L730,180 L750,200 L750,240 L730,260 L650,260 L630,240 L630,200 Z M780,180 L840,180 L860,200 L860,240 L840,260 L780,260 L760,240 L760,200 Z"; // Simplified placeholder paths for continents
+// --- GLOBE PARAMS ---
+const GLOBE_RADIUS = 100;
+const ARC_HEIGHT = 20;
 
-async function loadMap() {
-    const countriesGroup = document.getElementById('map-countries');
+// --- THREE.JS SETUP ---
+let scene, camera, renderer, controls, globe;
+let hotspotsGroup = new THREE.Group();
+let flowsGroup = new THREE.Group();
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function init() {
+    scene = new THREE.Scene();
     
-    // Instead of fetch, we use a slightly more robust way to render the landmasses
-    // In a real app, you'd use a full GeoJSON, but for this activity, we prioritize stability.
-    const continents = [
-        { name: 'Americas', d: "M50,100 L250,100 L300,200 L250,450 L150,450 L100,300 Z" },
-        { name: 'Eurasia', d: "M350,50 L950,50 L980,250 L800,400 L400,400 L350,250 Z" },
-        { name: 'Africa', d: "M400,220 L600,220 L620,450 L500,480 L420,400 Z" },
-        { name: 'Australia', d: "M800,350 L950,350 L950,450 L800,450 Z" }
-    ];
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.z = 350;
 
-    continents.forEach(c => {
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('class', 'land');
-        path.setAttribute('d', c.d);
-        countriesGroup.appendChild(path);
-    });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('globe-container').appendChild(renderer.domElement);
 
-    renderHotspots();
-    animateFlow();
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.rotateSpeed = 0.5;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5;
+    controls.minDistance = 200;
+    controls.maxDistance = 600;
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0x404040, 2);
+    scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0x61b8ff, 3, 1000);
+    pointLight.position.set(200, 200, 200);
+    scene.add(pointLight);
+
+    createGlobe();
+    createHotspots();
+    createFlows('all');
+
+    scene.add(hotspotsGroup);
+    scene.add(flowsGroup);
+
+    window.addEventListener('resize', onWindowResize);
+    renderer.domElement.addEventListener('click', onDocumentMouseDown);
+    
+    // Hide loader
+    setTimeout(() => {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+    }, 1000);
+
+    animate();
 }
 
-function renderHotspots() {
-    const group = document.getElementById('hotspots');
+function createGlobe() {
+    // Main Sphere with Procedural Grid Shader
+    const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0 }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            void main() {
+                vUv = uv;
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            uniform float time;
+            void main() {
+                float intensity = pow(0.7 - dot(vNormal, vec3(0, 0, 1.0)), 2.0);
+                vec3 atmosphere = vec3(0.3, 0.6, 1.0) * intensity;
+                
+                vec2 grid = abs(fract(vUv * 50.0 - 0.5) - 0.5) / fwidth(vUv * 50.0);
+                float line = min(grid.x, grid.y);
+                float gridVal = 1.0 - min(line, 1.0);
+                
+                vec3 color = vec3(0.05, 0.1, 0.2);
+                color += gridVal * vec3(0.1, 0.3, 0.5) * 0.5;
+                
+                gl_FragColor = vec4(color + atmosphere, 1.0);
+            }
+        `,
+        transparent: true
+    });
+
+    globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    // Glow effect
+    const glowGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 64, 64);
+    const glowMat = new THREE.ShaderMaterial({
+        vertexShader: `
+            varying vec3 vNormal;
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying vec3 vNormal;
+            void main() {
+                float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 6.0);
+                gl_FragColor = vec4(0.38, 0.72, 1.0, 1.0) * intensity;
+            }
+        `,
+        side: THREE.BackSide,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    scene.add(glow);
+}
+
+function latLonToVector3(lat, lon, radius) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+
+    const x = -(radius * Math.sin(phi) * Math.cos(theta));
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
+
+    return new THREE.Vector3(x, y, z);
+}
+
+function createHotspots() {
     HOTSPOTS.forEach(spot => {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.setAttribute('class', 'hotspot');
-        g.onclick = () => showInfo(spot);
-
-        const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        pulse.setAttribute('cx', spot.x); pulse.setAttribute('cy', spot.y);
-        pulse.setAttribute('r', '8');
-        pulse.setAttribute('class', 'hotspot-pulse');
+        const pos = latLonToVector3(spot.lat, spot.lon, GLOBE_RADIUS);
         
-        const core = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        core.setAttribute('cx', spot.x); core.setAttribute('cy', spot.y);
-        core.setAttribute('r', '4');
-        core.setAttribute('class', 'hotspot-core');
+        // Marker mesh
+        const markerGeo = new THREE.SphereGeometry(2, 16, 16);
+        const markerMat = new THREE.MeshBasicMaterial({ color: 0xff6f61 });
+        const marker = new THREE.Mesh(markerGeo, markerMat);
+        marker.position.copy(pos);
+        marker.userData = spot;
+        hotspotsGroup.add(marker);
 
-        g.appendChild(pulse);
-        g.appendChild(core);
-        group.appendChild(g);
-
-        // Animate pulse
-        gsap.to(pulse, {
-            r: 15,
-            opacity: 0,
-            duration: 2,
-            repeat: -1,
-            ease: 'power1.out'
-        });
+        // Ring
+        const ringGeo = new THREE.RingGeometry(3, 5, 32);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0xff6f61, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.copy(pos);
+        ring.lookAt(new THREE.Vector3(0,0,0));
+        hotspotsGroup.add(ring);
+        
+        gsap.to(ring.scale, { x: 2, y: 2, duration: 2, repeat: -1, ease: 'sine.out' });
+        gsap.to(ringMat, { opacity: 0, duration: 2, repeat: -1, ease: 'sine.out' });
     });
 }
 
-function animateFlow(filter = 'all') {
-    const group = document.getElementById('flow-lines');
-    group.innerHTML = '';
-
-    FLOWS.forEach((flow, i) => {
+function createFlows(filter) {
+    flowsGroup.clear();
+    
+    FLOWS.forEach(flow => {
         if (filter !== 'all' && flow.type !== filter) return;
 
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('class', `flow-line ${flow.type}`);
-        
-        // Quadratic curve for arc effect
-        const mx = (flow.from[0] + flow.to[0]) / 2;
-        const my = Math.min(flow.from[1], flow.to[1]) - 50;
-        const d = `M${flow.from[0]},${flow.from[1]} Q${mx},${my} ${flow.to[0]},${flow.to[1]}`;
-        
-        path.setAttribute('d', d);
-        group.appendChild(path);
+        const start = latLonToVector3(flow.from[0], flow.from[1], GLOBE_RADIUS);
+        const end = latLonToVector3(flow.to[0], flow.to[1], GLOBE_RADIUS);
 
-        gsap.to(path, {
-            strokeDashoffset: 0,
-            duration: 2,
-            delay: i * 0.2,
-            ease: 'power2.inOut'
+        // Calculate control point for arc
+        const mid = start.clone().lerp(end, 0.5).normalize().multiplyScalar(GLOBE_RADIUS + ARC_HEIGHT);
+        const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+        
+        const points = curve.getPoints(50);
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        
+        const color = flow.type === 'informal' ? 0xff6f61 : 0x61b8ff;
+        const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.6 });
+        
+        const line = new THREE.Line(geometry, material);
+        flowsGroup.add(line);
+
+        // Animated particle on flow
+        const dotGeo = new THREE.SphereGeometry(0.8, 8, 8);
+        const dotMat = new THREE.MeshBasicMaterial({ color });
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        flowsGroup.add(dot);
+
+        gsap.to({}, {
+            duration: 3 + Math.random() * 2,
+            repeat: -1,
+            onUpdate: function() {
+                const p = curve.getPoint(this.progress());
+                dot.position.copy(p);
+            }
         });
     });
+}
+
+function onDocumentMouseDown(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(hotspotsGroup.children);
+
+    if (intersects.length > 0) {
+        const spot = intersects[0].object.userData;
+        if (spot) showInfo(spot);
+    }
 }
 
 function showInfo(spot) {
@@ -111,16 +239,44 @@ function showInfo(spot) {
     document.getElementById('stat-labor').textContent = spot.labor;
     
     panel.classList.add('active');
+    controls.autoRotate = false;
+    
+    // Smooth camera transition to spot
+    const pos = latLonToVector3(spot.lat, spot.lon, 250);
+    gsap.to(camera.position, {
+        x: pos.x,
+        y: pos.y,
+        z: pos.z,
+        duration: 1.5,
+        ease: 'power2.inOut',
+        onUpdate: () => camera.lookAt(0,0,0)
+    });
 }
 
-// --- CONTROLS ---
-document.querySelectorAll('.control-btn[data-flow]').forEach(btn => {
-    btn.addEventListener('click', () => {
+document.getElementById('close-info').onclick = () => {
+    document.getElementById('info-panel').classList.remove('active');
+    controls.autoRotate = true;
+};
+
+document.querySelectorAll('.control-btn').forEach(btn => {
+    btn.onclick = () => {
         document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        animateFlow(btn.dataset.flow);
-    });
+        createFlows(btn.dataset.flow);
+    };
 });
 
-// START
-loadMap();
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    if (globe) globe.material.uniforms.time.value += 0.01;
+    renderer.render(scene, camera);
+}
+
+init();

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Rush Calculator | Skilizee E-Waste</title>
+    <title>Gold Rush Pro | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -32,491 +32,187 @@
 
         h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
 
-        .header-gradient {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        .market-ticker {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 8px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: scroll 30s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
         .topic-card {
             background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(0,0,0,0.02);
         }
 
-        /* Device Input Card */
         .device-card {
             background: var(--surface-soft);
             border: 2px solid transparent;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 1.5rem 1rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
-            overflow: hidden;
         }
 
-        .device-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(60,143,115,0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .device-card.has-value { border-color: var(--primary); }
-        .device-card.has-value::before { opacity: 1; }
-
-        .device-icon { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
-        .device-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
-        .device-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .device-card.active { border-color: var(--primary); transform: scale(1.02); background: white; }
 
         .stepper {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0;
             background: white;
             border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.08);
-            overflow: hidden;
+            margin-top: 1rem;
         }
 
         .stepper button {
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: transparent;
-            font-size: 1.3rem;
-            font-weight: 700;
+            width: 40px;
+            height: 40px;
             color: var(--primary);
-            cursor: pointer;
-            transition: background 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: 700;
         }
-
-        .stepper button:hover { background: var(--surface-soft); }
-        .stepper button:active { background: rgba(60,143,115,0.15); }
 
         .stepper input {
-            width: 56px;
-            height: 44px;
-            border: none;
-            border-left: 1px solid rgba(0,0,0,0.06);
-            border-right: 1px solid rgba(0,0,0,0.06);
+            width: 50px;
             text-align: center;
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
             font-weight: 700;
-            color: var(--text-primary);
-            background: transparent;
-            outline: none;
-            -moz-appearance: textfield;
+            border: 0;
+            outline: 0;
         }
 
-        .stepper input::-webkit-outer-spin-button,
-        .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        /* Yield Bars */
-        .yield-row {
-            display: grid;
-            grid-template-columns: 120px 1fr 100px;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 0;
-        }
-
-        .yield-bar-track {
-            height: 28px;
-            background: #f1f5f9;
-            border-radius: 999px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .yield-bar-fill {
-            height: 100%;
-            border-radius: 999px;
-            width: 0%;
-            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            min-width: 0;
-        }
-
-        .yield-bar-fill.gold { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-        .yield-bar-fill.silver { background: linear-gradient(90deg, #94a3b8, #cbd5e1); }
-        .yield-bar-fill.copper { background: linear-gradient(90deg, #ea580c, #f97316); }
-        .yield-bar-fill.palladium { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-
-        .metal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .metal-dot.gold { background: var(--gold); }
-        .metal-dot.silver { background: var(--silver); }
-        .metal-dot.copper { background: var(--copper); }
-        .metal-dot.palladium { background: var(--palladium); }
-
-        /* Value Card */
-        .value-card {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-            border: 2px solid rgba(245, 158, 11, 0.25);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .value-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(245,158,11,0.1), transparent 70%);
-        }
-
-        .value-amount {
-            font-family: 'Poppins', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
+        .yield-bar-track { height: 12px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+        .yield-bar-fill { height: 100%; border-radius: 99px; width: 0%; transition: width 1s ease; }
+        
+        .milestone-badge {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
             color: #92400e;
-            line-height: 1;
-        }
-
-        /* Comparison Strip */
-        .comparison-strip {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .comparison-side {
-            text-align: center;
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-
-        .comparison-side.devices { background: var(--surface-soft); }
-        .comparison-side.mining { background: #fef2f2; }
-
-        .comparison-icon { font-size: 3rem; display: block; margin-bottom: 0.75rem; }
-        .comparison-vs {
-            width: 48px;
-            height: 48px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
             font-weight: 700;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 12px rgba(60,143,115,0.3);
         }
 
-        /* Env Savings */
-        .env-card {
-            background: var(--surface-soft);
-            border-radius: 14px;
-            padding: 1.25rem;
-            text-align: center;
-            border: 1px solid rgba(60,143,115,0.08);
+        .value-display {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #92400e, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .env-icon { font-size: 1.75rem; margin-bottom: 0.5rem; display: block; }
-        .env-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .env-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
-
-        /* Insight cards */
-        .insight-card {
-            background: var(--surface);
-            border: 1px solid rgba(0,0,0,0.04);
-            border-radius: 18px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 8px 22px rgba(0,0,0,0.04);
-        }
-
-        /* Fullscreen */
+        /* Fullscreen btn */
         .fullscreen-btn {
-            
+            position: absolute;
             top: 24px;
             right: 24px;
             z-index: 100;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            box-shadow: 0 8px 16px rgba(60,143,115,0.3);
+            color: var(--text-primary);
             cursor: pointer;
-            border: 0;
-            transition: transform 0.2s ease;
-        }
-        .fullscreen-btn:hover { transform: scale(1.05); }
-
-        #scroll-progress { position: fixed;
-            
-            top: 0;
-            right: 0;
-            width: 4px;
-            height: 0%;
-            background: var(--primary);
-            z-index: 1000;
-        }
-
-        .fade-in { opacity: 1; transform: translateY(0); }
-
-        /* Fun comparison label */
-        .fun-label {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(60,143,115,0.1);
-            color: var(--primary);
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 0.75rem;
-        }
-
-        @media (max-width: 768px) {
-            .yield-row { grid-template-columns: 90px 1fr 70px; gap: 0.5rem; }
-            .comparison-strip { grid-template-columns: 1fr; }
-            .comparison-vs { margin: 0 auto; }
-            .value-amount { font-size: 2.5rem; }
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
     </style>
 </head>
 <body>
-    <div id="scroll-progress"></div>
+    <div class="market-ticker">
+        <div class="ticker-content" id="ticker">
+            <!-- Filled by JS -->
+        </div>
+    </div>
 
-    <!-- Header -->
-
-    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;" title="Toggle Fullscreen">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-
-        <!-- Device Inventory Input -->
-        <section class="topic-card p-6 md:p-8 fade-in">
-            <h3 class="text-xl font-bold mb-2">📦 Device Inventory</h3>
-            <p class="text-sm text-[var(--text-muted)] mb-6">How many old devices could your school collect? Adjust the numbers below.</p>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="device-inputs">
-                <div class="device-card" data-device="phone">
-                    <span class="device-icon">📱</span>
-                    <p class="device-name">Smartphones</p>
-                    <p class="device-desc">Old phones, feature phones</p>
-                    <div class="stepper">
-                        <button data-action="dec" aria-label="Decrease">−</button>
-                        <input type="number" value="0" min="0" max="500" data-input="phone" aria-label="Smartphone count">
-                        <button data-action="inc" aria-label="Increase">+</button>
-                    </div>
-                </div>
-                <div class="device-card" data-device="laptop">
-                    <span class="device-icon">💻</span>
-                    <p class="device-name">Laptops</p>
-                    <p class="device-desc">Notebooks, Chromebooks</p>
-                    <div class="stepper">
-                        <button data-action="dec" aria-label="Decrease">−</button>
-                        <input type="number" value="0" min="0" max="500" data-input="laptop" aria-label="Laptop count">
-                        <button data-action="inc" aria-label="Increase">+</button>
-                    </div>
-                </div>
-                <div class="device-card" data-device="desktop">
-                    <span class="device-icon">🖥️</span>
-                    <p class="device-name">Desktops</p>
-                    <p class="device-desc">Towers, all-in-ones</p>
-                    <div class="stepper">
-                        <button data-action="dec" aria-label="Decrease">−</button>
-                        <input type="number" value="0" min="0" max="500" data-input="desktop" aria-label="Desktop count">
-                        <button data-action="inc" aria-label="Increase">+</button>
-                    </div>
-                </div>
-                <div class="device-card" data-device="tablet">
-                    <span class="device-icon">📟</span>
-                    <p class="device-name">Tablets</p>
-                    <p class="device-desc">iPads, Android tablets</p>
-                    <div class="stepper">
-                        <button data-action="dec" aria-label="Decrease">−</button>
-                        <input type="number" value="0" min="0" max="500" data-input="tablet" aria-label="Tablet count">
-                        <button data-action="inc" aria-label="Increase">+</button>
-                    </div>
-                </div>
+    <main class="max-w-6xl mx-auto px-6 py-12 space-y-8">
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-4xl font-extrabold tracking-tight">Gold Rush Pro</h1>
+                <p class="text-[var(--text-muted)]">Real-time Urban Mining Intelligence</p>
             </div>
-            <div class="mt-4 text-center">
-                <p class="text-sm text-[var(--text-muted)]">Total devices: <strong id="total-devices" class="text-[var(--primary)]">0</strong></p>
+            
+            <button class="fullscreen-btn" id="toggle-fullscreen" title="Toggle Fullscreen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+            </button>
+        </header>
+
+        <section class="topic-card p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-xl font-bold">🛠️ Device Collection</h3>
+                <div class="milestone-badge" id="milestone-text">Goal: Collect 10 devices</div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="device-grid">
+                <!-- Filled by JS -->
             </div>
         </section>
 
-        <!-- Recovery Yield Dashboard -->
-        <section class="topic-card p-6 md:p-8 fade-in" id="yield-section">
-            <h3 class="text-xl font-bold mb-1">⚗️ Recovery Yield</h3>
-            <p class="text-sm text-[var(--text-muted)] mb-6">Estimated metals recoverable from your device collection.</p>
-            <div class="space-y-1">
-                <div class="yield-row">
-                    <div class="flex items-center gap-2">
-                        <span class="metal-dot gold"></span>
-                        <span class="font-bold text-sm">Gold (Au)</span>
-                    </div>
-                    <div class="yield-bar-track">
-                        <div class="yield-bar-fill gold" id="bar-gold"></div>
-                    </div>
-                    <span class="text-right font-bold text-sm" id="val-gold">0.000 g</span>
+        <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
+            <section class="topic-card p-8">
+                <h3 class="text-xl font-bold mb-6">⚗️ Estimated Extraction</h3>
+                <div class="space-y-6" id="yield-list">
+                    <!-- Filled by JS -->
                 </div>
-                <div class="yield-row">
-                    <div class="flex items-center gap-2">
-                        <span class="metal-dot silver"></span>
-                        <span class="font-bold text-sm">Silver (Ag)</span>
-                    </div>
-                    <div class="yield-bar-track">
-                        <div class="yield-bar-fill silver" id="bar-silver"></div>
-                    </div>
-                    <span class="text-right font-bold text-sm" id="val-silver">0.000 g</span>
-                </div>
-                <div class="yield-row">
-                    <div class="flex items-center gap-2">
-                        <span class="metal-dot copper"></span>
-                        <span class="font-bold text-sm">Copper (Cu)</span>
-                    </div>
-                    <div class="yield-bar-track">
-                        <div class="yield-bar-fill copper" id="bar-copper"></div>
-                    </div>
-                    <span class="text-right font-bold text-sm" id="val-copper">0.0 g</span>
-                </div>
-                <div class="yield-row">
-                    <div class="flex items-center gap-2">
-                        <span class="metal-dot palladium"></span>
-                        <span class="font-bold text-sm">Palladium (Pd)</span>
-                    </div>
-                    <div class="yield-bar-track">
-                        <div class="yield-bar-fill palladium" id="bar-palladium"></div>
-                    </div>
-                    <span class="text-right font-bold text-sm" id="val-palladium">0.000 g</span>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Mining Comparison -->
-        <section class="topic-card p-6 md:p-8 fade-in" id="comparison-section">
-            <h3 class="text-xl font-bold mb-1">⛏️ Urban Mine vs. Real Mine</h3>
-            <p class="text-sm text-[var(--text-muted)] mb-6">How much raw ore would traditional mining need to match your device collection?</p>
-            <div class="comparison-strip">
-                <div class="comparison-side devices">
-                    <span class="comparison-icon">📱</span>
-                    <p class="text-2xl font-bold" id="comp-devices">0</p>
-                    <p class="text-sm text-[var(--text-muted)]">devices collected</p>
-                    <p class="text-xs font-bold mt-2 text-[var(--primary)]" id="comp-gold-from-devices">containing 0g of gold</p>
-                </div>
-                <div class="comparison-vs">VS</div>
-                <div class="comparison-side mining">
-                    <span class="comparison-icon">⛰️</span>
-                    <p class="text-2xl font-bold text-red-600" id="comp-ore">0 kg</p>
-                    <p class="text-sm text-[var(--text-muted)]">of ore needed</p>
-                    <p class="text-xs font-bold mt-2 text-red-500">to extract the same gold</p>
-                </div>
-            </div>
-            <p class="text-center text-sm text-[var(--text-muted)] mt-4" id="comp-sentence">
-                Add devices above to see the comparison.
-            </p>
-        </section>
+            <section class="topic-card p-8 bg-amber-50/50 border-amber-100 flex flex-col items-center justify-center text-center">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-2">Market Valuation</p>
+                <div class="value-display" id="total-value">₹0</div>
+                <div class="flex gap-4 mt-6 text-xs font-bold text-amber-800" id="value-breakdown"></div>
+                
+                <button class="mt-10 w-full py-4 bg-[#1e293b] text-white rounded-2xl font-bold hover:bg-black transition-all shadow-xl" id="generate-cert">
+                    Generate Impact Certificate
+                </button>
+            </section>
+        </div>
 
-        <!-- Market Value -->
-        <section class="value-card fade-in" id="value-section">
-            <p class="text-sm font-bold uppercase tracking-wider text-amber-700 mb-2">💰 Total Estimated Market Value</p>
-            <p class="value-amount" id="total-value">₹0</p>
-            <div class="flex flex-wrap justify-center gap-4 mt-4 text-sm font-medium text-amber-800" id="value-breakdown">
-                <span>Au: ₹0</span>
-                <span>Ag: ₹0</span>
-                <span>Cu: ₹0</span>
-                <span>Pd: ₹0</span>
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="topic-card p-6 text-center">
+                <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-2">CO2 Saved</p>
+                <p class="text-2xl font-black text-[var(--primary)]" id="env-co2">0 kg</p>
             </div>
-            <div class="fun-label" id="fun-comparison">
-                Add devices to see what this could buy 📚
+            <div class="topic-card p-6 text-center">
+                <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-2">Water Saved</p>
+                <p class="text-2xl font-black text-blue-500" id="env-water">0 L</p>
             </div>
-        </section>
-
-        <!-- Environmental Savings -->
-        <section class="topic-card p-6 md:p-8 fade-in" id="env-section">
-            <h3 class="text-xl font-bold mb-1">🌍 Environmental Savings</h3>
-            <p class="text-sm text-[var(--text-muted)] mb-6">By recycling instead of landfilling, here's what you save.</p>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="env-card">
-                    <span class="env-icon">🌿</span>
-                    <p class="env-value" id="env-co2">0</p>
-                    <p class="env-label">kg CO₂ saved</p>
-                </div>
-                <div class="env-card">
-                    <span class="env-icon">💧</span>
-                    <p class="env-value" id="env-water">0</p>
-                    <p class="env-label">Litres water saved</p>
-                </div>
-                <div class="env-card">
-                    <span class="env-icon">⚡</span>
-                    <p class="env-value" id="env-energy">0</p>
-                    <p class="env-label">kWh energy saved</p>
-                </div>
-                <div class="env-card">
-                    <span class="env-icon">🗑️</span>
-                    <p class="env-value" id="env-landfill">0</p>
-                    <p class="env-label">kg landfill avoided</p>
-                </div>
+            <div class="topic-card p-6 text-center">
+                <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-2">Energy Saved</p>
+                <p class="text-2xl font-black text-amber-500" id="env-energy">0 kWh</p>
             </div>
-        </section>
-
-        <!-- Key Insights -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
-            <div class="insight-card">
-                <span class="text-3xl mb-4 block">🥇</span>
-                <h4 class="text-lg mb-2 text-[var(--primary)]">Richer Than Ore</h4>
-                <p class="text-sm text-[var(--text-muted)]">1 tonne of smartphones contains ~300g of gold. 1 tonne of gold ore yields only ~5g.</p>
-            </div>
-            <div class="insight-card">
-                <span class="text-3xl mb-4 block">📉</span>
-                <h4 class="text-lg mb-2 text-[var(--primary)]">Massive Gap</h4>
-                <p class="text-sm text-[var(--text-muted)]">Only 17% of global e-waste is formally recycled. The rest is lost to landfills or informal processing.</p>
-            </div>
-            <div class="insight-card">
-                <span class="text-3xl mb-4 block">💎</span>
-                <h4 class="text-lg mb-2 text-[var(--primary)]">$62.5 Billion</h4>
-                <p class="text-sm text-[var(--text-muted)]">The estimated annual value of the global e-waste stream — most of it unrecovered.</p>
+            <div class="topic-card p-6 text-center">
+                <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-2">Waste Diverted</p>
+                <p class="text-2xl font-black text-emerald-500" id="env-landfill">0 kg</p>
             </div>
         </section>
     </main>
 
-    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
-        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
-        <p class="text-[var(--text-muted)]">Gold Rush Calculator · Chapter 1.3 · Urban Mining</p>
-    </footer>
-
     <script src="./1-3-gold-rush.js"></script>
     <script>
-        // Check for embedded mode
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-            // Hide header and fullscreen toggle
-            document.querySelector('header').style.display = 'none';
-            document.getElementById('toggle-fullscreen').style.display = 'none';
-            // Reduce main padding
-            document.querySelector('main').style.paddingTop = '2rem';
-        }
-
-        // Fullscreen
+        // Fullscreen toggle
         document.getElementById('toggle-fullscreen').addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -524,49 +220,6 @@
                 document.exitFullscreen();
             }
         });
-
-        // Intersection Observer for fade-in
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    gsap.to(entry.target, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // Scroll progress
-        window.addEventListener('scroll', () => {
-            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = (window.scrollY / totalScroll) * 100;
-            document.getElementById('scroll-progress').style.height = pct + '%';
-        });
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

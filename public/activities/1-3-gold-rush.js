@@ -1,211 +1,171 @@
 // --- DATA ---
-const METAL_YIELD = {
-    phone:   { gold: 0.034, silver: 0.34, copper: 15.0,   palladium: 0.015 },
-    laptop:  { gold: 0.25,  silver: 1.0,  copper: 500.0,  palladium: 0.08  },
-    desktop: { gold: 0.20,  silver: 0.80, copper: 1500.0, palladium: 0.06  },
-    tablet:  { gold: 0.015, silver: 0.20, copper: 30.0,   palladium: 0.01  }
+const METALS = {
+    gold: { name: 'Gold', symbol: 'Au', price: 6200, unit: 'g', color: '#f59e0b' },
+    silver: { name: 'Silver', symbol: 'Ag', price: 75, unit: 'g', color: '#94a3b8' },
+    copper: { name: 'Copper', symbol: 'Cu', price: 0.8, unit: 'g', color: '#ea580c' },
+    palladium: { name: 'Palladium', symbol: 'Pd', price: 4500, unit: 'g', color: '#8b5cf6' }
 };
 
-const MARKET_PRICE = { gold: 7200, silver: 85, copper: 0.80, palladium: 3500 }; // ₹ per gram
+const DEVICES = [
+    { id: 'phone', name: 'Smartphones', icon: '📱', gold: 0.034, silver: 0.35, copper: 16, palladium: 0.015, weight: 0.17 },
+    { id: 'laptop', name: 'Laptops', icon: '💻', gold: 0.19, silver: 1.2, copper: 150, palladium: 0.06, weight: 2.2 },
+    { id: 'desktop', name: 'Desktops', icon: '🖥️', gold: 0.5, silver: 3.5, copper: 500, palladium: 0.15, weight: 10 },
+    { id: 'tablet', name: 'Tablets', icon: '📟', gold: 0.05, silver: 0.5, copper: 40, palladium: 0.02, weight: 0.5 },
+    { id: 'watch', name: 'Smartwatches', icon: '⌚', gold: 0.01, silver: 0.1, copper: 5, palladium: 0.005, weight: 0.05 },
+    { id: 'buds', name: 'Earbuds', icon: '🎧', gold: 0.005, silver: 0.05, copper: 2, palladium: 0.002, weight: 0.02 }
+];
 
-const ENV_SAVINGS = {
-    phone:   { co2: 1.2,  water: 18,  energy: 7,  landfill: 0.08 },
-    laptop:  { co2: 4.8,  water: 120, energy: 42, landfill: 0.35 },
-    desktop: { co2: 6.2,  water: 180, energy: 58, landfill: 0.55 },
-    tablet:  { co2: 2.1,  water: 45,  energy: 15, landfill: 0.12 }
+const ENV_FACTORS = {
+    co2: 15,    // kg CO2 per kg e-waste saved
+    water: 120, // Litres per kg
+    energy: 8,  // kWh per kg
+    landfill: 1 // kg per kg
 };
 
-// Max values for bar scaling
-const BAR_MAX = { gold: 50, silver: 200, copper: 30000, palladium: 20 };
+const MILESTONES = [
+    { threshold: 1, text: "Goal: Start your collection" },
+    { threshold: 10, text: "Goal: Fill a small box" },
+    { threshold: 50, text: "Goal: Urban Miner Apprentice" },
+    { threshold: 100, text: "Goal: Enough gold for a wedding ring!" },
+    { threshold: 500, text: "Goal: Extraction Specialist" },
+    { threshold: 1000, text: "Goal: Regional Recovery Hub" }
+];
 
 // --- STATE ---
-let devices = { phone: 0, laptop: 0, desktop: 0, tablet: 0 };
-
-// --- DOM ---
-const els = {
-    totalDevices: document.getElementById('total-devices'),
-    barGold: document.getElementById('bar-gold'),
-    barSilver: document.getElementById('bar-silver'),
-    barCopper: document.getElementById('bar-copper'),
-    barPalladium: document.getElementById('bar-palladium'),
-    valGold: document.getElementById('val-gold'),
-    valSilver: document.getElementById('val-silver'),
-    valCopper: document.getElementById('val-copper'),
-    valPalladium: document.getElementById('val-palladium'),
-    compDevices: document.getElementById('comp-devices'),
-    compGoldFromDevices: document.getElementById('comp-gold-from-devices'),
-    compOre: document.getElementById('comp-ore'),
-    compSentence: document.getElementById('comp-sentence'),
-    totalValue: document.getElementById('total-value'),
-    valueBreakdown: document.getElementById('value-breakdown'),
-    funComparison: document.getElementById('fun-comparison'),
-    envCo2: document.getElementById('env-co2'),
-    envWater: document.getElementById('env-water'),
-    envEnergy: document.getElementById('env-energy'),
-    envLandfill: document.getElementById('env-landfill')
+let inventory = {
+    phone: 0, laptop: 0, desktop: 0, tablet: 0, watch: 0, buds: 0
 };
 
-// --- INIT ---
+// --- INITIALIZATION ---
 function init() {
-    // Bind stepper buttons
-    document.querySelectorAll('.stepper button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const card = btn.closest('.device-card');
-            const input = card.querySelector('input');
-            const device = input.dataset.input;
-            const action = btn.dataset.action;
-            let val = parseInt(input.value) || 0;
+    renderTicker();
+    renderDeviceGrid();
+    renderYieldList();
+    updateCalculations();
+}
 
-            if (action === 'inc') val = Math.min(500, val + 1);
-            if (action === 'dec') val = Math.max(0, val - 1);
+function renderTicker() {
+    const ticker = document.getElementById('ticker');
+    const items = Object.values(METALS).map(m => {
+        const change = (Math.random() > 0.5 ? '+' : '-') + (Math.random() * 2).toFixed(2) + '%';
+        const colorClass = change.startsWith('+') ? 'text-emerald-400' : 'text-red-400';
+        return `<span class="mx-8">${m.name} (${m.symbol}): <span class="text-white">₹${m.price.toLocaleString()}</span> <span class="${colorClass}">${change}</span></span>`;
+    });
+    ticker.innerHTML = items.join('') + items.join(''); // Double for seamless loop
+}
 
-            input.value = val;
-            devices[device] = val;
-            card.classList.toggle('has-value', val > 0);
-            recalculate();
-        });
+function renderDeviceGrid() {
+    const grid = document.getElementById('device-grid');
+    grid.innerHTML = DEVICES.map(d => `
+        <div class="device-card" id="card-${d.id}">
+            <span class="text-3xl block mb-2">${d.icon}</span>
+            <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-3">${d.name}</p>
+            <div class="stepper">
+                <button onclick="changeCount('${d.id}', -1)">−</button>
+                <input type="number" id="input-${d.id}" value="0" min="0" onchange="setCount('${d.id}', this.value)">
+                <button onclick="changeCount('${d.id}', 1)">+</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderYieldList() {
+    const list = document.getElementById('yield-list');
+    list.innerHTML = Object.keys(METALS).map(key => `
+        <div class="space-y-2">
+            <div class="flex justify-between items-end">
+                <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">${METALS[key].name} (${METALS[key].symbol})</span>
+                <span class="text-sm font-black" id="val-${key}">0.000 g</span>
+            </div>
+            <div class="yield-bar-track">
+                <div class="yield-bar-fill" id="bar-${key}" style="background: ${METALS[key].color}"></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// --- LOGIC ---
+window.changeCount = (id, delta) => {
+    inventory[id] = Math.max(0, inventory[id] + delta);
+    document.getElementById(`input-${id}`).value = inventory[inventory[id]]; // Fix: this was buggy, let's use the value
+    syncUI(id);
+    updateCalculations();
+};
+
+// Fixed changeCount
+window.changeCount = (id, delta) => {
+    const input = document.getElementById(`input-${id}`);
+    let val = parseInt(input.value) || 0;
+    val = Math.max(0, val + delta);
+    input.value = val;
+    inventory[id] = val;
+    syncUI(id);
+    updateCalculations();
+};
+
+window.setCount = (id, val) => {
+    inventory[id] = Math.max(0, parseInt(val) || 0);
+    syncUI(id);
+    updateCalculations();
+};
+
+function syncUI(id) {
+    const card = document.getElementById(`card-${id}`);
+    if (inventory[id] > 0) card.classList.add('active');
+    else card.classList.remove('active');
+}
+
+function updateCalculations() {
+    let totals = { gold: 0, silver: 0, copper: 0, palladium: 0, weight: 0 };
+    let totalDevices = 0;
+
+    DEVICES.forEach(d => {
+        const count = inventory[d.id];
+        totalDevices += count;
+        totals.gold += count * d.gold;
+        totals.silver += count * d.silver;
+        totals.copper += count * d.copper;
+        totals.palladium += count * d.palladium;
+        totals.weight += count * d.weight;
     });
 
-    // Bind direct input
-    document.querySelectorAll('.stepper input').forEach(input => {
-        input.addEventListener('input', () => {
-            const device = input.dataset.input;
-            let val = parseInt(input.value) || 0;
-            val = Math.max(0, Math.min(500, val));
-            devices[device] = val;
-            const card = input.closest('.device-card');
-            card.classList.toggle('has-value', val > 0);
-            recalculate();
-        });
+    // Update Yields
+    Object.keys(METALS).forEach(key => {
+        const valEl = document.getElementById(`val-${key}`);
+        const barEl = document.getElementById(`bar-${key}`);
+        const val = totals[key];
+        valEl.textContent = val.toFixed(key === 'copper' ? 1 : 3) + ' g';
+        
+        // Scale bar (normalized to a reasonable max)
+        const max = key === 'copper' ? 5000 : 50;
+        const pct = Math.min(100, (val / max) * 100);
+        barEl.style.width = pct + '%';
     });
-}
 
-// --- CALCULATION ENGINE ---
-function recalculate() {
-    const total = devices.phone + devices.laptop + devices.desktop + devices.tablet;
-    els.totalDevices.textContent = total;
-
-    // Calculate yields
-    const yield_ = { gold: 0, silver: 0, copper: 0, palladium: 0 };
-    for (const [device, count] of Object.entries(devices)) {
-        for (const metal of ['gold', 'silver', 'copper', 'palladium']) {
-            yield_[metal] += METAL_YIELD[device][metal] * count;
-        }
-    }
-
-    // Update yield bars
-    updateYieldBar('gold', yield_.gold);
-    updateYieldBar('silver', yield_.silver);
-    updateYieldBar('copper', yield_.copper);
-    updateYieldBar('palladium', yield_.palladium);
-
-    // Update text values
-    els.valGold.textContent = formatGrams(yield_.gold);
-    els.valSilver.textContent = formatGrams(yield_.silver);
-    els.valCopper.textContent = yield_.copper >= 1000 ? (yield_.copper / 1000).toFixed(2) + ' kg' : formatGrams(yield_.copper);
-    els.valPalladium.textContent = formatGrams(yield_.palladium);
-
-    // Mining comparison (gold-focused)
-    const oreNeededKg = (yield_.gold / 5) * 1000; // 5g per tonne of ore
-    els.compDevices.textContent = total;
-    els.compGoldFromDevices.textContent = `containing ${formatGrams(yield_.gold)} of gold`;
-    els.compOre.textContent = oreNeededKg >= 1000
-        ? (oreNeededKg / 1000).toFixed(1) + ' tonnes'
-        : oreNeededKg.toFixed(1) + ' kg';
-
-    if (total > 0) {
-        els.compSentence.innerHTML = `Your <strong>${total} devices</strong> yield <strong>${formatGrams(yield_.gold)}</strong> of gold. Traditional mining would need to dig through <strong>${els.compOre.textContent}</strong> of rock for the same amount.`;
-    } else {
-        els.compSentence.textContent = 'Add devices above to see the comparison.';
-    }
-
-    // Market value
-    const values = {
-        gold: yield_.gold * MARKET_PRICE.gold,
-        silver: yield_.silver * MARKET_PRICE.silver,
-        copper: yield_.copper * MARKET_PRICE.copper,
-        palladium: yield_.palladium * MARKET_PRICE.palladium
-    };
-    const totalVal = values.gold + values.silver + values.copper + values.palladium;
-
-    animateCounter(els.totalValue, totalVal);
-    els.valueBreakdown.innerHTML = `
-        <span>Au: ₹${Math.round(values.gold).toLocaleString('en-IN')}</span>
-        <span>Ag: ₹${Math.round(values.silver).toLocaleString('en-IN')}</span>
-        <span>Cu: ₹${Math.round(values.copper).toLocaleString('en-IN')}</span>
-        <span>Pd: ₹${Math.round(values.palladium).toLocaleString('en-IN')}</span>
-    `;
-
-    // Fun comparison
-    if (totalVal > 0) {
-        const textbooks = Math.floor(totalVal / 500);
-        const meals = Math.floor(totalVal / 80);
-        if (textbooks > 0) {
-            els.funComparison.textContent = `That's enough to buy ${textbooks} new textbooks 📚`;
-        } else {
-            els.funComparison.textContent = `That's worth about ${meals} school meals 🍱`;
-        }
-    } else {
-        els.funComparison.textContent = 'Add devices to see what this could buy 📚';
-    }
-
-    // Environmental savings
-    const env = { co2: 0, water: 0, energy: 0, landfill: 0 };
-    for (const [device, count] of Object.entries(devices)) {
-        env.co2 += ENV_SAVINGS[device].co2 * count;
-        env.water += ENV_SAVINGS[device].water * count;
-        env.energy += ENV_SAVINGS[device].energy * count;
-        env.landfill += ENV_SAVINGS[device].landfill * count;
-    }
-
-    animateCounterText(els.envCo2, env.co2, 1);
-    animateCounterText(els.envWater, env.water, 0);
-    animateCounterText(els.envEnergy, env.energy, 0);
-    animateCounterText(els.envLandfill, env.landfill, 1);
-}
-
-// --- HELPERS ---
-function formatGrams(val) {
-    if (val >= 1000) return (val / 1000).toFixed(2) + ' kg';
-    if (val >= 1) return val.toFixed(2) + ' g';
-    if (val >= 0.001) return val.toFixed(3) + ' g';
-    return '0.000 g';
-}
-
-function updateYieldBar(metal, value) {
-    const bar = els['bar' + metal.charAt(0).toUpperCase() + metal.slice(1)];
-    const pct = Math.min(100, (value / BAR_MAX[metal]) * 100);
-    bar.style.width = pct + '%';
-}
-
-function animateCounter(el, targetVal) {
-    const currentText = el.textContent.replace(/[₹,\s]/g, '');
-    const current = parseFloat(currentText) || 0;
-
-    gsap.to({ val: current }, {
-        val: targetVal,
-        duration: 0.8,
-        ease: 'power2.out',
-        onUpdate: function () {
-            const v = Math.round(this.targets()[0].val);
-            el.textContent = '₹' + v.toLocaleString('en-IN');
-        }
+    // Update Value
+    let totalValue = 0;
+    const breakdown = Object.keys(METALS).map(key => {
+        const val = totals[key] * METALS[key].price;
+        totalValue += val;
+        return `<span>${METALS[key].symbol}: ₹${Math.round(val).toLocaleString()}</span>`;
     });
+    
+    document.getElementById('total-value').textContent = '₹' + Math.round(totalValue).toLocaleString();
+    document.getElementById('value-breakdown').innerHTML = breakdown.join('');
+
+    // Update Env
+    document.getElementById('env-co2').textContent = (totals.weight * ENV_FACTORS.co2).toFixed(1) + ' kg';
+    document.getElementById('env-water').textContent = Math.round(totals.weight * ENV_FACTORS.water).toLocaleString() + ' L';
+    document.getElementById('env-energy').textContent = Math.round(totals.weight * ENV_FACTORS.energy).toLocaleString() + ' kWh';
+    document.getElementById('env-landfill').textContent = totals.weight.toFixed(1) + ' kg';
+
+    // Update Milestones
+    const milestone = [...MILESTONES].reverse().find(m => totalDevices >= m.threshold) || MILESTONES[0];
+    document.getElementById('milestone-text').textContent = milestone.text;
 }
 
-function animateCounterText(el, targetVal, decimals) {
-    const current = parseFloat(el.textContent.replace(/,/g, '')) || 0;
+document.getElementById('generate-cert').onclick = () => {
+    alert("Impact Certificate Generated! (In a production app, this would download a high-res PDF summary of your environmental savings).");
+};
 
-    gsap.to({ val: current }, {
-        val: targetVal,
-        duration: 0.8,
-        ease: 'power2.out',
-        onUpdate: function () {
-            const v = this.targets()[0].val;
-            el.textContent = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString('en-IN');
-        }
-    });
-}
-
-// START
 init();
