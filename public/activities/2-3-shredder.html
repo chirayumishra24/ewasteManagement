@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urban Mine Explorer | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>Urban Mine Explorer Pro | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
@@ -17,369 +17,343 @@
     </script>
     <style>
         :root {
-            --page-bg: #fdfaf7;
+            --page-bg: #f1f5f9;
             --surface: #ffffff;
-            --primary: #f3a44a;
-            --primary-dark: #ea580c;
-            --text-primary: #1e293b;
-            --industrial-gray: #334155;
+            --primary: #ea580c;
+            --primary-dark: #c2410c;
+            --text-primary: #0f172a;
         }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
+        body { background-color: var(--page-bg); color: var(--text-primary); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; }
+        
+        #canvas-container {
+            width: 100%; height: 550px;
+            background: linear-gradient(180deg, #1e293b 0%, #020617 100%);
+            border-radius: 20px; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
         }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-        code { font-family: 'JetBrains Mono', monospace; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
-        }
-
-        .topic-card {
-            background: var(--surface);
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.05);
             border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;
+            padding: 1rem 2rem; border-radius: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: all 0.2s; border: none; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(234, 88, 12, 0.4); }
+        .action-btn:active { transform: translateY(2px); }
+        
+        .counter-display {
+            font-family: 'JetBrains Mono', monospace; font-size: 2.5rem; font-weight: 700;
+            color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            background: #0f172a; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155;
+            display: inline-block; min-width: 150px; text-align: center;
         }
 
-        #three-canvas-container {
-            width: 100%;
-            height: 500px;
-            background: #0f172a;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .industrial-stat {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .control-panel {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .shredder-btn {
-            background: var(--primary);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .shredder-btn:hover { background: var(--primary-dark); transform: scale(1.02); }
-        .shredder-btn:active { transform: scale(0.98); }
-
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        
         .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #f97316, #fbbf24);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3);
-            cursor: pointer; border: 0;
-        }
-
-        .is-embedded main { padding-top: 2rem; }
-
-        .layer-badge {
-            position: absolute; top: 20px; right: 20px;
+            position: absolute; top: 16px; right: 16px; z-index: 50;
+            width: 48px; height: 48px; border-radius: 50%;
             background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
-            padding: 8px 16px; border-radius: 99px;
-            color: #fbbf24; font-weight: 700; font-size: 12px; border: 1px solid rgba(251, 191, 36, 0.3);
+            border: 1px solid rgba(255,255,255,0.2); color: white;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
         }
-
-        #shred-counter {
-            font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #fbbf24;
-        }
+        .fullscreen-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
     </style>
 </head>
 <body>
-
-    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Information Panel -->
-            <div class="space-y-6">
-                <div class="topic-card p-6">
-                    <h3 class="text-xl font-bold mb-4">Industrial Separation</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed mb-6">
-                        Recycling isn't sorting by hand—it's high-speed mechanical triage. Shredders break devices into 20mm fragments, and magnets pull steel away from plastics and copper.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="industrial-stat">
-                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Recovery Goal</p>
-                            <p class="text-lg font-bold text-slate-700">98% Purity</p>
-                        </div>
-                        <div class="industrial-stat">
-                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Process Speed</p>
-                            <p class="text-lg font-bold text-slate-700">2 Tons / Hour</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="control-panel text-center">
-                    <p class="text-xs font-bold text-slate-400 uppercase mb-4">Plant Controls</p>
-                    <button id="shred-btn" class="shredder-btn w-full mb-4">Feed Shredder</button>
-                    <p class="text-xs text-slate-400">Fragments are separated into 3 streams: Ferrous (Magnets), Non-Ferrous (Eddy Currents), and Plastics (Density).</p>
-                </div>
+    <main class="max-w-6xl mx-auto px-6 py-8 space-y-6">
+        <header class="flex justify-between items-end">
+            <div>
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">Module 2.3 • Recycle</span>
+                <h1 class="text-3xl font-bold">Urban Mine Industrial Triage</h1>
             </div>
+            <div class="text-right">
+                <p class="text-xs text-slate-500 font-bold uppercase mb-1">Recovered Value</p>
+                <div class="counter-display" id="value-counter">$0.00</div>
+            </div>
+        </header>
 
-            <!-- 3D Shredder View -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="topic-card p-2 relative">
-                    <div class="layer-badge">ACTIVE RECOVERY ENGINE</div>
-                    <div id="three-canvas-container">
-                        <div class="absolute bottom-6 left-6">
-                            <p class="text-[10px] font-bold text-white/40 uppercase mb-1">Fragments Recovered</p>
-                            <div id="shred-counter">000000</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Legend -->
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="p-4 bg-white rounded-2xl border border-slate-100 flex items-center gap-3">
-                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <p class="text-xs font-bold text-slate-600">Ferrous Metal</p>
-                    </div>
-                    <div class="p-4 bg-white rounded-2xl border border-slate-100 flex items-center gap-3">
-                        <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
-                        <p class="text-xs font-bold text-slate-600">Copper/Alu</p>
-                    </div>
-                    <div class="p-4 bg-white rounded-2xl border border-slate-100 flex items-center gap-3">
-                        <div class="w-3 h-3 bg-slate-400 rounded-full"></div>
-                        <p class="text-xs font-bold text-slate-600">Plastic Scrap</p>
-                    </div>
+        <div class="relative group">
+            <div id="canvas-container">
+                <button class="fullscreen-btn" id="fs-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                </button>
+                <!-- UI Overlay in 3D Space -->
+                <div class="absolute top-6 left-6 text-white bg-black/40 backdrop-blur border border-white/10 p-4 rounded-xl">
+                    <h3 class="font-mono font-bold text-sm text-orange-400 mb-2">SYSTEM STATUS: <span class="text-green-400">ONLINE</span></h3>
+                    <ul class="text-xs space-y-2 font-mono text-slate-300">
+                        <li><span class="legend-dot bg-blue-500 mr-2"></span> FERROUS (Magnetic)</li>
+                        <li><span class="legend-dot bg-orange-500 mr-2"></span> NON-FERROUS (Eddy)</li>
+                        <li><span class="legend-dot bg-slate-400 mr-2"></span> PLASTICS (Residue)</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- How it Works -->
-        <section class="topic-card p-8 md:p-12 fade-in">
-            <h2 class="text-3xl font-bold mb-8 text-center">The Shredder Chain</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">1</div>
-                    <h4 class="text-lg font-bold mb-3">Primary Shred</h4>
-                    <p class="text-sm text-slate-500">Device is pulverized into large fragments. Batteries must be removed before this step to prevent fires.</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">2</div>
-                    <h4 class="text-lg font-bold mb-3">Magnetic Triage</h4>
-                    <p class="text-sm text-slate-500">Overhead magnetic belts lift steel and iron fragments, isolating the ferrous material stream instantly.</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">3</div>
-                    <h4 class="text-lg font-bold mb-3">Eddy Current</h4>
-                    <p class="text-sm text-slate-500">Rotating magnetic fields "eject" non-magnetic metals like aluminum and copper from the remaining plastic stream.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-panel p-6 md:col-span-1 flex flex-col justify-center">
+                <p class="text-sm text-slate-500 mb-4">Introduce e-waste into the shredder. Magnets will automatically pull iron/steel upward, while copper/aluminum fall to the secondary bin.</p>
+                <button class="action-btn" id="shred-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    ENGAGE SHREDDER
+                </button>
+            </div>
+            
+            <div class="glass-panel p-6 md:col-span-2">
+                <h3 class="text-lg font-bold mb-3">The Process</h3>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="w-10 h-10 mx-auto bg-slate-100 rounded-full flex items-center justify-center font-bold mb-2">1</div>
+                        <p class="text-xs font-bold">Primary Shred</p>
+                        <p class="text-[10px] text-slate-500 mt-1">20mm fragments</p>
+                    </div>
+                    <div>
+                        <div class="w-10 h-10 mx-auto bg-slate-100 rounded-full flex items-center justify-center font-bold mb-2">2</div>
+                        <p class="text-xs font-bold">Magnetic Triage</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Lifts Ferrous metals</p>
+                    </div>
+                    <div>
+                        <div class="w-10 h-10 mx-auto bg-slate-100 rounded-full flex items-center justify-center font-bold mb-2">3</div>
+                        <p class="text-xs font-bold">Density Split</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Plastics vs Copper/Alu</p>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
-
-    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
-        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
-        <p class="text-slate-500">Urban Mine Explorer · Chapter 2.3 · Recycle</p>
-    </footer>
 
     <script type="module">
         import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // --- APP STATE ---
-        let scene, camera, renderer, fragments = [];
-        let shredCount = 0;
-        let conveyor, magnet;
+        let scene, camera, renderer, controls;
+        let machineGroup = new THREE.Group();
+        let rollers = [];
+        let particles = [];
+        let totalValue = 0;
 
-        const container = document.getElementById('three-canvas-container');
+        const MATS = {
+            machine: new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 }),
+            belt: new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 }),
+            ferrous: new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 1.0, roughness: 0.2 }),
+            nonferrous: new THREE.MeshStandardMaterial({ color: 0xf97316, metalness: 0.9, roughness: 0.3 }),
+            plastic: new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.8 })
+        };
 
-        // --- INITIALIZATION ---
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(5, 5, 10);
-            camera.lookAt(0, 0, 0);
+            scene.fog = new THREE.FogExp2(0x020617, 0.04);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true });
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 8, 15);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
             container.appendChild(renderer.domElement);
 
-            // Industrial Lighting
-            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 1.2);
-            directional.position.set(10, 20, 10);
-            scene.add(directional);
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.maxPolarAngle = Math.PI/2 - 0.1; // Don't go below ground
 
-            // Environment
-            createPlant();
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+            const spot = new THREE.SpotLight(0xffffff, 100);
+            spot.position.set(0, 15, 0);
+            spot.angle = Math.PI/4;
+            spot.penumbra = 0.5;
+            spot.castShadow = true;
+            scene.add(spot);
             
-            animate();
-            document.getElementById('shred-btn').addEventListener('click', spawnShredBurst);
-            window.addEventListener('resize', onResize);
-        }
+            const accent = new THREE.PointLight(0xea580c, 50, 10);
+            accent.position.set(0, 2, 0);
+            scene.add(accent);
 
-        function createPlant() {
-            // Conveyor Belt
-            const convGeo = new THREE.BoxGeometry(10, 0.2, 3);
-            const convMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
-            conveyor = new THREE.Mesh(convGeo, convMat);
-            conveyor.position.y = -1;
-            scene.add(conveyor);
-
-            // Magnet Structure
-            const magGeo = new THREE.BoxGeometry(2, 1, 2);
-            const magMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 });
-            magnet = new THREE.Mesh(magGeo, magMat);
-            magnet.position.set(2, 2, 0);
-            scene.add(magnet);
-
-            const magSupport = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 5), magMat);
-            magSupport.position.set(2, 4.5, 0);
-            scene.add(magSupport);
-
-            // Shredder Input
-            const shredGeo = new THREE.BoxGeometry(2, 2, 3);
-            const shredMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
-            const input = new THREE.Mesh(shredGeo, shredMat);
-            input.position.set(-4, 0, 0);
-            scene.add(input);
-        }
-
-        function spawnShredBurst() {
-            const burstSize = 10;
-            for (let i = 0; i < burstSize; i++) {
-                setTimeout(() => spawnFragment(), i * 50);
-            }
-            shredCount += burstSize;
-            updateCounter();
-        }
-
-        function spawnFragment() {
-            const types = [
-                { color: 0x3b82f6, metal: true },   // Ferrous
-                { color: 0xf97316, metal: false },  // Copper (Non-ferrous)
-                { color: 0x94a3b8, metal: false }   // Plastic
-            ];
-            const type = types[Math.floor(Math.random() * types.length)];
+            buildMachine();
             
-            const size = 0.1 + Math.random() * 0.2;
-            const geo = new THREE.BoxGeometry(size, size, size);
-            const mat = new THREE.MeshStandardMaterial({ color: type.color });
-            const mesh = new THREE.Mesh(geo, mat);
+            document.getElementById('shred-btn').onclick = triggerShred;
             
-            mesh.position.set(-4, 0.5, (Math.random() - 0.5) * 2);
-            mesh.userData = { 
-                vel: new THREE.Vector3(0.05 + Math.random() * 0.05, 0, 0),
-                isMetal: type.metal,
-                isRecovered: false
+            document.getElementById('fs-btn').onclick = () => {
+                if(!document.fullscreenElement) container.requestFullscreen();
+                else document.exitFullscreen();
             };
-            
-            scene.add(mesh);
-            fragments.push(mesh);
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            animate();
         }
 
-        function updateCounter() {
-            const counter = document.getElementById('shred-counter');
-            counter.textContent = shredCount.toString().padStart(6, '0');
+        function buildMachine() {
+            // Main Hopper
+            const hopper = new THREE.Mesh(new THREE.CylinderGeometry(3, 1.5, 4, 4, 1, true), MATS.machine);
+            hopper.position.y = 6;
+            hopper.rotation.y = Math.PI/4;
+            hopper.material.side = THREE.DoubleSide;
+            machineGroup.add(hopper);
+            
+            // Rollers (Shredder blades)
+            for(let i=0; i<2; i++) {
+                const roller = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 3, 8), MATS.machine);
+                roller.rotation.z = Math.PI/2;
+                roller.position.set(0, 3.5, i===0 ? -0.7 : 0.7);
+                machineGroup.add(roller);
+                rollers.push({ mesh: roller, dir: i===0 ? 1 : -1 });
+            }
+
+            // Magnetic Belt (Overhead)
+            const magBelt = new THREE.Mesh(new THREE.BoxGeometry(4, 0.5, 2), new THREE.MeshStandardMaterial({color:0x334155, metalness:0.9}));
+            magBelt.position.set(4, 2, 0);
+            machineGroup.add(magBelt);
+            
+            // Lower Conveyor
+            const conv = new THREE.Mesh(new THREE.BoxGeometry(10, 0.2, 3), MATS.belt);
+            conv.position.set(2, 0, 0);
+            machineGroup.add(conv);
+            
+            // Bins
+            const binMat = new THREE.MeshStandardMaterial({color: 0x1e293b, transparent:true, opacity:0.8});
+            const bin1 = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), binMat); // Ferrous
+            bin1.position.set(6, -1, 3);
+            machineGroup.add(bin1);
+            
+            const bin2 = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), binMat); // Non-Ferrous
+            bin2.position.set(7, -1, 0);
+            machineGroup.add(bin2);
+
+            scene.add(machineGroup);
+        }
+
+        function triggerShred() {
+            // Drop a chunk into hopper
+            const chunk = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), MATS.machine);
+            chunk.position.set(0, 9, 0);
+            scene.add(chunk);
+            
+            gsap.to(chunk.position, {
+                y: 4, duration: 0.5, ease: "power2.in",
+                onComplete: () => {
+                    scene.remove(chunk);
+                    // Spawn particles
+                    spawnParticles();
+                    
+                    // Shake camera slightly
+                    gsap.fromTo(camera.position, 
+                        {x: camera.position.x + 0.1}, 
+                        {x: camera.position.x, duration: 0.1, yoyo: true, repeat: 3}
+                    );
+                }
+            });
+        }
+
+        function spawnParticles() {
+            const count = 30;
+            const types = [
+                { type: 'ferrous', mat: MATS.ferrous, val: 0.10 },
+                { type: 'nonferrous', mat: MATS.nonferrous, val: 0.50 },
+                { type: 'plastic', mat: MATS.plastic, val: 0.00 }
+            ];
+            
+            for(let i=0; i<count; i++) {
+                const t = types[Math.floor(Math.random() * types.length)];
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), t.mat);
+                
+                mesh.position.set((Math.random()-0.5)*1.5, 3.5, (Math.random()-0.5)*1.5);
+                
+                scene.add(mesh);
+                particles.push({
+                    mesh,
+                    type: t.type,
+                    val: t.val,
+                    vel: new THREE.Vector3((Math.random()-0.5)*0.1, -0.2, (Math.random()-0.5)*0.1),
+                    state: 'falling' // falling -> conveyor -> magnetic_lift -> falling_bin
+                });
+            }
         }
 
         function animate() {
             requestAnimationFrame(animate);
-
-            // Update fragments
-            for (let i = fragments.length - 1; i >= 0; i--) {
-                const f = fragments[i];
-                f.position.add(f.userData.vel);
-                f.rotation.x += 0.05;
-                f.rotation.y += 0.05;
-
-                // Magnetic attraction for Ferrous metals
-                if (f.userData.isMetal && f.position.x > 1.5 && f.position.x < 2.5 && !f.userData.isRecovered) {
-                    const distToMag = f.position.distanceTo(magnet.position);
-                    if (distToMag < 3) {
-                        f.userData.vel.y += (magnet.position.y - f.position.y) * 0.05;
-                        f.userData.vel.x *= 0.8; // Slow down
-                        
-                        if (distToMag < 0.5) {
-                            f.userData.isRecovered = true;
-                            f.userData.vel.set(0,0.1,0); // Lift up
+            controls.update();
+            
+            // Spin rollers
+            rollers.forEach(r => r.mesh.rotation.x += 0.2 * r.dir);
+            
+            // Particle Physics
+            for(let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                if (p.state === 'falling') {
+                    p.vel.y -= 0.01; // Gravity
+                    p.mesh.position.add(p.vel);
+                    p.mesh.rotation.x += 0.1;
+                    
+                    if (p.mesh.position.y <= 0.2) {
+                        p.mesh.position.y = 0.2;
+                        p.state = 'conveyor';
+                    }
+                } 
+                else if (p.state === 'conveyor') {
+                    p.mesh.position.x += 0.08; // Move right
+                    
+                    // Magnetic Zone
+                    if (p.mesh.position.x > 3 && p.mesh.position.x < 5 && p.type === 'ferrous') {
+                        p.state = 'magnetic_lift';
+                    }
+                    
+                    // End of conveyor
+                    if (p.mesh.position.x > 7) {
+                        p.state = 'falling_bin2';
+                        p.vel.set(0.05, 0, 0);
+                    }
+                }
+                else if (p.state === 'magnetic_lift') {
+                    p.mesh.position.y += 0.1;
+                    if(p.mesh.position.y > 1.8) {
+                        p.mesh.position.y = 1.8;
+                        p.mesh.position.z += 0.05; // Move towards bin 1
+                        if(p.mesh.position.z > 3) {
+                            p.state = 'falling_bin1';
+                            p.vel.set(0, -0.1, 0);
                         }
                     }
                 }
-
-                // Cleanup
-                if (f.position.x > 6 || f.position.y > 6) {
-                    scene.remove(f);
-                    fragments.splice(i, 1);
+                else if (p.state === 'falling_bin1' || p.state === 'falling_bin2') {
+                    p.vel.y -= 0.01;
+                    p.mesh.position.add(p.vel);
+                    if (p.mesh.position.y < -0.8) {
+                        // Landed in bin
+                        totalValue += p.val;
+                        document.getElementById('value-counter').textContent = '$' + totalValue.toFixed(2);
+                        
+                        scene.remove(p.mesh);
+                        particles.splice(i, 1);
+                    }
                 }
             }
-
-            // Subtle plant movement
-            magnet.position.y = 2 + Math.sin(Date.now() * 0.005) * 0.1;
-
+            
             renderer.render(scene, camera);
         }
 
-        function onResize() {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        // Fullscreen
-        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
-        init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
+        if (urlParams.get('embedded') === 'true') document.body.classList.add('is-embedded');
+        init();
     </script>
 </body>
 </html>
