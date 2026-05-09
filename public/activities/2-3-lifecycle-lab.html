@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lifecycle Decision Lab | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>Lifecycle Decision Lab Pro | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
@@ -16,347 +16,59 @@
         }
     </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #f3a44a;
-            --reduce: #60a5fa;
-            --reuse: #c084fc;
-            --recycle: #fbbf24;
-            --text-primary: #1e293b;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        }
-
-        .topic-card {
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        #three-canvas-container {
-            width: 100%;
-            height: 400px;
-            background: radial-gradient(circle at center, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 16px;
-            position: relative;
-        }
-
-        .decision-btn {
-            padding: 1.5rem;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
-            cursor: pointer;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .decision-btn:hover { transform: translateY(-4px); }
-        .btn-reduce:hover { border-color: var(--reduce); background: #eff6ff; }
-        .btn-reuse:hover { border-color: var(--reuse); background: #faf5ff; }
-        .btn-recycle:hover { border-color: var(--recycle); background: #fffbeb; }
-
-        .stat-badge {
-            display: flex; align-items: center; gap: 12px;
-            padding: 0.75rem 1rem; border-radius: 12px; background: #f1f5f9;
-        }
-
-        .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #1e293b, #334155);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            cursor: pointer; border: 0;
-        }
-
-        .is-embedded main { padding-top: 2rem; }
-
-        .scenario-box {
-            animation: slideIn 0.5s ease-out;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .impact-pill {
-            padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase;
-        }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+        #canvas-container { height: 400px; background: #0f172a; border-radius: 20px; position: relative; overflow: hidden; }
+        .choice-btn { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+        .choice-btn:hover { border-color: #3b82f6; transform: translateY(-2px); }
     </style>
 </head>
-<body>
-
-    <main class="relative max-w-5xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <!-- Scenario Card -->
-        <section class="topic-card overflow-hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2">
-                <div class="p-8 md:p-12 space-y-6">
-                    <div class="inline-block px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Current Scenario</div>
-                    <h2 class="text-3xl font-bold" id="scenario-title">Old Office Laptop</h2>
-                    <p class="text-slate-500 leading-relaxed" id="scenario-desc">
-                        A 2016 ThinkPad with 4GB RAM and a slow HDD. The battery is at 40% health, but the screen and keyboard are in perfect condition.
-                    </p>
-                    
-                    <div class="space-y-3">
-                        <div class="stat-badge">
-                            <span class="text-xl">⚙️</span>
-                            <span class="text-xs font-medium text-slate-600" id="spec-1">Core i3 (6th Gen)</span>
-                        </div>
-                        <div class="stat-badge">
-                            <span class="text-xl">🔋</span>
-                            <span class="text-xs font-medium text-slate-600" id="spec-2">40% Battery Health</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="three-canvas-container">
-                    <!-- 3D Model of the device -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Decisions -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="decision-btn btn-reduce" data-choice="reduce">
-                <div class="text-3xl mb-3">📉</div>
-                <h4 class="text-lg font-bold text-blue-600">Reduce</h4>
-                <p class="text-xs text-slate-400 mt-2">Optimization & Repair</p>
-            </div>
-            <div class="decision-btn btn-reuse" data-choice="reuse">
-                <div class="text-3xl mb-3">🔄</div>
-                <h4 class="text-lg font-bold text-purple-600">Reuse</h4>
-                <p class="text-xs text-slate-400 mt-2">Repurpose & Secondary Life</p>
-            </div>
-            <div class="decision-btn btn-recycle" data-choice="recycle">
-                <div class="text-3xl mb-3">♻️</div>
-                <h4 class="text-lg font-bold text-orange-500">Recycle</h4>
-                <p class="text-xs text-slate-400 mt-2">Safe Material Recovery</p>
-            </div>
-        </section>
-
-        <!-- Result Section (Overlay/Hidden) -->
-        <section id="feedback-panel" class="topic-card p-8 md:p-10 hidden fade-in">
-            <div class="flex items-start gap-6">
-                <div id="feedback-icon" class="text-5xl">✅</div>
-                <div class="flex-1">
-                    <div id="feedback-pill" class="impact-pill mb-3">Optimal Path</div>
-                    <h3 class="text-2xl font-bold mb-3" id="feedback-title">Great Choice: Reuse</h3>
-                    <p class="text-slate-600 leading-relaxed mb-6" id="feedback-text">
-                        By turning this into a Linux media station, you extend its life by 5 years without spending a cent.
-                    </p>
-                    <button id="next-scenario" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors">Next Scenario</button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
-        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
-        <p class="text-slate-500">Lifecycle Decision Lab · Chapter 2.3 · Recycle</p>
-    </footer>
-
+<body class="p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-center">Lifecycle Decision Lab</h1>
+        <div id="canvas-container"></div>
+        <div class="grid grid-cols-3 gap-4">
+            <button class="choice-btn" data-choice="reduce">REDUCE</button>
+            <button class="choice-btn" data-choice="reuse">REUSE</button>
+            <button class="choice-btn" data-choice="recycle">RECYCLE</button>
+        </div>
+        <div id="feedback" class="p-6 bg-white border rounded-xl hidden">
+            <h3 class="font-bold text-xl" id="f-title"></h3>
+            <p class="text-slate-500" id="f-desc"></p>
+        </div>
+    </div>
     <script type="module">
         import * as THREE from 'three';
-
-        // --- DATA ---
-        const SCENARIOS = [
-            {
-                id: 'laptop',
-                title: 'Office Laptop (2016)',
-                desc: 'Slow HDD, 4GB RAM, Great screen. Battery is weak but functional when plugged in.',
-                specs: ['Core i3 CPU', 'Battery: 40%'],
-                color: 0x475569,
-                scale: [1.5, 0.1, 1],
-                best: 'reuse',
-                feedback: {
-                    reduce: { title: 'Good effort', text: 'Repairing is possible, but 4GB RAM will still struggle with modern Windows. Consider a lighter mission.', icon: '🤔', type: 'suboptimal' },
-                    reuse: { title: 'Perfect Path', text: 'Installing ChromeOS Flex or Linux turns this into a high-speed web browsing station for years to come.', icon: '✨', type: 'optimal' },
-                    recycle: { title: 'Too Early', text: 'Recycling is for dead hardware. This machine still has 5+ years of secondary life in it.', icon: '⚠️', type: 'inefficient' }
-                }
-            },
-            {
-                id: 'phone',
-                title: 'Cracked Smartphone',
-                desc: 'Recent model but with a shattered screen. Repair costs ₹8,000, new phone is ₹12,000.',
-                specs: ['Modern 5G Chip', 'Shattered Display'],
-                color: 0x1e293b,
-                scale: [0.6, 1.2, 0.1],
-                best: 'reduce',
-                feedback: {
-                    reduce: { title: 'Optimal Choice', text: 'Repairing a modern chip saves the massive footprint of manufacturing a new motherboard. It is worth the fix.', icon: '🛠️', type: 'optimal' },
-                    reuse: { title: 'Clever Option', text: 'If you won\'t fix it, use it as a headless server or security cam. But repair is still better for primary use.', icon: '📱', type: 'suboptimal' },
-                    recycle: { title: 'High Waste', text: 'Discarding a modern 5G chip because of a screen crack is the biggest cause of e-waste growth.', icon: '🛑', type: 'inefficient' }
-                }
-            },
-            {
-                id: 'tablet',
-                title: 'Swollen Battery Tablet',
-                desc: 'A budget tablet from 2014. The battery has started to expand and the OS is no longer supported.',
-                specs: ['Swollen Battery', 'Dead OS'],
-                color: 0x334155,
-                scale: [1.2, 0.8, 0.2],
-                best: 'recycle',
-                feedback: {
-                    reduce: { title: 'Dangerous!', text: 'Never try to repair or open a swollen battery. It is a major fire hazard.', icon: '🔥', type: 'dangerous' },
-                    reuse: { title: 'Risky Path', text: 'Continuing to plug in a swollen battery is dangerous. Do not reuse.', icon: '🚫', type: 'dangerous' },
-                    recycle: { title: 'Correct & Safe', text: 'The battery has reached the end of its safety life. Take it to a professional recycler immediately.', icon: '✅', type: 'optimal' }
-                }
-            }
-        ];
-
-        // --- APP STATE ---
-        let scene, camera, renderer, deviceMesh;
-        let activeIdx = 0;
-
-        const container = document.getElementById('three-canvas-container');
-
-        // --- INITIALIZATION ---
+        let scene, camera, renderer, sphere;
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(2, 2, 3);
-            camera.lookAt(0,0,0);
-
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
             container.appendChild(renderer.domElement);
-
-            const ambient = new THREE.AmbientLight(0xffffff, 1);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 1.5);
-            directional.position.set(5, 5, 5);
-            scene.add(directional);
-
-            renderScenario();
+            sphere = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), new THREE.MeshStandardMaterial({ color: 0x3b82f6 }));
+            scene.add(sphere);
+            scene.add(new THREE.AmbientLight(0xffffff, 1));
             animate();
-            setupEvents();
         }
-
-        function renderScenario() {
-            if (deviceMesh) scene.remove(deviceMesh);
-            if (activeIdx >= SCENARIOS.length) {
-                alert("Lab Complete!");
-                activeIdx = 0;
-            }
-
-            const s = SCENARIOS[activeIdx];
-            const geo = new THREE.BoxGeometry(...s.scale);
-            const mat = new THREE.MeshStandardMaterial({ color: s.color, roughness: 0.2 });
-            deviceMesh = new THREE.Mesh(geo, mat);
-            scene.add(deviceMesh);
-
-            document.getElementById('scenario-title').textContent = s.title;
-            document.getElementById('scenario-desc').textContent = s.desc;
-            document.getElementById('spec-1').textContent = s.specs[0];
-            document.getElementById('spec-2').textContent = s.specs[1];
-            
-            document.getElementById('feedback-panel').classList.add('hidden');
-            gsap.from(deviceMesh.scale, { x:0, y:0, z:0, duration: 0.5 });
-        }
-
-        function setupEvents() {
-            document.querySelectorAll('.decision-btn').forEach(btn => {
-                btn.addEventListener('click', () => handleChoice(btn.dataset.choice));
-            });
-            document.getElementById('next-scenario').addEventListener('click', () => {
-                activeIdx++;
-                renderScenario();
-            });
-        }
-
-        function handleChoice(choice) {
-            const s = SCENARIOS[activeIdx];
-            const feedback = s.feedback[choice];
-            const panel = document.getElementById('feedback-panel');
-            
-            panel.classList.remove('hidden');
-            document.getElementById('feedback-title').textContent = feedback.title;
-            document.getElementById('feedback-text').textContent = feedback.text;
-            document.getElementById('feedback-icon').textContent = feedback.icon;
-            
-            const pill = document.getElementById('feedback-pill');
-            pill.textContent = feedback.type.toUpperCase();
-            pill.style.background = feedback.type === 'optimal' ? '#dcfce7' : (feedback.type === 'suboptimal' ? '#fef9c3' : '#fee2e2');
-            pill.style.color = feedback.type === 'optimal' ? '#15803d' : (feedback.type === 'suboptimal' ? '#854d0e' : '#b91c1c');
-
-            gsap.from(panel, { opacity: 0, y: 20, duration: 0.4 });
-            
-            // Visual Effect
-            if (feedback.type === 'optimal') {
-                gsap.to(deviceMesh.rotation, { y: Math.PI * 4, duration: 1, ease: 'power2.inOut' });
-            } else {
-                gsap.to(deviceMesh.position, { x: 0.1, duration: 0.05, repeat: 5, yoyo: true });
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (deviceMesh) deviceMesh.rotation.y += 0.005;
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
+        function animate() { requestAnimationFrame(animate); sphere.rotation.y += 0.01; renderer.render(scene, camera); }
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.onclick = () => {
+                const choice = btn.dataset.choice;
+                const data = {
+                    reduce: { title: 'Prevention First', desc: 'By maintaining your device, you avoided 100% of the recycling energy cost.', color: 0x10b981 },
+                    reuse: { title: 'Resource Continuity', desc: 'Extending use to a second life saves 90% of raw material extraction.', color: 0xc17cff },
+                    recycle: { title: 'Material Recovery', desc: 'Formal recycling recovers 98% of precious metals safely.', color: 0xea580c }
+                };
+                const info = data[choice];
+                document.getElementById('f-title').textContent = info.title;
+                document.getElementById('f-desc').textContent = info.desc;
+                document.getElementById('feedback').classList.remove('hidden');
+                gsap.to(sphere.material.color, { r: ((info.color >> 16) & 0xff)/255, g: ((info.color >> 8) & 0xff)/255, b: (info.color & 0xff)/255, duration: 0.5 });
+            };
         });
-
-        // Fullscreen
-        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

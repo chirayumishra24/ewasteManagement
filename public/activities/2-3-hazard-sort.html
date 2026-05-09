@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hazardous Material Sort | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>Hazard Sort Pro | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
@@ -16,342 +16,53 @@
         }
     </script>
     <style>
-        :root {
-            --page-bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #f3a44a;
-            --primary-dark: #ea580c;
-            --text-primary: #1e293b;
-            --danger: #ef4444;
-            --success: #22c55e;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-        code { font-family: 'JetBrains Mono', monospace; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #ea580c 0%, #f3a44a 100%);
-        }
-
-        .topic-card {
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        #three-canvas-container {
-            width: 100%;
-            height: 450px;
-            background: radial-gradient(circle at center, #fef2f2 0%, #fff1f2 100%);
-            border-radius: 16px;
-            position: relative;
-            cursor: grab;
-        }
-
-        .bin {
-            border: 2px solid transparent;
-            padding: 1.5rem;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .bin:hover { transform: translateY(-4px); }
-        .bin.active { border-color: var(--primary); background: #fff7ed; }
-
-        .hazard-label {
-            font-size: 10px; font-weight: 700; text-transform: uppercase;
-            padding: 2px 8px; border-radius: 4px;
-            display: inline-block; margin-bottom: 8px;
-        }
-
-        .label-toxic { background: #fee2e2; color: #b91c1c; }
-        .label-flam { background: #ffedd5; color: #9a3412; }
-        .label-acid { background: #fef9c3; color: #854d0e; }
-
-        .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, #ea580c, #f3a44a);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; box-shadow: 0 8px 16px rgba(234, 88, 12, 0.3);
-            cursor: pointer; border: 0;
-        }
-
-        .is-embedded main { padding-top: 2rem; }
-
-        #game-status {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            padding: 8px 24px; border-radius: 99px;
-            background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            font-weight: 700; font-size: 14px; z-index: 10;
-        }
+        body { font-family: 'Inter', sans-serif; background: #fff1f2; }
+        #canvas-container { height: 500px; background: #450a0a; border-radius: 20px; position: relative; overflow: hidden; }
+        .bin { border: 2px dashed #ef4444; border-radius: 12px; padding: 1rem; text-align: center; }
     </style>
 </head>
-<body>
-
-    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <div class="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8">
-            <!-- 3D Stage -->
-            <section class="topic-card p-2 relative overflow-hidden">
-                <div id="game-status">Drag the item to the correct bin</div>
-                <div id="three-canvas-container">
-                    <!-- Three.js Canvas -->
-                </div>
-                
-                <!-- Item Info HUD -->
-                <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
-                    <div class="bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg max-w-xs border border-slate-100">
-                        <span class="hazard-label label-toxic" id="item-label">Highly Toxic</span>
-                        <h4 class="text-xl font-bold mb-1" id="item-name">Lithium-Ion Battery</h4>
-                        <p class="text-xs text-slate-500 leading-tight" id="item-desc">
-                            Contains heavy metals and pressurized electrolytes. Risk of thermal runaway if crushed.
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase">Sort Progress</p>
-                        <p class="text-4xl font-bold text-orange-600" id="progress-val">0/5</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Bins -->
-            <section class="space-y-6">
-                <h3 class="text-xl font-bold px-2">Disposal Streams</h3>
-                <div class="space-y-4" id="bins-container">
-                    <div class="bin border-red-100" data-type="battery">
-                        <div class="text-3xl mb-2">🔋</div>
-                        <p class="font-bold">Battery Recovery</p>
-                        <p class="text-[10px] text-slate-400 uppercase">Fire & Chemical Risk</p>
-                    </div>
-                    <div class="bin border-blue-100" data-type="display">
-                        <div class="text-3xl mb-2">🖥️</div>
-                        <p class="font-bold">Display Glass</p>
-                        <p class="text-[10px] text-slate-400 uppercase">Lead & Mercury Risk</p>
-                    </div>
-                    <div class="bin border-emerald-100" data-type="circuit">
-                        <div class="text-3xl mb-2">📟</div>
-                        <p class="font-bold">Logic Boards</p>
-                        <p class="text-[10px] text-slate-400 uppercase">Precious Metal Recovery</p>
-                    </div>
-                </div>
-                
-                <div class="p-6 bg-slate-900 rounded-2xl text-white mt-8">
-                    <h4 class="text-orange-400 font-bold mb-2 flex items-center gap-2">
-                        <span>⚠️</span> Safety First
-                    </h4>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Never break open batteries or CRT monitors. These components must remain intact until they reach specialized chemical or atmospheric treatment facilities.
-                    </p>
-                </div>
-            </section>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold text-center text-red-900">Hazardous Material Sort</h1>
+        <div id="canvas-container">
+            <div class="absolute top-6 left-6 bg-red-600 text-white p-3 rounded-lg font-bold">Score: <span id="score">0</span></div>
         </div>
-    </main>
-
-    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
-        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
-        <p class="text-slate-500">Hazardous Material Sort · Chapter 2.3 · Recycle</p>
-    </footer>
-
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bin text-red-700 font-bold">TOXIC BIN</div>
+            <div class="bin text-blue-700 font-bold" style="border-color: #3b82f6;">RECYCLABLE BIN</div>
+        </div>
+    </div>
     <script type="module">
         import * as THREE from 'three';
-
-        // --- DATA ---
-        const ITEMS = [
-            { id: 'bat', name: 'Lithium-Ion Battery', type: 'battery', label: 'Highly Toxic', color: 0x3b82f6, desc: 'Fire risk. Must be separated before shredding.', scale: [0.8, 1.2, 0.2] },
-            { id: 'crt', name: 'Lead Glass Tube', type: 'display', label: 'Toxic Dust', color: 0x475569, desc: 'Contains up to 3kg of lead. Requires specialized handling.', scale: [1, 0.8, 1] },
-            { id: 'pcb', name: 'PCB (BFR Infused)', type: 'circuit', label: 'Pollutant Risk', color: 0x065f46, desc: 'Brominated Flame Retardants. Needs high-heat incineration.', scale: [1.2, 0.1, 0.8] },
-            { id: 'lamp', name: 'CCFL Backlight', type: 'display', label: 'Mercury Vapor', color: 0xe2e8f0, desc: 'Contains mercury gas. Do not break!', scale: [0.05, 1.5, 0.05] },
-            { id: 'cap', name: 'Capacitors', type: 'battery', label: 'Acid Leak', color: 0x1e293b, desc: 'May contain acidic electrolytes that corrode recovery lines.', scale: [0.3, 0.6, 0.3] }
-        ];
-
-        // --- APP STATE ---
-        let scene, camera, renderer, currentItemMesh;
-        let currentIndex = 0;
+        let scene, camera, renderer, currentItem;
         let score = 0;
-        let isDragging = false;
-        let dragOffset = new THREE.Vector3();
-        let raycaster = new THREE.Raycaster();
-        let mouse = new THREE.Vector2();
-
-        const container = document.getElementById('three-canvas-container');
-
-        // --- INITIALIZATION ---
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 1, 5);
-
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
             container.appendChild(renderer.domElement);
-
-            const ambient = new THREE.AmbientLight(0xffffff, 1);
-            scene.add(ambient);
-            const directional = new THREE.DirectionalLight(0xffffff, 1.5);
-            directional.position.set(5, 10, 5);
-            scene.add(directional);
-
-            spawnItem();
+            scene.add(new THREE.AmbientLight(0xffffff, 1));
+            spawn();
             animate();
-            setupInteractions();
-            window.addEventListener('resize', onResize);
         }
-
-        function spawnItem() {
-            if (currentItemMesh) scene.remove(currentItemMesh);
-            if (currentIndex >= ITEMS.length) {
-                document.getElementById('game-status').textContent = '✨ ALL ITEMS SORTED!';
-                document.getElementById('game-status').className = 'text-green-600 bg-green-50 px-6 py-2 rounded-full font-bold';
-                return;
-            }
-
-            const item = ITEMS[currentIndex];
-            const geo = new THREE.BoxGeometry(...item.scale);
-            const mat = new THREE.MeshStandardMaterial({ color: item.color, roughness: 0.2 });
-            currentItemMesh = new THREE.Mesh(geo, mat);
-            scene.add(currentItemMesh);
-
-            gsap.from(currentItemMesh.scale, { x:0, y:0, z:0, duration: 0.5, ease: 'back.out' });
-            
-            document.getElementById('item-name').textContent = item.name;
-            document.getElementById('item-desc').textContent = item.desc;
-            document.getElementById('item-label').textContent = item.label;
-            document.getElementById('progress-val').textContent = `${currentIndex}/5`;
+        function spawn() {
+            const items = [{ name: 'Battery', toxic: true, color: 0xef4444 }, { name: 'Alu Case', toxic: false, color: 0x3b82f6 }];
+            const item = items[Math.floor(Math.random()*items.length)];
+            currentItem = new THREE.Mesh(new THREE.IcosahedronGeometry(1), new THREE.MeshStandardMaterial({ color: item.color }));
+            currentItem.userData = item;
+            scene.add(currentItem);
         }
-
-        function setupInteractions() {
-            container.addEventListener('mousedown', onMouseDown);
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('mouseup', onMouseUp);
-
-            // Bin targets
-            document.querySelectorAll('.bin').forEach(bin => {
-                bin.addEventListener('mouseenter', () => bin.classList.add('active'));
-                bin.addEventListener('mouseleave', () => bin.classList.remove('active'));
-                bin.addEventListener('click', () => {
-                    if (currentIndex < ITEMS.length) validateSort(bin.dataset.type);
-                });
-            });
-        }
-
-        function validateSort(binType) {
-            const item = ITEMS[currentIndex];
-            const status = document.getElementById('game-status');
-            
-            if (item.type === binType) {
-                status.textContent = '✅ CORRECT SORT';
-                status.style.color = '#15803d';
-                gsap.to(currentItemMesh.position, { y: -5, opacity: 0, duration: 0.4, onComplete: () => {
-                    currentIndex++;
-                    spawnItem();
-                }});
-            } else {
-                status.textContent = '❌ INCORRECT - TRY AGAIN';
-                status.style.color = '#b91c1c';
-                gsap.to(currentItemMesh.position, { x: 0.5, duration: 0.1, repeat: 3, yoyo: true });
-            }
-        }
-
-        function onMouseDown(event) {
-            event.preventDefault();
-            mouse.x = ( (event.clientX - container.getBoundingClientRect().left) / container.clientWidth ) * 2 - 1;
-            mouse.y = -( (event.clientY - container.getBoundingClientRect().top) / container.clientHeight ) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObject(currentItemMesh);
-            if (intersects.length > 0) {
-                isDragging = true;
-                controlsEnabled(false);
-            }
-        }
-
-        function onMouseMove(event) {
-            if (!isDragging) return;
-            mouse.x = ( (event.clientX - container.getBoundingClientRect().left) / container.clientWidth ) * 2 - 1;
-            mouse.y = -( (event.clientY - container.getBoundingClientRect().top) / container.clientHeight ) * 2 + 1;
-            
-            currentItemMesh.position.x = mouse.x * 3;
-            currentItemMesh.position.y = mouse.y * 2;
-        }
-
-        function onMouseUp() {
-            if (isDragging) {
-                isDragging = false;
-                gsap.to(currentItemMesh.position, { x:0, y:0, z:0, duration: 0.5, ease: 'power2.out' });
-            }
-        }
-
-        function controlsEnabled(val) {
-            container.style.cursor = val ? 'grab' : 'grabbing';
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (currentItemMesh && !isDragging) {
-                currentItemMesh.rotation.y += 0.01;
-            }
-            renderer.render(scene, camera);
-        }
-
-        function onResize() {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        // Fullscreen
-        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
+        function animate() { requestAnimationFrame(animate); if(currentItem) currentItem.rotation.y += 0.02; renderer.render(scene, camera); }
+        window.addEventListener('keydown', (e) => {
+            if(!currentItem) return;
+            const toxic = e.key === 'ArrowLeft';
+            if(toxic === currentItem.userData.toxic) { score++; document.getElementById('score').textContent = score; }
+            scene.remove(currentItem); spawn();
         });
-
         init();
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>

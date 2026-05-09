@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Autopsy Lab | Skilizee E-Waste</title>
+    <title>Device Autopsy Pro | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -16,522 +16,66 @@
         }
     </script>
     <style>
-        :root {
-            --page-bg: #f8f7f3;
-            --surface: #ffffff;
-            --surface-soft: #f1f5f9;
-            --primary: #61b8ff;
-            --primary-dark: #3b82f6;
-            --primary-light: #93c5fd;
-            --text-primary: #1e293b;
-            --text-muted: #64748b;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-        }
-
-        body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
-
-        .header-gradient {
-            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-        }
-
-        .topic-card {
-            background: var(--surface);
-            border-radius: 20px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        #three-canvas-container {
-            width: 100%;
-            height: 480px;
-            background: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 16px;
-            position: relative;
-            cursor: grab;
-        }
-
-        .scan-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .scan-line {
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
-            display: none;
-        }
-
-        .part-card {
-            background: var(--surface);
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 16px;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            width: 100%;
-        }
-
-        .part-card:hover { transform: translateY(-4px); border-color: var(--primary); }
-        .part-card.active { border-color: var(--primary); background: #eff6ff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1); }
-
-        .status-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-            display: inline-block; margin-right: 8px;
-        }
-
-        .status-green { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
-        .status-red { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); }
-        .status-idle { background: #cbd5e1; }
-
-        .cost-bar {
-            height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;
-        }
-        .cost-fill { height: 100%; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-        .btn-scan {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white; font-weight: 700; padding: 1rem 2rem; border-radius: 999px;
-            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
-            transition: all 0.2s ease;
-        }
-        .btn-scan:hover { transform: scale(1.05); box-shadow: 0 12px 20px rgba(59, 130, 246, 0.4); }
-        .btn-scan:active { transform: scale(0.98); }
-
-        .fullscreen-btn {
-             top: 24px; right: 24px; z-index: 100;
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
-            cursor: pointer; border: 0;
-        }
-
-        .fade-in { opacity: 1; transform: translateY(0); }
-        
-        .is-embedded main { padding-top: 2rem; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; }
+        #canvas-container { height: 500px; width: 100%; position: relative; border-radius: 20px; overflow: hidden; background: radial-gradient(circle, #1e293b, #0f172a); }
+        .info-card { position: absolute; bottom: 20px; right: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 300px; }
+        .node { cursor: pointer; }
     </style>
 </head>
-<body>
-
-    <main class="relative max-w-6xl mx-auto px-6 space-y-8 pb-20">
-    <button class="fullscreen-btn" id="toggle-fullscreen" style="position: absolute; top: 16px; right: 16px; z-index: 100;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-        </svg>
-    </button>
-        <!-- 3D Diagnostics View -->
-        <section class="topic-card p-4 md:p-6 fade-in">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
-                <div class="relative">
-                    <div id="three-canvas-container">
-                        <div id="scan-line" class="scan-line"></div>
-                        <div id="canvas-loading" class="absolute inset-0 flex items-center justify-center bg-slate-50 z-10">
-                            <div class="text-center">
-                                <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-                                <p class="font-bold text-slate-400">Booting Diagnostics...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute top-4 left-4 flex gap-2">
-                        <div class="bg-black/80 backdrop-blur text-white px-4 py-2 rounded-lg font-mono text-xs flex items-center gap-2">
-                            <span id="scan-status-dot" class="status-dot status-idle"></span>
-                            SYSTEM STATUS: <span id="system-status-text">IDLE</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h3 class="text-xl font-bold mb-4">Hardware Inventory</h3>
-                    <div class="space-y-3" id="parts-list">
-                        <!-- Parts injected by JS -->
-                    </div>
-                    <button id="run-diagnostics" class="btn-scan w-full mt-4">
-                        RUN SYSTEM SCAN
-                    </button>
-                </div>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <header class="text-center">
+            <h1 class="text-3xl font-bold">Hardware Autopsy Lab</h1>
+            <p class="text-slate-400">Identify the bottleneck module and repair it instead of replacing the entire unit.</p>
+        </header>
+        <div id="canvas-container">
+            <div class="info-card">
+                <h3 class="font-bold text-lg mb-2" id="node-name">Select Component</h3>
+                <p class="text-sm text-slate-300" id="node-desc">Click on a hardware module to diagnose its health.</p>
             </div>
-        </section>
-
-        <!-- Diagnosis & Prescription -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 fade-in">
-            <div class="topic-card p-6 md:p-8">
-                <h3 class="text-xl font-bold mb-6">Repair vs. Replace</h3>
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between text-sm font-bold mb-2">
-                            <span>Repair & Upgrade Cost</span>
-                            <span id="repair-cost-text">₹0</span>
-                        </div>
-                        <div class="cost-bar">
-                            <div id="repair-bar" class="cost-fill bg-blue-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm font-bold mb-2">
-                            <span>New Device Replacement</span>
-                            <span>₹45,000</span>
-                        </div>
-                        <div class="cost-bar">
-                            <div class="cost-fill bg-slate-300" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-4">
-                    <span class="text-2xl">💡</span>
-                    <p class="text-sm text-blue-800 leading-relaxed" id="diagnosis-tip">
-                        Run a scan to identify failing components and see how much you can save by repairing instead of replacing.
-                    </p>
-                </div>
-            </div>
-
-            <div class="topic-card p-6 md:p-8">
-                <h3 class="text-xl font-bold mb-4">Environmental Impact</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-4 bg-slate-50 rounded-xl text-center">
-                        <p class="text-2xl font-bold text-blue-600" id="stat-co2">0%</p>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">CO₂ Avoided</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 rounded-xl text-center">
-                        <p class="text-2xl font-bold text-blue-600" id="stat-waste">0kg</p>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">E-Waste Prevented</p>
-                    </div>
-                </div>
-                <div class="mt-6 space-y-4">
-                    <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Recommended Actions</h4>
-                    <ul class="space-y-2 text-sm" id="action-list">
-                        <li class="text-slate-400 italic">Scan required to generate actions...</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Technical Deep Dive -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 fade-in">
-            <div class="topic-card p-6">
-                <h4 class="font-bold text-blue-600 mb-2">The Thermal Link</h4>
-                <p class="text-sm text-slate-500">Dried-out thermal paste causes CPUs to throttle and eventually fail. A ₹500 tube of paste can save a ₹50,000 laptop.</p>
-            </div>
-            <div class="topic-card p-6">
-                <h4 class="font-bold text-blue-600 mb-2">Memory Pressure</h4>
-                <p class="text-sm text-slate-500">Modern software is RAM-hungry. Upgrading from 8GB to 16GB is the single most effective way to make an old PC feel new.</p>
-            </div>
-            <div class="topic-card p-6">
-                <h4 class="font-bold text-blue-600 mb-2">Modular Design</h4>
-                <p class="text-sm text-slate-500">The "Right to Repair" movement advocates for devices that are easy to disassemble and upgrade, extending total service life.</p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-white py-12 px-6 text-center border-t border-slate-100">
-        <h4 class="text-xl font-bold mb-2">Skilizee E-Waste</h4>
-        <p class="text-slate-500">Device Autopsy Lab · Chapter 2.1 · Reduce</p>
-    </footer>
-
+        </div>
+    </div>
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // --- DATA ---
-        const PARTS = [
-            { id: 'cpu', name: 'Central Processor (CPU)', pos: {x: 0, y: 0.1, z: 0}, size: [1.2, 0.1, 1.2], color: 0x334155, repairCost: 8500, failChance: 0.3, info: 'Dried thermal paste causing extreme throttling.' },
-            { id: 'ram', name: 'Memory Modules (RAM)', pos: {x: 1.2, y: 0.1, z: 0.5}, size: [0.3, 0.3, 1.8], color: 0x475569, repairCost: 3200, failChance: 0.6, info: 'Capacity bottleneck. System swapping to disk.' },
-            { id: 'ssd', name: 'Storage (NVMe SSD)', pos: {x: 1.2, y: 0.1, z: -1.2}, size: [0.8, 0.1, 0.3], color: 0x1e293b, repairCost: 4500, failChance: 0.2, info: 'Drive health at 15%. Risk of data loss.' },
-            { id: 'gpu', name: 'Graphics Processor', pos: {x: -1.5, y: 0.1, z: 0.8}, size: [1.8, 0.1, 1.4], color: 0x0f172a, repairCost: 12000, failChance: 0.4, info: 'Fan failure causing heat-soak shutdowns.' },
-            { id: 'psu', name: 'Power Regulator', pos: {x: -2.0, y: 0.1, z: -1.5}, size: [1.0, 0.4, 1.0], color: 0x64748b, repairCost: 2800, failChance: 0.5, info: 'Aging capacitors providing unstable voltage.' }
+        let scene, camera, renderer, controls;
+        const nodes = [
+            { name: 'Logic Board', pos: [0, 0, 0], desc: 'The brain. Often healthy even when software feels slow.' },
+            { name: 'Lithium Battery', pos: [0, -1.5, 0], desc: 'The #1 bottleneck. Replacing this saves the device.' },
+            { name: 'Storage Module', pos: [1, 0, 0], desc: 'Can be wiped or swapped to restore speed.' }
         ];
-
-        // --- APP STATE ---
-        let scene, camera, renderer, controls, motherboard;
-        let partMeshes = {};
-        let isScanning = false;
-        let scanResults = {};
-
-        const container = document.getElementById('three-canvas-container');
-
-        // --- INITIALIZATION ---
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            scene.background = null;
-
-            camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(4, 5, 6);
-
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
+            camera.position.set(5, 5, 5);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.shadowMap.enabled = true;
             container.appendChild(renderer.domElement);
-
             controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-
-            // Lights
-            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-            scene.add(ambient);
-
-            const sun = new THREE.DirectionalLight(0xffffff, 1.2);
-            sun.position.set(5, 10, 7.5);
-            sun.castShadow = true;
-            scene.add(sun);
-
-            createMotherboard();
-            renderPartsUI();
-            animate();
-
-            document.getElementById('canvas-loading').style.display = 'none';
-            document.getElementById('run-diagnostics').addEventListener('click', startScan);
-            window.addEventListener('resize', onResize);
-        }
-
-        function createMotherboard() {
-            // Main PCB
-            const pcbGeom = new THREE.BoxGeometry(6, 0.1, 4.5);
-            const pcbMat = new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.7 });
-            motherboard = new THREE.Mesh(pcbGeom, pcbMat);
-            motherboard.receiveShadow = true;
-            scene.add(motherboard);
-
-            // Circuit Lines (Texture effect)
-            const grid = new THREE.GridHelper(6, 12, 0x059669, 0x059669);
-            grid.position.y = 0.06;
-            scene.add(grid);
-
-            // Components
-            PARTS.forEach(part => {
-                const geom = new THREE.BoxGeometry(...part.size);
-                const mat = new THREE.MeshStandardMaterial({ 
-                    color: part.color, 
-                    metalness: 0.5, 
-                    roughness: 0.2,
-                    emissive: 0x000000 
-                });
-                const mesh = new THREE.Mesh(geom, mat);
-                mesh.position.set(part.pos.x, part.pos.y + (part.size[1]/2), part.pos.z);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            nodes.forEach(n => {
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), new THREE.MeshStandardMaterial({ color: 0x61b8ff }));
+                mesh.position.set(...n.pos);
+                mesh.userData = n;
                 scene.add(mesh);
-                partMeshes[part.id] = mesh;
-
-                // Add label
-                const label = createPartLabel(part.name, part.pos);
-                // In a real app we'd use CSS2DObject, here we just keep the mesh
             });
+            window.addEventListener('click', onPick);
+            animate();
         }
-
-        function createPartLabel(text, pos) {
-            // Placeholder for 3D label if needed
-        }
-
-        function renderPartsUI() {
-            const list = document.getElementById('parts-list');
-            list.innerHTML = '';
-            PARTS.forEach(part => {
-                const card = document.createElement('div');
-                card.className = 'part-card';
-                card.id = `card-${part.id}`;
-                card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <span class="status-dot status-idle" id="dot-${part.id}"></span>
-                            <span class="font-bold text-sm">${part.name}</span>
-                        </div>
-                        <span class="text-[10px] font-mono text-slate-400">#${part.id.toUpperCase()}</span>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        function startScan() {
-            if (isScanning) return;
-            isScanning = true;
-            
-            const btn = document.getElementById('run-diagnostics');
-            btn.disabled = true;
-            btn.textContent = 'SCANNING...';
-            btn.style.opacity = '0.5';
-
-            document.getElementById('scan-line').style.display = 'block';
-            document.getElementById('scan-status-dot').className = 'status-dot animate-pulse bg-blue-500';
-            document.getElementById('system-status-text').textContent = 'SCANNING HARDWARE...';
-
-            // Animate scan line
-            gsap.fromTo('#scan-line', 
-                { top: '0%' }, 
-                { top: '100%', duration: 1.5, repeat: 1, yoyo: true, ease: 'none', 
-                  onComplete: finishScan 
-                }
-            );
-
-            // Animate camera
-            gsap.to(camera.position, { x: 0, y: 7, z: 2, duration: 2, ease: 'power2.inOut' });
-        }
-
-        function finishScan() {
-            isScanning = false;
-            document.getElementById('scan-line').style.display = 'none';
-            document.getElementById('scan-status-dot').className = 'status-dot status-red';
-            document.getElementById('system-status-text').textContent = 'SCAN COMPLETE: ISSUES FOUND';
-            
-            const btn = document.getElementById('run-diagnostics');
-            btn.disabled = false;
-            btn.textContent = 'RE-SCAN SYSTEM';
-            btn.style.opacity = '1';
-
-            let totalRepair = 0;
-            let failingParts = [];
-
-            PARTS.forEach(part => {
-                const failed = Math.random() < part.failChance;
-                const dot = document.getElementById(`dot-${part.id}`);
-                const card = document.getElementById(`card-${part.id}`);
-                const mesh = partMeshes[part.id];
-
-                if (failed) {
-                    dot.className = 'status-dot status-red';
-                    card.classList.add('active');
-                    totalRepair += part.repairCost;
-                    failingParts.push(part);
-                    
-                    // Highlight 3D part
-                    gsap.to(mesh.material.emissive, { r: 0.5, duration: 0.5, repeat: -1, yoyo: true });
-                } else {
-                    dot.className = 'status-dot status-green';
-                    card.classList.remove('active');
-                    gsap.to(mesh.material.emissive, { r: 0, duration: 0.5 });
-                }
-            });
-
-            updateImpact(totalRepair, failingParts);
-        }
-
-        function updateImpact(cost, failingParts) {
-            // Costs
-            document.getElementById('repair-cost-text').textContent = `₹${cost.toLocaleString()}`;
-            const repairPct = (cost / 45000) * 100;
-            gsap.to('#repair-bar', { width: `${repairPct}%`, duration: 1 });
-
-            // Stats
-            const co2Saved = 85; // Fixed high % because we avoid manufacturing
-            const wasteSaved = 2.4; // Average device weight in kg
-            
-            gsap.to('#stat-co2', { 
-                innerHTML: co2Saved, 
-                duration: 2, 
-                snap: { innerHTML: 1 },
-                onUpdate: function() { this.targets()[0].innerHTML += '%'; }
-            });
-            
-            gsap.to('#stat-waste', { 
-                innerHTML: wasteSaved, 
-                duration: 2,
-                onUpdate: function() { this.targets()[0].innerHTML = parseFloat(this.targets()[0].innerHTML).toFixed(1) + 'kg'; }
-            });
-
-            // Action List
-            const list = document.getElementById('action-list');
-            list.innerHTML = '';
-            
-            if (failingParts.length === 0) {
-                list.innerHTML = '<li class="text-green-600 font-bold">✓ All systems healthy. No actions required.</li>';
-                document.getElementById('diagnosis-tip').textContent = "Excellent maintenance! Your hardware is in top shape.";
-            } else {
-                failingParts.forEach(p => {
-                    const li = document.createElement('li');
-                    li.className = 'flex items-start gap-2';
-                    li.innerHTML = `<span class="text-blue-500">•</span> <span><strong>${p.name}:</strong> ${p.info}</span>`;
-                    list.appendChild(li);
-                });
-                const savings = 45000 - cost;
-                document.getElementById('diagnosis-tip').textContent = `You can save ₹${savings.toLocaleString()} and prevent 2.4kg of e-waste by performing these targeted repairs.`;
+        function onPick(e) {
+            const mouse = new THREE.Vector2((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+            if(intersects.length > 0) {
+                const node = intersects[0].object.userData;
+                document.getElementById('node-name').textContent = node.name;
+                document.getElementById('node-desc').textContent = node.desc;
             }
         }
-
-        function onResize() {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        // Fullscreen Toggle
-        document.getElementById('toggle-fullscreen').addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        });
-
-        // Check for embedded mode
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
-
-        // Initialize
+        function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
         init();
-
-        // Intersection Observer for fade-in animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    gsap.to(entry.target, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    </script>
-
-    <script>
-        // Robust Fullscreen functionality
-        document.getElementById('toggle-fullscreen')?.addEventListener('click', async () => {
-            try {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    const el = document.documentElement;
-                    if (el.requestFullscreen) await el.requestFullscreen();
-                    else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-                    else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-                } else {
-                    if (document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                    else if (document.msExitFullscreen) await document.msExitFullscreen();
-                }
-            } catch (err) {
-                console.warn("Fullscreen request failed. This usually happens if the activity is embedded and permissions are blocked.", err);
-            }
-        });
-
-        // Embedded mode detection
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('embedded') === 'true') {
-            document.body.classList.add('is-embedded');
-        }
     </script>
 </body>
 </html>
