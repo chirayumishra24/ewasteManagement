@@ -746,6 +746,70 @@ function FullscreenButton() {
 
 
 
+function CourseTopbar() {
+  const { id } = useParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const currentChapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
+  const chapterIndex = chapters.findIndex((entry) => entry.id === currentChapter.id)
+  const progress = Math.round(((chapterIndex + 1) / chapters.length) * 100)
+
+  return (
+    <header className="course-topbar">
+      <div className="course-brand">
+        <span className="brand-stamp">Project Skilizee</span>
+        <strong>E-Waste Management</strong>
+      </div>
+
+      <div className="course-nav-hub">
+        <button 
+          className={`course-chapter-trigger ${isOpen ? 'active' : ''}`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span className="trigger-label">Jump to Chapter</span>
+          <div className="trigger-current">
+            <small>{currentChapter.id}</small>
+            <strong>{currentChapter.title}</strong>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+
+        {isOpen && (
+          <div className="course-chapter-dropdown glass-panel">
+            <div className="dropdown-grid">
+              {chapters.map((ch) => (
+                <Link
+                  key={ch.id}
+                  to={`/${ch.id}`}
+                  className={`dropdown-item ${ch.id === currentChapter.id ? 'active' : ''}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="item-id">{ch.id}</div>
+                  <div className="item-copy">
+                    <strong>{ch.title}</strong>
+                    <span>{ch.moduleLabel}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="course-progress">
+        <div className="progress-label">
+          <span>Campaign Progress</span>
+          <strong>{progress}%</strong>
+        </div>
+        <div className="course-progress-meter">
+          <span style={{ width: `${progress}%`, transition: 'width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
+        </div>
+      </div>
+    </header>
+  )
+}
+
 function AppLayout() {
   const { id } = useParams()
   const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
@@ -754,6 +818,7 @@ function AppLayout() {
     <main className="page-shell">
       <div className="filmic-grain" aria-hidden="true" />
       <FullscreenButton />
+      
       <div className="page-background" aria-hidden="true">
         <div className="page-background-tint" />
         <div className="page-background-scene">
@@ -764,7 +829,10 @@ function AppLayout() {
       </div>
 
       <div className="content-layer" style={{ position: 'relative', zIndex: 10 }}>
-        <Outlet />
+        <div className="course-shell">
+          <CourseTopbar />
+          <Outlet />
+        </div>
       </div>
     </main>
   )

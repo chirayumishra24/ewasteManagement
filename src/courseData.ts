@@ -239,6 +239,7 @@ export const chapters: CourseChapter[] = [
           ),
           resources(
             { label: 'Launch Module 1', href: '/1-1', description: 'Enter the hazard and materials chapters that establish the problem.' },
+            { label: 'Urban Mining (1.3)', href: '/1-3', description: 'See the market value and material density inside the waste stream.' },
             { label: 'Launch Module 2', href: '/2-1', description: 'Move into maintenance, reuse, and industrial recovery decisions.' },
             { label: 'Launch Module 3', href: '/3-1', description: 'Open the regional map, drive planning, and digital citizenship sequence.' },
           ),
