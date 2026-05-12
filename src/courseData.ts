@@ -26,13 +26,14 @@ export type ChapterThemeKey =
   | 'action'
   | 'privacy'
   | 'policy'
+  | 'digital'
 
 export type ChapterLayout = 'hub' | 'steps' | 'split' | 'bento' | 'dashboard' | 'atlas'
 
-export type HeroVariant = 'spotlight' | 'signal' | 'diagnostic' | 'atlas'
+export type HeroVariant = 'spotlight' | 'signal' | 'diagnostic' | 'atlas' | 'abstract'
 
 export type RobotAssembly = {
-  part: 'head' | 'torso' | 'mobility'
+  part: 'head' | 'torso' | 'mobility' | 'arm_l'
   title: string
   schematic: string
   summary: string
@@ -696,7 +697,6 @@ export const chapters: CourseChapter[] = [
             { step: '03', title: 'Manage the battery', detail: 'Use optimized charging, avoid deep cycling when possible, and replace degraded batteries before replacing the device.' },
           ),
           callout('Reduction mindset', 'Maintenance is not glamorous, but it is one of the highest-impact ways to cut waste before recycling ever begins.', 'success'),
-          activity('Lifespan Extender Dashboard', '/activities/2-1-lifespan-extender.html?embedded=true', 'Calculate how maintenance actions like battery care and physical protection can double your device\'s usable life.'),
           activity('Battery Health Simulator', '/activities/2-1-battery-sim.html?embedded=true', 'Interact with a 3D lithium-ion cell and see how charging habits like overnight charging and heat accelerate chemical degradation.'),
         ],
       },
@@ -812,6 +812,11 @@ export const chapters: CourseChapter[] = [
         robotNote: 'Components are textures. PCBs are patterns. Cables are structural.',
         heroVariant: 'abstract',
         accentColor: '#ff85e1',
+        pulses: [
+          { label: 'Input', value: 'PCB / Cable / Shell' },
+          { label: 'Method', value: 'Upcycling' },
+          { label: 'Output', value: 'Art / Jewelry' },
+        ],
         blocks: [
           bullets(
             'Convert old CRT monitor shells into unique planters or pet beds.',
@@ -830,6 +835,11 @@ export const chapters: CourseChapter[] = [
         robotNote: 'If Windows feels heavy, try the lightness of Linux. The hardware is still strong.',
         heroVariant: 'diagnostic',
         accentColor: '#85a9ff',
+        pulses: [
+          { label: 'Strategy', value: 'OS swap' },
+          { label: 'Tool', value: 'Linux / ChromeOS' },
+          { label: 'Outcome', value: 'Restored utility' },
+        ],
         blocks: [
           compare(
             {

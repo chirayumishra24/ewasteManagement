@@ -61,18 +61,21 @@
         .nav-left { left: 20px; } .nav-right { right: 20px; }
 
         .fullscreen-btn {
-            position: absolute; top: 16px; right: 16px; z-index: 50;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.2); color: white;
+            position: absolute; top: 24px; right: 24px; z-index: 100;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(15, 23, 42, 0.05); backdrop-filter: blur(8px);
+            border: 1px solid rgba(15, 23, 42, 0.1); color: #0f172a;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s;
         }
-        .fullscreen-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .fullscreen-btn:hover { background: rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
     </style>
 </head>
 <body>
-    <main class="max-w-6xl mx-auto px-6 py-8 space-y-8">
+    <main class="relative max-w-6xl mx-auto px-6 py-8 space-y-8">
+        <button class="fullscreen-btn" id="fs-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
         <header class="text-center space-y-2">
             <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wider">Module 2.2 • Reuse</span>
             <h1 class="text-3xl font-bold">Second Life Workshop</h1>
@@ -80,9 +83,6 @@
         </header>
 
         <div id="canvas-container" class="group">
-            <button class="fullscreen-btn" id="fs-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-            </button>
             <button class="nav-arrow nav-left" id="prev-btn">←</button>
             <button class="nav-arrow nav-right" id="next-btn">→</button>
             
@@ -182,7 +182,7 @@
             document.getElementById('next-btn').onclick = () => rotate(1);
             
             document.getElementById('fs-btn').onclick = () => {
-                if(!document.fullscreenElement) container.requestFullscreen();
+                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
                 else document.exitFullscreen();
             };
 

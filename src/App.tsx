@@ -223,39 +223,40 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
   const [hoverIndex, setHoverIndex] = useState(block.labels.length - 1)
   const activeSeries = block.series[activeSeriesIndex] ?? block.series[0]
 
-  if (!activeSeries) {
-    return null
-  }
+  if (!activeSeries) return null
 
-  const chartWidth = 100
-  const chartHeight = 100
-  const insetX = 7
-  const insetY = 10
+  const chartWidth = 160
+  const chartHeight = 90
+  const inset = { top: 12, bottom: 12, left: 8, right: 8 }
+  
   const values = activeSeries.values
   const maxValue = Math.max(...values)
   const minValue = Math.min(...values)
   const valueRange = Math.max(maxValue - minValue, 1)
+  
   const activePointIndex = Math.min(Math.max(hoverIndex, 0), values.length - 1)
   const activeValue = values[activePointIndex]
   const activeLabel = block.labels[activePointIndex]
+  
   const firstValue = values[0]
   const lastValue = values[values.length - 1]
   const netChange = lastValue - firstValue
   const trendDirection = netChange >= 0 ? 'up' : 'down'
-  const stepX = values.length > 1 ? (chartWidth - insetX * 2) / (values.length - 1) : 0
 
   const points = values.map((value, index) => {
-    const x = insetX + stepX * index
-    const y = insetY + ((maxValue - value) / valueRange) * (chartHeight - insetY * 2)
+    const x = inset.left + (index / (values.length - 1)) * (chartWidth - inset.left - inset.right)
+    const y = chartHeight - inset.bottom - ((value - minValue) / valueRange) * (chartHeight - inset.top - inset.bottom)
     return { x, y }
   })
 
-  const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
-  const firstPoint = points[0]
-  const lastPoint = points[points.length - 1]
-  const areaPath = `${linePath} L ${lastPoint.x} ${chartHeight - insetY / 2} L ${firstPoint.x} ${chartHeight - insetY / 2} Z`
-  const markerPoint = points[activePointIndex]
-  const yTicks = [maxValue, minValue + valueRange / 2, minValue]
+  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${chartHeight} L ${points[0].x} ${chartHeight} Z`
+  
+  const yTicks = [
+    { label: formatTrendValue(activeSeries, maxValue), y: inset.top },
+    { label: formatTrendValue(activeSeries, minValue + valueRange / 2), y: (inset.top + (chartHeight - inset.bottom)) / 2 },
+    { label: formatTrendValue(activeSeries, minValue), y: chartHeight - inset.bottom }
+  ]
 
   return (
     <section className="trend-card">
@@ -272,11 +273,10 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
         </div>
       </div>
 
-      <div className="trend-series-switches" role="tablist" aria-label={block.title}>
+      <div className="trend-series-switches" role="tablist">
         {block.series.map((series, index) => (
           <button
             key={series.label}
-            type="button"
             className={`trend-series-chip ${index === activeSeriesIndex ? 'active' : ''}`}
             onClick={() => {
               setActiveSeriesIndex(index)
@@ -292,66 +292,60 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
 
       <div className="trend-chart-shell" onMouseLeave={() => setHoverIndex(block.labels.length - 1)}>
         <div className="trend-y-axis">
-          {yTicks.map((tick, index) => (
-            <span key={`${activeSeries.label}-${tick}-${index}`}>{formatTrendValue(activeSeries, tick)}</span>
+          {yTicks.map((tick, i) => (
+            <span 
+              key={i} 
+              style={{ 
+                position: 'absolute', 
+                top: `${(tick.y / chartHeight) * 100}%`, 
+                right: '12px',
+                transform: 'translateY(-50%)',
+                textAlign: 'right',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {tick.label}
+            </span>
           ))}
         </div>
 
         <div className="trend-chart-panel">
-          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="trend-chart" preserveAspectRatio="none" aria-hidden="true">
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="trend-chart" preserveAspectRatio="none">
             <defs>
               <linearGradient id={`trend-gradient-${activeSeriesIndex}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={activeSeries.accentColor} stopOpacity="0.34" />
+                <stop offset="0%" stopColor={activeSeries.accentColor} stopOpacity="0.4" />
                 <stop offset="100%" stopColor={activeSeries.accentColor} stopOpacity="0" />
               </linearGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
             </defs>
 
-            {[20, 50, 80].map((y) => (
-              <line key={y} x1="0" y1={y} x2={chartWidth} y2={y} className="trend-grid-line" />
+            {/* Grid Lines */}
+            {yTicks.map((tick, i) => (
+              <line key={i} x1="0" y1={tick.y} x2={chartWidth} y2={tick.y} className="trend-grid-line" />
             ))}
 
-            <path 
-              d={areaPath} 
-              className="trend-area" 
-              fill={`url(#trend-gradient-${activeSeriesIndex})`}
-            />
-            <path 
-              d={linePath} 
-              className="trend-line" 
-              filter="url(#glow)"
-              style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties} 
-            />
+            <path d={areaPath} className="trend-area" fill={`url(#trend-gradient-${activeSeriesIndex})`} />
+            <path d={linePath} className="trend-line" style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties} />
 
-            {points.map((point, index) => (
-              <g key={`${activeSeries.label}-${block.labels[index]}`}>
-                <circle
-                  cx={point.x}
-                  cy={point.y}
-                  r={index === hoverIndex ? 2.8 : 1.9}
-                  className={`trend-point ${index === hoverIndex ? 'active' : ''}`}
-                  style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}
-                  onMouseEnter={() => setHoverIndex(index)}
-                />
-              </g>
+            {points.map((p, i) => (
+              <circle
+                key={i}
+                cx={p.x}
+                cy={p.y}
+                r={i === hoverIndex ? 3.5 : 2.2}
+                className={`trend-point ${i === hoverIndex ? 'active' : ''}`}
+                style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}
+                onMouseEnter={() => setHoverIndex(i)}
+              />
             ))}
           </svg>
 
           <div
             className="trend-tooltip"
-            style={
-              {
-                '--trend-accent': activeSeries.accentColor,
-                left: `${markerPoint.x}%`,
-                top: `${markerPoint.y}%`,
-              } as CSSProperties
-            }
+            style={{
+              '--trend-accent': activeSeries.accentColor,
+              left: `${(points[activePointIndex].x / chartWidth) * 100}%`,
+              top: `${(points[activePointIndex].y / chartHeight) * 100}%`,
+            } as CSSProperties}
           >
             <strong>{formatTrendValue(activeSeries, activeValue)}</strong>
             <span>{activeLabel}</span>
@@ -360,13 +354,11 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
       </div>
 
       <div className="trend-x-axis">
-        {block.labels.map((label, index) => (
+        {block.labels.map((label, i) => (
           <button
-            key={`${activeSeries.label}-${label}`}
-            type="button"
-            className={`trend-x-tick ${index === activePointIndex ? 'active' : ''}`}
-            onMouseEnter={() => setHoverIndex(index)}
-            onFocus={() => setHoverIndex(index)}
+            key={label}
+            className={`trend-x-tick ${i === activePointIndex ? 'active' : ''}`}
+            onMouseEnter={() => setHoverIndex(i)}
           >
             {label}
           </button>
@@ -375,21 +367,18 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
 
       <div className="trend-insights">
         <article className="trend-insight-card">
-          <span>Start point</span>
+          <span>Start</span>
           <strong>{formatTrendValue(activeSeries, firstValue)}</strong>
           <p>{block.labels[0]}</p>
         </article>
         <article className="trend-insight-card">
-          <span>Latest point</span>
-          <strong>{formatTrendValue(activeSeries, lastValue)}</strong>
-          <p>{block.labels[block.labels.length - 1]}</p>
+          <span>Peak</span>
+          <strong>{formatTrendValue(activeSeries, maxValue)}</strong>
+          <p>Highest Recorded</p>
         </article>
         <article className={`trend-insight-card trend-insight-${trendDirection}`}>
-          <span>Net change</span>
-          <strong>
-            {netChange >= 0 ? '+' : '-'}
-            {formatTrendValue(activeSeries, Math.abs(netChange))}
-          </strong>
+          <span>Net Change</span>
+          <strong>{netChange >= 0 ? '+' : ''}{formatTrendValue(activeSeries, netChange)}</strong>
           <p>{activeSeries.detail}</p>
         </article>
       </div>

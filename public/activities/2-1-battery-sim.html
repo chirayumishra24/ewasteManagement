@@ -57,19 +57,23 @@
         .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
         
         .fullscreen-btn {
-            position: absolute; top: 16px; right: 16px; z-index: 50;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.2); color: white;
+            position: absolute; top: 24px; right: 24px; z-index: 100;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(15, 23, 42, 0.05); backdrop-filter: blur(8px);
+            border: 1px solid rgba(15, 23, 42, 0.1); color: #0f172a;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s;
         }
-        .fullscreen-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .fullscreen-btn:hover { background: rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
         .is-embedded main { padding-top: 1rem; }
     </style>
 </head>
 <body>
-    <main class="max-w-6xl mx-auto px-6 py-8 space-y-8">
+    <main class="relative max-w-6xl mx-auto px-6 py-8 space-y-8">
+        <button class="fullscreen-btn" id="fs-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+
         <header class="text-center space-y-2">
             <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold uppercase tracking-wider">Module 2.1 • Reduce</span>
             <h1 class="text-3xl font-bold">Battery Degradation Lab</h1>
@@ -80,9 +84,6 @@
             <!-- 3D View -->
             <div class="relative group">
                 <div id="canvas-container">
-                    <button class="fullscreen-btn" id="fs-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-                    </button>
                     <!-- Overlay Stats -->
                     <div class="absolute bottom-6 left-6 flex gap-4 z-10">
                         <div class="bg-black/50 backdrop-blur-md border border-white/10 p-3 rounded-xl text-white">
@@ -134,7 +135,7 @@
         const HABITS = [
             { id: 'heat', icon: '🔥', label: 'Overheating (Gaming/Sun)', penalty: 15, temp: 18, desc: 'High temps destroy lithium cells faster than anything else. Swelling risk increases.' },
             { id: 'overcharge', icon: '⚡', label: 'Overnight 100% Charge', penalty: 8, temp: 5, desc: 'Holding a battery at 100% voltage causes continuous micro-stress on the anode.' },
-            { id: 'deep', icon: '🪫', label: 'Deep Discharge (0%)', penalty: 10, temp: 2, desc: 'Draining to zero damages the battery's voltage regulators.' }
+            { id: 'deep', icon: '🪫', label: 'Deep Discharge (0%)', penalty: 10, temp: 2, desc: "Draining to zero damages the battery's voltage regulators." }
         ];
 
         let scene, camera, renderer, controls;
@@ -185,7 +186,7 @@
             
             // Fullscreen
             document.getElementById('fs-btn').addEventListener('click', () => {
-                if(!document.fullscreenElement) container.requestFullscreen();
+                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
                 else document.exitFullscreen();
             });
 

@@ -16,62 +16,281 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #faf5ff; }
-        #canvas-container { height: 450px; background: #0f172a; border-radius: 20px; position: relative; overflow: hidden; }
-        .spec-input { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
-        .fullscreen-btn { position: absolute; top: 16px; right: 16px; z-index: 50; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        :root {
+            --router-purple: #4c1d95;
+            --router-grid: rgba(139, 92, 246, 0.1);
+            --accent: #a855f7;
+        }
+        body { font-family: 'Inter', sans-serif; background: #fafafc; color: #1e293b; }
+        
+        #canvas-container { 
+            height: 450px; 
+            background: #0f172a; 
+            border-radius: 24px; 
+            position: relative; 
+            overflow: hidden;
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.4);
+        }
+        
+        /* Grid Effect */
+        #canvas-container::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: 
+                linear-gradient(var(--router-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--router-grid) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        .spec-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+
+        .mission-result {
+            background: #f5f3ff;
+            border: 2px solid #ddd6fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            animation: slideUp 0.4s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mission-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: white; border: 1px solid #ddd6fe;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 24px;
+        }
+
+        .fullscreen-btn {
+            position: absolute; top: 24px; right: 24px; z-index: 100;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1); color: white;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        select, button { transition: all 0.2s; }
+        select:focus { border-color: var(--accent); ring: 2px var(--accent); outline: none; }
     </style>
 </head>
 <body class="p-6">
-    <div class="max-w-6xl mx-auto space-y-6">
-        <h1 class="text-3xl font-bold text-center">The Repurpose Router</h1>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div id="canvas-container">
-                <button class="fullscreen-btn" onclick="document.getElementById('canvas-container').requestFullscreen()">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-                </button>
-            </div>
-            <div class="spec-input space-y-4">
-                <h3 class="font-bold">Input Device Specs</h3>
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase">CPU Class</label>
-                    <select id="cpu" class="w-full mt-1 p-2 border rounded-lg">
-                        <option value="low">Low Power (Atom/Celeron)</option>
-                        <option value="med">Mid Range (i3/i5)</option>
-                        <option value="high">High Performance (i7/Ryzen)</option>
-                    </select>
+    <div class="relative max-w-6xl mx-auto space-y-6">
+        <button class="fullscreen-btn" id="fs-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
+
+        <header class="text-center space-y-2">
+            <div class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[10px] font-bold uppercase tracking-widest mb-2">Module 2.2 • Circular Computing</div>
+            <h1 class="text-3xl font-bold">The Repurpose Router</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto">Hardware doesn't die, it just needs a new mission. Match your old device's specs with a low-power, high-impact role to keep it out of the landfill.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div id="canvas-container" class="lg:col-span-7">
+                <div class="absolute top-6 left-6 z-10 font-mono text-[10px] text-purple-400 opacity-60">
+                    ROUTING_ALGORITHM_v2.0 // STATUS: READY
                 </div>
-                <button id="route-btn" class="w-full bg-purple-600 text-white p-3 rounded-lg font-bold">Find New Mission</button>
-                <div id="recommendation" class="p-4 bg-purple-50 text-purple-900 rounded-lg hidden">
-                    <strong>Recommended:</strong> <span id="rec-text"></span>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                <div class="spec-card space-y-6">
+                    <h3 class="font-bold border-b pb-4">Hardware Inventory</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">CPU Category</label>
+                            <select id="cpu" class="w-full p-3 border-2 border-slate-100 rounded-xl bg-slate-50 font-medium">
+                                <option value="low">Atom / Celeron / Early i3</option>
+                                <option value="med">Core i5 / Ryzen 3 (Quad Core)</option>
+                                <option value="high">Core i7 / Ryzen 7 (High Perf)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Memory (RAM)</label>
+                            <select id="ram" class="w-full p-3 border-2 border-slate-100 rounded-xl bg-slate-50 font-medium">
+                                <option value="low">Less than 4GB</option>
+                                <option value="med">4GB - 8GB</option>
+                                <option value="high">16GB or More</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="route-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-xl font-bold shadow-lg shadow-purple-200 transform active:scale-95 transition-all">
+                        Route New Mission
+                    </button>
+                </div>
+
+                <div id="result-area" class="hidden space-y-4">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Calculated Mission</p>
+                    <div class="mission-result">
+                        <div class="mission-icon" id="res-icon">🚀</div>
+                        <div>
+                            <h4 class="font-bold text-purple-900" id="res-title">Mission Name</h4>
+                            <p class="text-xs text-purple-700/70 mt-1" id="res-desc">Mission description goes here.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-100 rounded-xl">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase mb-2">Technical Rationale</p>
+                        <p class="text-xs text-slate-600 leading-relaxed" id="res-why"></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <script type="module">
         import * as THREE from 'three';
-        let scene, camera, renderer, globe;
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const MISSIONS = {
+            'low-low': {
+                icon: '🏠',
+                title: 'Smart Home Hub',
+                desc: 'Run Home Assistant or Zigbee bridges to automate your house.',
+                why: 'Low-power CPUs are ideal for 24/7 always-on devices. With < 4GB RAM, a headless (no monitor) Linux setup is lightweight and highly efficient.'
+            },
+            'low-med': {
+                icon: '🛡️',
+                title: 'Network Security Guard',
+                desc: 'Install Pi-hole or a local DNS filter to block global ads.',
+                why: 'Network filtering doesn\'t require much CPU, but the extra RAM overhead allows for detailed logging and complex blocklists.'
+            },
+            'med-med': {
+                icon: '☁️',
+                title: 'Personal Cloud Server',
+                desc: 'Host your own files and photos using Nextcloud or CasaOS.',
+                why: 'Mid-range hardware can handle file indexing and database operations efficiently without high electricity costs.'
+            },
+            'med-high': {
+                icon: '🎥',
+                title: 'Home Media Center',
+                desc: 'Use Jellyfin or Plex to stream your media collection locally.',
+                why: '8GB+ RAM allows for smooth buffer management, and mid-range CPUs can handle 1080p hardware transcoding.'
+            },
+            'high-high': {
+                icon: '⚡',
+                title: 'Distributed Compute Node',
+                desc: 'Contribute to scientific research or host game servers.',
+                why: 'High-performance hardware can handle parallel tasks like compiling code or running virtualization containers (Docker/Proxmox).'
+            },
+            'default': {
+                icon: '🛠️',
+                title: 'Linux Learning Station',
+                desc: 'Turn this device into a specialized coding or terminal environment.',
+                why: 'Even mismatched hardware can serve as a robust environment for learning system administration or web development.'
+            }
+        };
+
+        let scene, camera, renderer, controls, chip, particles;
+
         function init() {
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 5);
+            camera.position.set(4, 4, 8);
+
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
-            globe = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), new THREE.MeshStandardMaterial({ color: 0x85a9ff, wireframe: true }));
-            scene.add(globe);
-            scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.autoRotate = true;
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+            const p1 = new THREE.PointLight(0xa855f7, 2);
+            p1.position.set(5, 5, 5);
+            scene.add(p1);
+
+            // 3D Chip Model
+            const chipGroup = new THREE.Group();
+            const body = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 3), new THREE.MeshStandardMaterial({ color: 0x1e293b }));
+            const die = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.2, 1.2), new THREE.MeshStandardMaterial({ color: 0x4c1d95, metalness: 0.8, roughness: 0.2 }));
+            die.position.y = 0.1;
+            
+            // Pins
+            for(let i=0; i<8; i++) {
+                const pin = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.4), new THREE.MeshStandardMaterial({ color: 0x94a3b8 }));
+                pin.position.set(-1.6, -0.05, -1.4 + (i*0.4));
+                chipGroup.add(pin);
+                const pin2 = pin.clone();
+                pin2.position.x = 1.6;
+                chipGroup.add(pin2);
+            }
+
+            chipGroup.add(body, die);
+            scene.add(chipGroup);
+            chip = die;
+
+            // Background Particles
+            const partGeo = new THREE.BufferGeometry();
+            const partPos = [];
+            for(let i=0; i<200; i++) { partPos.push((Math.random()-0.5)*15, (Math.random()-0.5)*15, (Math.random()-0.5)*15); }
+            partGeo.setAttribute('position', new THREE.Float32BufferAttribute(partPos, 3));
+            particles = new THREE.Points(partGeo, new THREE.PointsMaterial({ color: 0xa855f7, size: 0.05 }));
+            scene.add(particles);
+
+            document.getElementById('route-btn').onclick = routeMission;
+            
+            document.getElementById('fs-btn').onclick = () => {
+                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+            };
+
             animate();
         }
-        function animate() { requestAnimationFrame(animate); globe.rotation.y += 0.005; renderer.render(scene, camera); }
-        document.getElementById('route-btn').onclick = () => {
+
+        function routeMission() {
             const cpu = document.getElementById('cpu').value;
-            const recs = { low: 'Lightweight Linux / Smart Hub', med: 'Home Media Server / NAS', high: 'Dedicated Render Node / Compile Bot' };
-            document.getElementById('rec-text').textContent = recs[cpu];
-            document.getElementById('recommendation').classList.remove('hidden');
-            gsap.to(globe.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 0.3, yoyo: true, repeat: 1 });
-        };
+            const ram = document.getElementById('ram').value;
+            const key = `${cpu}-${ram}`;
+            const data = MISSIONS[key] || MISSIONS['default'];
+
+            const resultArea = document.getElementById('result-area');
+            resultArea.classList.remove('hidden');
+            
+            document.getElementById('res-icon').textContent = data.icon;
+            document.getElementById('res-title').textContent = data.title;
+            document.getElementById('res-desc').textContent = data.desc;
+            document.getElementById('res-why').textContent = data.why;
+
+            // Visual Response
+            gsap.from('#result-area', { opacity: 0, y: 20, duration: 0.5 });
+            gsap.to(chip.material.color, { 
+                r: cpu === 'high' ? 1 : 0.3, 
+                g: cpu === 'med' ? 0.8 : 0.1, 
+                b: cpu === 'low' ? 1 : 0.6, 
+                duration: 1 
+            });
+            gsap.to(camera.position, { z: 6, duration: 1, yoyo: true, repeat: 1 });
+        }
+
+        function animate() { 
+            requestAnimationFrame(animate); 
+            controls.update();
+            particles.rotation.y += 0.001;
+            renderer.render(scene, camera); 
+        }
+
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
         init();
     </script>
 </body>
