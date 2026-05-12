@@ -46,11 +46,12 @@ function ScrapRobot({
   unlockedParts,
 }: {
   accentColor: string
-  unlockedParts: Array<'head' | 'torso' | 'mobility'>
+  unlockedParts: Array<'head' | 'torso' | 'mobility' | 'arm_l'>
 }) {
   const hasHead = unlockedParts.includes('head')
   const hasTorso = unlockedParts.includes('torso')
   const hasMobility = unlockedParts.includes('mobility')
+  const hasArmL = unlockedParts.includes('arm_l')
 
   return (
     <div className="robot-stage" style={{ '--chapter-accent': accentColor } as CSSProperties} aria-hidden="true">
@@ -77,7 +78,7 @@ function ScrapRobot({
           <div className="robot-bolt robot-bolt-left" />
           <div className="robot-bolt robot-bolt-right" />
         </div>
-        <div className={`robot-arm robot-arm-left ${hasTorso ? 'assembled' : 'hologram'}`}>
+        <div className={`robot-arm robot-arm-left ${hasArmL ? 'assembled' : hasTorso ? 'assembled' : 'hologram'}`}>
           <span className="robot-joint" />
         </div>
         <div className={`robot-arm robot-arm-right ${hasTorso ? 'assembled' : 'hologram'} ${hasTorso ? 'broken' : ''}`}>
