@@ -16,29 +16,93 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #fdf4ff; overflow: hidden; }
-        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #fdf4ff, #fae8ff); }
-        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 320px; }
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
-        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #c17cff; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .msg-input { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-top: 8px; font-size: 14px; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; margin: 0; overflow: hidden; }
+        
+        #canvas-container { 
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #2e1065 0%, #0f172a 100%); 
+        }
+
+        .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
+        
+        .ui-panel {
+            pointer-events: auto;
+            background: rgba(46, 16, 101, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-panel { top: 30px; left: 30px; padding: 24px; max-width: 380px; }
+        
+        .editor-panel { bottom: 30px; left: 30px; width: 380px; padding: 24px; }
+
+        textarea {
+            width: 100%; height: 120px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: #d8b4fe;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            transition: 0.3s;
+        }
+        textarea:focus { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+
+        .broadcast-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+            border-radius: 12px; font-weight: 700; color: white;
+            margin-top: 16px; transition: 0.3s;
+        }
+        .broadcast-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+
+        .purpose-box {
+            position: absolute; bottom: 30px; right: 30px; max-width: 320px;
+            padding: 20px; font-size: 12px; color: rgba(216, 180, 254, 0.6);
+            background: rgba(46, 16, 101, 0.3); border: 1px solid rgba(168, 85, 247, 0.1);
+        }
+
+        /* Scanline Effect on Text */
+        #hologram-text-buffer {
+            position: fixed; top: -1000px;
+            width: 512px; height: 512px;
+            background: black; color: #a855f7;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700; font-size: 48px;
+            padding: 40px; text-align: center;
+            display: flex; align-items: center; justify-content: center;
+        }
     </style>
 </head>
 <body>
-    <div id="canvas-container">
-        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-        </button>
-        <div class="hud space-y-4">
-            <div class="glass">
-                <h1 class="text-2xl font-bold text-purple-900">Campaign Hologram</h1>
-                <p class="text-sm text-purple-800/60 mt-2">Craft your message and broadcast it to the community.</p>
+    <div id="canvas-container"></div>
+    <canvas id="hologram-text-buffer" width="512" height="512"></canvas>
+
+    <div class="ui-layer">
+        <div class="ui-panel header-panel">
+            <div class="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-2">Module 3.2 • Outreach</div>
+            <h1 class="text-2xl font-bold mb-2">Campaign Hologram</h1>
+            <p class="text-sm text-purple-200/60 leading-relaxed">Craft your message and broadcast it to the community. A clear message increases donation intent by 65%.</p>
+        </div>
+
+        <div class="ui-panel editor-panel">
+            <p class="text-[10px] font-bold text-purple-400 uppercase mb-3 tracking-widest">Message Body</p>
+            <textarea id="msg-input" placeholder="Type your awareness message here... e.g., Recycle your old phones today!"></textarea>
+            
+            <div class="mt-4 p-3 bg-purple-500/5 rounded-xl border border-purple-500/10">
+                <p class="text-[11px] text-purple-300"><b>Instructions:</b> Type your message above. It will appear live on the 3D hologram projector.</p>
             </div>
-            <div class="glass">
-                <label class="text-xs font-bold text-purple-400 uppercase">Message Body</label>
-                <textarea id="msg-text" class="msg-input h-24" placeholder="Enter drive details..."></textarea>
-                <button class="w-full bg-purple-600 text-white mt-4 p-3 rounded-xl font-bold" id="broadcast-btn">Broadcast Now</button>
-            </div>
+
+            <button class="broadcast-btn" onclick="broadcast()">BROADCAST NOW</button>
+        </div>
+
+        <div class="ui-panel purpose-box rounded-xl">
+            <span class="font-bold text-purple-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            To practice clear, actionable communication. In e-waste management, public participation is the biggest bottleneck; effective outreach is the key to closing the loop.
         </div>
     </div>
 
@@ -46,52 +110,136 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        let scene, camera, renderer, holoPlane;
+        let scene, camera, renderer, controls, textTexture, textMesh;
+        const canvas = document.getElementById('hologram-text-buffer');
+        const ctx = canvas.getContext('2d');
 
         function init() {
+            const container = document.getElementById('canvas-container');
+            
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5);
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.04);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(8, 5, 8);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
 
-            const controls = new OrbitControls(camera, renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
+            controls.maxPolarAngle = Math.PI / 2.2;
 
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-            
-            const floor = new THREE.GridHelper(10, 10, 0xd8b4fe, 0xf3e8ff);
-            scene.add(floor);
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+            const spotlight = new THREE.SpotLight(0xa855f7, 5);
+            spotlight.position.set(0, 10, 0);
+            scene.add(spotlight);
+
+            // Projector Base
+            const baseGeo = new THREE.CylinderGeometry(2, 2.2, 0.5, 32);
+            const baseMat = new THREE.MeshStandardMaterial({ color: 0x1e1b4b, metalness: 0.8, roughness: 0.2 });
+            const base = new THREE.Mesh(baseGeo, baseMat);
+            scene.add(base);
+
+            // Glowing Lens
+            const lensGeo = new THREE.CircleGeometry(1.2, 32);
+            const lensMat = new THREE.MeshBasicMaterial({ color: 0xa855f7, side: THREE.DoubleSide });
+            const lens = new THREE.Mesh(lensGeo, lensMat);
+            lens.rotation.x = Math.PI / 2;
+            lens.position.y = 0.26;
+            scene.add(lens);
 
             // Hologram Plane
-            const geo = new THREE.PlaneGeometry(3, 2);
-            const mat = new THREE.MeshStandardMaterial({ 
-                color: 0xc17cff, 
+            textTexture = new THREE.CanvasTexture(canvas);
+            const holoGeo = new THREE.PlaneGeometry(4, 4);
+            const holoMat = new THREE.MeshBasicMaterial({ 
+                map: textTexture, 
                 transparent: true, 
-                opacity: 0.3, 
-                emissive: 0xc17cff, 
-                emissiveIntensity: 0.5,
+                opacity: 0.8,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending
+            });
+            textMesh = new THREE.Mesh(holoGeo, holoMat);
+            textMesh.position.y = 3;
+            scene.add(textMesh);
+
+            // Light Rays
+            const rayGeo = new THREE.CylinderGeometry(0.5, 2, 3, 32, 1, true);
+            const rayMat = new THREE.MeshBasicMaterial({ 
+                color: 0xa855f7, 
+                transparent: true, 
+                opacity: 0.1,
                 side: THREE.DoubleSide
             });
-            holoPlane = new THREE.Mesh(geo, mat);
-            holoPlane.position.y = 1.5;
-            scene.add(holoPlane);
+            const rays = new THREE.Mesh(rayGeo, rayMat);
+            rays.position.y = 1.5;
+            scene.add(rays);
+
+            updateCanvas("YOUR MESSAGE HERE");
+
+            document.getElementById('msg-input').addEventListener('input', (e) => {
+                updateCanvas(e.target.value || "YOUR MESSAGE HERE");
+            });
 
             animate();
         }
 
-        document.getElementById('broadcast-btn').onclick = () => {
-            gsap.to(holoPlane.material, { opacity: 0.8, duration: 0.2, yoyo: true, repeat: 5 });
-            gsap.to(holoPlane.scale, { x: 1.1, y: 1.1, duration: 0.1, yoyo: true, repeat: 5 });
+        function updateCanvas(text) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            ctx.strokeStyle = '#a855f7';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, 472, 472);
+
+            ctx.fillStyle = '#a855f7';
+            ctx.font = '700 42px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Handle multiline
+            const words = text.split(' ');
+            let line = '';
+            let y = 256 - (words.length > 5 ? 100 : 0);
+            const lineHeight = 50;
+
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                if (testLine.length > 15 && n > 0) {
+                    ctx.fillText(line, 256, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, 256, y);
+            
+            textTexture.needsUpdate = true;
+        }
+
+        window.broadcast = () => {
+            gsap.to(textMesh.scale, { x: 1.2, y: 1.2, duration: 0.1, yoyo: true, repeat: 1 });
+            alert("Broadcast sent to community nodes!");
         };
 
         function animate() {
             requestAnimationFrame(animate);
-            holoPlane.rotation.y += 0.005;
+            controls.update();
+            textMesh.rotation.y += 0.005;
+            textMesh.position.y = 3 + Math.sin(Date.now() * 0.002) * 0.1;
             renderer.render(scene, camera);
         }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         init();
     </script>
 </body>

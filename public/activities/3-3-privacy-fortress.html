@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Fortress | Skilizee E-Waste</title>
+    <title>Data Sanitation Lab | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -16,72 +16,188 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f0fdf4; overflow: hidden; }
-        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #f0fdf4, #dcfce7); }
-        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 320px; }
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
-        .layer-btn { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; text-align: left; transition: 0.2s; margin-top: 8px; }
-        .layer-btn:hover { border-color: #10b981; transform: translateX(4px); }
-        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; margin: 0; overflow: hidden; }
+        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #064e3b 0%, #020617 100%); }
+        
+        .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
+        .ui-panel {
+            pointer-events: auto;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-panel { top: 30px; left: 30px; padding: 24px; max-width: 380px; }
+        .controls-panel { bottom: 30px; left: 30px; width: 380px; padding: 24px; }
+
+        .secure-btn {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 16px; margin-top: 12px;
+            display: flex; align-items: center; gap: 16px;
+            cursor: pointer; transition: 0.2s; text-align: left;
+        }
+        .secure-btn:hover { background: rgba(16, 185, 129, 0.1); border-color: #10b981; transform: translateX(4px); }
+
+        .purpose-box {
+            position: absolute; bottom: 30px; right: 30px; max-width: 320px;
+            padding: 20px; font-size: 12px; color: rgba(167, 243, 208, 0.6);
+            background: rgba(6, 78, 59, 0.3); border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .status-badge {
+            font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 6px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
-    <div id="canvas-container">
-        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-        </button>
-        <div class="hud space-y-4">
-            <div class="glass">
-                <h1 class="text-2xl font-bold text-teal-900">Privacy Fortress</h1>
-                <p class="text-sm text-teal-800/60 mt-2">Harden your digital core with security layers.</p>
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <div class="ui-panel header-panel">
+            <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Module 3.3 • Data Security</div>
+            <h1 class="text-2xl font-bold mb-2">Data Sanitation Lab</h1>
+            <p class="text-sm text-emerald-200/60 leading-relaxed">Before a device enters the recycling stream, its physical storage must be sanitized. A simple "delete" is not enough.</p>
+        </div>
+
+        <div class="ui-panel controls-panel">
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sanitation Protocols</p>
+                <span id="status-tag" class="status-badge bg-red-500/20 text-red-400 border border-red-500/30">VULNERABLE</span>
             </div>
-            <div class="glass">
-                <button class="layer-btn" onclick="addLayer(0x10b981)">Enable 2FA</button>
-                <button class="layer-btn" onclick="addLayer(0x3b82f6)">Disk Encryption</button>
-                <button class="layer-btn" onclick="addLayer(0xc17cff)">VPN Tunneling</button>
-            </div>
+
+            <button class="secure-btn" onclick="applyProtocol('encrypt')">
+                <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">🔐</div>
+                <div>
+                    <h4 class="text-sm font-bold">Disk Encryption</h4>
+                    <p class="text-[10px] opacity-60">Scramble data with AES-256</p>
+                </div>
+            </button>
+
+            <button class="secure-btn" onclick="applyProtocol('wipe')">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">🧹</div>
+                <div>
+                    <h4 class="text-sm font-bold">DOD-Level Wipe</h4>
+                    <p class="text-[10px] opacity-60">3-pass overwrite with random data</p>
+                </div>
+            </button>
+
+            <button class="secure-btn" onclick="applyProtocol('shred')">
+                <div class="w-10 h-10 bg-slate-500/20 rounded-lg flex items-center justify-center text-slate-400">⚔️</div>
+                <div>
+                    <h4 class="text-sm font-bold">Physical Shredding</h4>
+                    <p class="text-[10px] opacity-60">Puncturing the physical platters</p>
+                </div>
+            </button>
+        </div>
+
+        <div class="ui-panel purpose-box rounded-xl">
+            <span class="font-bold text-emerald-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            To understand that e-waste management includes data liability. Sanitization ensures that personal, financial, and medical data cannot be recovered by third parties after disposal.
         </div>
     </div>
 
     <script type="module">
         import * as THREE from 'three';
-        let scene, camera, renderer, core;
-        const layers = [];
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let scene, camera, renderer, controls, drive, shield;
+        let protocols = { encrypt: false, wipe: false, shred: false };
 
         function init() {
+            const container = document.getElementById('canvas-container');
+            
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5);
+            scene.fog = new THREE.FogExp2(0x020617, 0.05);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(5, 5, 5);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
 
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+            const pLight = new THREE.PointLight(0x10b981, 2, 10);
+            pLight.position.set(2, 5, 2);
+            scene.add(pLight);
+
+            // Storage Drive Model (Stylized)
+            const group = new THREE.Group();
             
-            core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 0), new THREE.MeshStandardMaterial({ color: 0x10b981, flatShading: true }));
-            scene.add(core);
+            // Casing
+            const caseGeo = new THREE.BoxGeometry(2, 0.3, 3);
+            const caseMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.2 });
+            const casing = new THREE.Mesh(caseGeo, caseMat);
+            group.add(casing);
+
+            // Platter (HDD style)
+            const platterGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.05, 32);
+            const platterMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 1, roughness: 0.1 });
+            const platter = new THREE.Mesh(platterGeo, platterMat);
+            platter.position.set(0, 0.18, -0.5);
+            group.add(platter);
+
+            scene.add(group);
+            drive = group;
+
+            // Shield (Invisible initially)
+            const shieldGeo = new THREE.SphereGeometry(2.5, 32, 32);
+            const shieldMat = new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0, wireframe: true });
+            shield = new THREE.Mesh(shieldGeo, shieldMat);
+            scene.add(shield);
 
             animate();
         }
 
-        window.addLayer = (color) => {
-            const radius = 0.7 + (layers.length * 0.2);
-            const layer = new THREE.Mesh(
-                new THREE.SphereGeometry(radius, 32, 32),
-                new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.2, wireframe: true })
-            );
-            scene.add(layer);
-            layers.push(layer);
-            gsap.from(layer.scale, { x:0, y:0, z:0, duration: 1, ease: "elastic.out" });
+        window.applyProtocol = (type) => {
+            protocols[type] = true;
+            
+            if(type === 'encrypt') {
+                gsap.to(shield.material, { opacity: 0.1, duration: 1 });
+                gsap.to(shield.scale, { x: 1.1, y: 1.1, z: 1.1, duration: 0.5, yoyo: true, repeat: 1 });
+            }
+            if(type === 'wipe') {
+                gsap.to(drive.position, { y: 0.5, duration: 0.1, yoyo: true, repeat: 5 });
+            }
+            if(type === 'shred') {
+                gsap.to(drive.scale, { x: 0.1, y: 0.1, z: 0.1, duration: 1, ease: "power2.in" });
+                gsap.to(drive.rotation, { x: 5, y: 5, duration: 1 });
+            }
+
+            updateStatus();
         };
+
+        function updateStatus() {
+            const tag = document.getElementById('status-tag');
+            const count = Object.values(protocols).filter(v => v).length;
+            
+            if(count === 1) { tag.textContent = "PROTECTED"; tag.className = "status-badge bg-blue-500/20 text-blue-400 border border-blue-500/30"; }
+            if(count === 2) { tag.textContent = "SANITIZED"; tag.className = "status-badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; }
+            if(count === 3) { tag.textContent = "DESTROYED"; tag.className = "status-badge bg-slate-500/20 text-slate-400 border border-slate-500/30"; }
+        }
 
         function animate() {
             requestAnimationFrame(animate);
-            core.rotation.y += 0.01;
-            layers.forEach((l, i) => l.rotation.y += 0.005 * (i+1));
+            controls.update();
+            drive.rotation.y += 0.005;
+            shield.rotation.y -= 0.002;
             renderer.render(scene, camera);
         }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         init();
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>India E-Waste Atlas | Skilizee E-Waste</title>
+    <title>India Atlas | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -16,30 +16,92 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #fff7ed; overflow: hidden; }
-        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #fff7ed, #ffedd5); }
-        .hud { position: absolute; top: 40px; left: 40px; z-index: 10; width: 320px; }
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
-        .city-btn { width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; text-align: left; transition: 0.2s; margin-top: 8px; }
-        .city-btn:hover { border-color: #f3a44a; transform: translateX(4px); }
-        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #f3a44a; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        body { font-family: 'Inter', sans-serif; background: #fff7ed; color: #7c2d12; margin: 0; overflow: hidden; }
+        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #ffedd5 0%, #fff7ed 100%); }
+        
+        .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
+        .ui-panel {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 88, 12, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(124, 45, 18, 0.05);
+        }
+
+        .header-panel { top: 30px; left: 30px; padding: 24px; max-width: 380px; }
+        .city-panel { bottom: 30px; left: 30px; width: 380px; padding: 24px; }
+
+        .city-card {
+            background: white; border: 1px solid #fed7aa;
+            border-radius: 16px; padding: 12px; margin-top: 10px;
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .city-card:hover { border-color: #ea580c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1); }
+        .city-card.active { border-color: #ea580c; background: #fff7ed; }
+
+        .purpose-box {
+            position: absolute; bottom: 30px; right: 30px; max-width: 320px;
+            padding: 20px; font-size: 12px; color: #9a3412;
+            background: rgba(255, 237, 213, 0.6); border: 1px solid rgba(234, 88, 12, 0.1);
+        }
+
+        .data-overlay {
+            position: absolute; top: 30px; right: 30px; padding: 20px;
+            background: rgba(255, 255, 255, 0.9); border-radius: 16px; width: 260px;
+        }
     </style>
 </head>
 <body>
-    <div id="canvas-container">
-        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-        </button>
-        <div class="hud space-y-4">
-            <div class="glass">
-                <h1 class="text-2xl font-bold text-orange-900">National Atlas</h1>
-                <p class="text-sm text-orange-800/60 mt-2">Explore e-waste hotspots across India's urban landscape.</p>
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <div class="ui-panel header-panel">
+            <div class="text-[10px] font-bold text-orange-500 uppercase tracking-widest mb-2">Module 3.4 • National Overview</div>
+            <h1 class="text-2xl font-bold mb-2">National E-Waste Atlas</h1>
+            <p class="text-sm text-orange-800/70 leading-relaxed">India is the world's 3rd largest e-waste generator. Explore the urban "mines" where most electronics accumulate.</p>
+        </div>
+
+        <div class="ui-panel city-panel">
+            <p class="text-xs font-bold text-orange-400 uppercase tracking-widest mb-4">Urban Hotspots (Annual MT)</p>
+            
+            <div class="city-card" onclick="focusCity('Mumbai', 0)">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-bold">120k</div>
+                <div>
+                    <h4 class="text-sm font-bold">Mumbai</h4>
+                    <p class="text-[10px] opacity-60">Highest generation in India</p>
+                </div>
             </div>
-            <div class="glass">
-                <button class="city-btn" onclick="highlightCity('Delhi', 5)">Delhi NCR</button>
-                <button class="city-btn" onclick="highlightCity('Mumbai', 4.5)">Mumbai</button>
-                <button class="city-btn" onclick="highlightCity('Bangalore', 3.8)">Bangalore</button>
+
+            <div class="city-card" onclick="focusCity('Delhi', 1)">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-bold">98k</div>
+                <div>
+                    <h4 class="text-sm font-bold">Delhi NCR</h4>
+                    <p class="text-[10px] opacity-60">Primary hub for informal processing</p>
+                </div>
             </div>
+
+            <div class="city-card" onclick="focusCity('Bangalore', 2)">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 font-bold">92k</div>
+                <div>
+                    <h4 class="text-sm font-bold">Bengaluru</h4>
+                    <p class="text-[10px] opacity-60">IT capital's hardware footprint</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-overlay ui-panel">
+            <h4 id="focus-name" class="font-bold text-orange-600 mb-1 tracking-tight">Select a City</h4>
+            <p id="focus-stat" class="text-[10px] text-slate-500 mb-2">Interactive mapping of mineral wealth in urban centers.</p>
+            <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+                <div id="focus-bar" class="h-full bg-orange-500 w-0 transition-all duration-500"></div>
+            </div>
+        </div>
+
+        <div class="ui-panel purpose-box rounded-xl">
+            <span class="font-bold text-orange-600 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            To understand the concentration of e-waste in India. Urbanization and IT expansion correlate directly with waste volume, making large metros the primary targets for formal collection networks.
         </div>
     </div>
 
@@ -47,37 +109,99 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        let scene, camera, renderer, map;
-        const bars = [];
+        let scene, camera, renderer, controls, indiaMap;
+        const cityBars = [];
+        
+        // Approx coordinates for India Map (Low poly)
+        const indiaPoints = [
+            [0, 8], [1, 7], [3, 6], [4, 4], [3, 2], [5, 1], [4, -1], [3, -3], [1, -5], 
+            [0, -7], [-1, -5], [-3, -3], [-4, -1], [-5, 1], [-4, 3], [-3, 5], [-1, 7]
+        ];
+
+        const cities = [
+            { name: "Mumbai", x: -2.5, z: -1.5, val: 5, info: "120,000 Metric Tons / Year" },
+            { name: "Delhi", x: -0.5, z: 4.5, val: 4, info: "98,000 Metric Tons / Year" },
+            { name: "Bangalore", x: -0.5, z: -3.5, val: 3.8, info: "92,000 Metric Tons / Year" },
+            { name: "Chennai", x: 1, z: -4, val: 3, info: "67,000 Metric Tons / Year" },
+            { name: "Kolkata", x: 4, z: 1.5, val: 2.5, info: "52,000 Metric Tons / Year" }
+        ];
 
         function init() {
+            const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(10, 10, 10);
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 15, 10);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
 
-            const controls = new OrbitControls(camera, renderer.domElement);
-            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-            
-            // Base Map
-            map = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({ color: 0xf3a44a, transparent: true, opacity: 0.2 }));
-            map.rotation.x = -Math.PI / 2;
-            scene.add(map);
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.maxPolarAngle = Math.PI / 2.5;
+
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const sun = new THREE.DirectionalLight(0xffffff, 1);
+            sun.position.set(10, 20, 10);
+            scene.add(sun);
+
+            // Create India Shape
+            const shape = new THREE.Shape();
+            shape.moveTo(indiaPoints[0][0], indiaPoints[0][1]);
+            indiaPoints.slice(1).forEach(p => shape.lineTo(p[0], p[1]));
+            shape.closePath();
+
+            const extrudeSettings = { depth: 0.2, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.1 };
+            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            const material = new THREE.MeshStandardMaterial({ color: 0xfed7aa, roughness: 0.8 });
+            indiaMap = new THREE.Mesh(geometry, material);
+            indiaMap.rotation.x = -Math.PI / 2;
+            scene.add(indiaMap);
+
+            // Add City Bars
+            cities.forEach((city, i) => {
+                const barGeo = new THREE.CylinderGeometry(0.15, 0.15, city.val, 16);
+                const barMat = new THREE.MeshStandardMaterial({ color: 0xea580c });
+                const bar = new THREE.Mesh(barGeo, barMat);
+                bar.position.set(city.x, city.val/2, -city.z); // Mapping Y to Z since map is rotated
+                scene.add(bar);
+                cityBars.push(bar);
+                
+                gsap.from(bar.scale, { y: 0, duration: 1, delay: i * 0.2, ease: "power2.out" });
+            });
 
             animate();
         }
 
-        window.highlightCity = (name, val) => {
-            const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, val), new THREE.MeshStandardMaterial({ color: 0xea580c }));
-            bar.position.set(Math.random() * 6 - 3, val/2, Math.random() * 6 - 3);
-            scene.add(bar);
-            gsap.from(bar.scale, { y: 0, duration: 1, ease: "power2.out" });
+        window.focusCity = (name, index) => {
+            const city = cities[index];
+            document.getElementById('focus-name').textContent = city.name;
+            document.getElementById('focus-stat').textContent = city.info;
+            document.getElementById('focus-bar').style.width = (city.val * 20) + '%';
+            
+            // Camera Move
+            gsap.to(camera.position, { x: city.x, z: -city.z + 5, y: 5, duration: 1.5, ease: "power2.inOut" });
+            gsap.to(controls.target, { x: city.x, z: -city.z, y: 0, duration: 1.5 });
+            
+            // Pulse bar
+            const bar = cityBars[index];
+            gsap.to(bar.scale, { x: 1.5, z: 1.5, duration: 0.3, yoyo: true, repeat: 1 });
         };
 
-        function animate() { requestAnimationFrame(animate); renderer.render(scene, camera); }
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         init();
     </script>
 </body>

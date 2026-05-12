@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Material Waterfall | Skilizee E-Waste</title>
+    <title>Urban Mine Distiller | Skilizee E-Waste</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -16,83 +16,214 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #ecfdf5; overflow: hidden; }
-        #canvas-container { height: 100vh; position: relative; background: radial-gradient(circle, #f0fdf4, #dcfce7); }
-        .hud { position: absolute; bottom: 40px; right: 40px; z-index: 10; width: 350px; }
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 24px; padding: 24px; border: 1px solid rgba(255,255,255,0.3); }
-        .fullscreen-btn { position: absolute; top: 40px; right: 40px; z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: #2bc1a6; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; margin: 0; overflow: hidden; }
+        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #064e3b 0%, #020617 100%); }
+        
+        .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
+        .ui-panel {
+            pointer-events: auto;
+            background: rgba(6, 78, 59, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-panel { top: 30px; left: 30px; padding: 24px; max-width: 380px; }
+        .recovery-stats { bottom: 30px; right: 30px; width: 380px; padding: 24px; }
+
+        .yield-card {
+            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 16px; margin-top: 12px;
+        }
+
+        .simulate-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px; font-weight: 700; color: white;
+            margin-top: 16px; transition: 0.3s;
+        }
+        .simulate-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+
+        .purpose-box {
+            position: absolute; bottom: 30px; left: 30px; max-width: 320px;
+            padding: 20px; font-size: 12px; color: rgba(167, 243, 208, 0.6);
+            background: rgba(6, 78, 59, 0.3); border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .input-control {
+            margin-top: 20px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px;
+        }
+        input[type=range] { width: 100%; accent-color: #10b981; }
     </style>
 </head>
 <body>
-    <div id="canvas-container">
-        <button class="fullscreen-btn" onclick="document.body.requestFullscreen()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-        </button>
-        <div class="hud space-y-4">
-            <div class="glass">
-                <h1 class="text-2xl font-bold text-teal-900">Material Recovery</h1>
-                <p class="text-sm text-teal-800/60 mt-1">Visualize how collected weight converts into pure resources.</p>
-                <div class="mt-6 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase text-teal-600">Gold Recovered</span>
-                        <span class="font-bold" id="gold-val">0.00g</span>
-                    </div>
-                    <div class="h-2 bg-teal-100 rounded-full overflow-hidden">
-                        <div id="gold-bar" class="h-full bg-yellow-400 w-0"></div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase text-teal-600">Copper Recovered</span>
-                        <span class="font-bold" id="copper-val">0.00kg</span>
-                    </div>
-                    <div class="h-2 bg-teal-100 rounded-full overflow-hidden">
-                        <div id="copper-bar" class="h-full bg-orange-400 w-0"></div>
-                    </div>
-                </div>
-                <button class="w-full bg-teal-600 text-white mt-6 p-4 rounded-xl font-bold" onclick="simulateRecovery()">Run Recovery Sim</button>
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <div class="ui-panel header-panel">
+            <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Module 3.2 • Material Recovery</div>
+            <h1 class="text-2xl font-bold mb-2">Urban Mine Distiller</h1>
+            <p class="text-sm text-emerald-200/60 leading-relaxed">Visualize the sheer density of minerals in e-waste. 1 ton of phones contains up to 80x more gold than 1 ton of raw ore.</p>
+        </div>
+
+        <div class="ui-panel recovery-stats">
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Yield Potential</p>
+                <div class="text-xs bg-emerald-900/50 px-2 py-1 rounded text-emerald-300">ACTIVE VORTEX</div>
             </div>
+
+            <div class="yield-card">
+                <div class="flex justify-between text-xs mb-2">
+                    <span class="text-slate-400">Gold Recovered</span>
+                    <span class="font-bold text-yellow-400" id="gold-val">0.0g</span>
+                </div>
+                <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div id="gold-bar" class="h-full bg-yellow-500 w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <div class="yield-card">
+                <div class="flex justify-between text-xs mb-2">
+                    <span class="text-slate-400">Copper Recovered</span>
+                    <span class="font-bold text-orange-400" id="copper-val">0.0kg</span>
+                </div>
+                <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div id="copper-bar" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <div class="input-control">
+                <div class="flex justify-between text-[10px] uppercase font-bold mb-2">
+                    <span>Waste Input Weight</span>
+                    <span id="weight-label">100 KG</span>
+                </div>
+                <input type="range" id="weight-input" min="10" max="1000" value="100" step="10">
+            </div>
+
+            <button class="simulate-btn" onclick="distill()">RUN DISTILLATION</button>
+        </div>
+
+        <div class="ui-panel purpose-box rounded-xl">
+            <span class="font-bold text-emerald-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            To demonstrate the resource-efficiency of recycling. While traditional mining moves mountains for a few grams of gold, urban mining recovers the same amount from just a few hundred phones.
         </div>
     </div>
 
     <script type="module">
         import * as THREE from 'three';
-        let scene, camera, renderer, particles;
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        let scene, camera, renderer, controls, vortex, ingots = [];
+        const phones = [];
 
         function init() {
+            const container = document.getElementById('canvas-container');
+            
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 5, 10);
-            camera.lookAt(0, 0, 0);
+            scene.fog = new THREE.FogExp2(0x020617, 0.08);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
 
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(500 * 3);
-            for(let i=0; i<500*3; i++) pos[i] = (Math.random() - 0.5) * 10;
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            particles = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x2bc1a6, size: 0.05 }));
-            scene.add(particles);
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+
+            // Lights
+            scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+            const pLight = new THREE.PointLight(0x10b981, 5, 20);
+            pLight.position.set(0, 0, 0);
+            scene.add(pLight);
+
+            // Vortex Group
+            vortex = new THREE.Group();
+            scene.add(vortex);
+
+            // Seed Phones (Scatter)
+            for(let i=0; i<60; i++) {
+                const geo = new THREE.BoxGeometry(0.4, 0.8, 0.1);
+                const mat = new THREE.MeshStandardMaterial({ color: 0x1e293b });
+                const phone = new THREE.Mesh(geo, mat);
+                resetPhone(phone);
+                vortex.add(phone);
+                phones.push(phone);
+            }
+
+            document.getElementById('weight-input').oninput = (e) => {
+                document.getElementById('weight-label').textContent = e.target.value + ' KG';
+            };
 
             animate();
         }
 
-        window.simulateRecovery = () => {
-            gsap.to('#gold-val', { innerText: 12.45, duration: 2, snap: { innerText: 0.01 }, onUpdate: function() {
+        function resetPhone(p) {
+            const angle = Math.random() * Math.PI * 2;
+            const r = 3 + Math.random() * 5;
+            p.position.set(Math.cos(angle) * r, (Math.random() - 0.5) * 8, Math.sin(angle) * r);
+            p.userData.speed = 0.02 + Math.random() * 0.05;
+            p.userData.radius = r;
+            p.userData.angle = angle;
+        }
+
+        window.distill = () => {
+            const weight = parseInt(document.getElementById('weight-input').value);
+            
+            // UI Feedback
+            gsap.to('#gold-val', { innerText: (weight * 0.025).toFixed(1), duration: 2, snap: { innerText: 0.1 }, onUpdate: function() {
                 document.getElementById('gold-val').textContent = this.targets()[0].innerText + 'g';
-                document.getElementById('gold-bar').style.width = (this.progress() * 80) + '%';
+                document.getElementById('gold-bar').style.width = (this.progress() * 100) + '%';
             }});
-            gsap.to('#copper-val', { innerText: 45.2, duration: 2, snap: { innerText: 0.1 }, onUpdate: function() {
+            gsap.to('#copper-val', { innerText: (weight * 0.15).toFixed(1), duration: 2, snap: { innerText: 0.1 }, onUpdate: function() {
                 document.getElementById('copper-val').textContent = this.targets()[0].innerText + 'kg';
-                document.getElementById('copper-bar').style.width = (this.progress() * 95) + '%';
+                document.getElementById('copper-bar').style.width = (this.progress() * 100) + '%';
             }});
+
+            // 3D Visual: Suck phones to center, spawn ingots
+            phones.forEach(p => {
+                gsap.to(p.position, { x: 0, y: 0, z: 0, duration: 1.5, ease: "power2.in", onComplete: () => resetPhone(p) });
+            });
+
+            // Spawn Ingots
+            setTimeout(() => {
+                const ingotGeo = new THREE.BoxGeometry(1.2, 0.4, 0.6);
+                const goldMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.1 });
+                const ingot = new THREE.Mesh(ingotGeo, goldMat);
+                ingot.position.y = 5;
+                scene.add(ingot);
+                gsap.to(ingot.position, { y: 0, duration: 1, ease: "bounce.out" });
+                gsap.to(ingot.scale, { x: 0, y: 0, z: 0, delay: 3, duration: 0.5, onComplete: () => scene.remove(ingot) });
+            }, 1500);
         };
 
         function animate() {
             requestAnimationFrame(animate);
-            particles.rotation.y += 0.002;
+            controls.update();
+
+            const time = Date.now() * 0.001;
+            phones.forEach((p, i) => {
+                p.userData.angle += p.userData.speed;
+                p.position.x = Math.cos(p.userData.angle) * p.userData.radius;
+                p.position.z = Math.sin(p.userData.angle) * p.userData.radius;
+                p.rotation.x += 0.01;
+                p.rotation.z += 0.01;
+            });
+
             renderer.render(scene, camera);
         }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
         init();
     </script>
 </body>
