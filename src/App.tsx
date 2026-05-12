@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
-import { BrowserRouter as Router, Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
+import { BrowserRouter as Router, Link, Navigate, Route, Routes, useParams, Outlet } from 'react-router-dom'
 import './App.css'
 import {
   chapters,
@@ -54,7 +54,7 @@ function ScrapRobot({
   const hasArmL = unlockedParts.includes('arm_l')
 
   return (
-    <div className="robot-stage" style={{ '--chapter-accent': accentColor } as CSSProperties} aria-hidden="true">
+    <div className="robot-stage" style={{ '--accent-color': accentColor } as CSSProperties} aria-hidden="true">
       <div className="robot-grid" />
       <div className="robot-splash robot-splash-one" />
       <div className="robot-splash robot-splash-two" />
@@ -267,7 +267,7 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
           <h4>{block.title}</h4>
           <p className="media-note">{block.summary}</p>
         </div>
-        <div className="trend-spotlight" style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}>
+        <div className="trend-spotlight" style={{ '--accent-color': activeSeries.accentColor } as CSSProperties}>
           <span>{activeSeries.label}</span>
           <strong>{formatTrendValue(activeSeries, activeValue)}</strong>
           <p>{activeLabel}</p>
@@ -283,7 +283,7 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
               setActiveSeriesIndex(index)
               setHoverIndex(block.labels.length - 1)
             }}
-            style={{ '--trend-accent': series.accentColor } as CSSProperties}
+            style={{ '--accent-color': series.accentColor } as CSSProperties}
           >
             <span className="trend-series-dot" />
             {series.label}
@@ -325,7 +325,7 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
             ))}
 
             <path d={areaPath} className="trend-area" fill={`url(#trend-gradient-${activeSeriesIndex})`} />
-            <path d={linePath} className="trend-line" style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties} />
+            <path d={linePath} className="trend-line" style={{ '--accent-color': activeSeries.accentColor } as CSSProperties} />
 
             {points.map((p, i) => (
               <circle
@@ -334,7 +334,7 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
                 cy={p.y}
                 r={i === hoverIndex ? 3.5 : 2.2}
                 className={`trend-point ${i === hoverIndex ? 'active' : ''}`}
-                style={{ '--trend-accent': activeSeries.accentColor } as CSSProperties}
+                style={{ '--accent-color': activeSeries.accentColor } as CSSProperties}
                 onMouseEnter={() => setHoverIndex(i)}
               />
             ))}
@@ -343,7 +343,7 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
           <div
             className="trend-tooltip"
             style={{
-              '--trend-accent': activeSeries.accentColor,
+              '--accent-color': activeSeries.accentColor,
               left: `${(points[activePointIndex].x / chartWidth) * 100}%`,
               top: `${(points[activePointIndex].y / chartHeight) * 100}%`,
             } as CSSProperties}
@@ -537,7 +537,7 @@ function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout })
     <article
       id={`topic-${tab.id}`}
       className={`topic-panel topic-layout-${layout} topic-hero-${tab.heroVariant ?? 'signal'}`}
-      style={{ '--topic-accent': tab.accentColor ?? '#ff8b4d' } as CSSProperties}
+      style={{ '--accent-color': tab.accentColor ?? '#ff8b4d' } as CSSProperties}
     >
       <header className="topic-header">
         <div>
@@ -612,7 +612,10 @@ function ChapterPage() {
   return (
     <div
       className={`course-shell chapter-theme-${chapter.themeKey}`}
-      style={{ '--chapter-accent': chapter.accentColor } as CSSProperties}
+      style={{ 
+        '--accent-color': chapter.accentColor,
+        '--accent-color-transparent': `${chapter.accentColor}20`
+      } as CSSProperties}
     >
       <section className="hero-panel">
         <div className="hero-copy">
@@ -740,7 +743,10 @@ function FullscreenButton() {
 
 
 
-function AppContent() {
+
+
+
+function AppLayout() {
   const { id } = useParams()
   const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
 
@@ -757,11 +763,9 @@ function AppContent() {
         </div>
       </div>
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/1-0" replace />} />
-        <Route path="/chapter/:id" element={<ChapterPage />} />
-        <Route path="/:id" element={<ChapterPage />} />
-      </Routes>
+      <div className="content-layer" style={{ position: 'relative', zIndex: 10 }}>
+        <Outlet />
+      </div>
     </main>
   )
 }
@@ -770,9 +774,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/:id" element={<AppContent />} />
-        <Route path="/chapter/:id" element={<AppContent />} />
-        <Route path="/" element={<Navigate to="/1-0" replace />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Navigate to="/1-0" replace />} />
+          <Route path="/chapter/:id" element={<ChapterPage />} />
+          <Route path="/:id" element={<ChapterPage />} />
+        </Route>
       </Routes>
     </Router>
   )
