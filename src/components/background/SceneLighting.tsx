@@ -1,21 +1,41 @@
+
 import { Environment, Lightformer } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 import { Color, Fog } from 'three'
 import { sceneConfig } from '../../sceneConfig'
 import type { SceneQuality } from './sceneQuality'
+import type { ChapterThemeKey } from '../../courseData'
 
-export function SceneLighting({ scrollProgress, quality }: { scrollProgress: number; quality: SceneQuality }) {
+const themeColors: Record<ChapterThemeKey, string> = {
+  hazard: '#f59e0b',
+  recycling: '#06b6d4',
+  action: '#ef4444',
+  recovery: '#10b981',
+  diagnostic: '#14b8a6',
+  mapping: '#8b5cf6'
+}
+
+export function SceneLighting({ 
+  scrollProgress, 
+  quality, 
+  theme = 'hazard' 
+}: { 
+  scrollProgress: number; 
+  quality: SceneQuality;
+  theme?: ChapterThemeKey;
+}) {
   const fogRef = useRef<Fog | null>(null)
   const motionFactor = quality.reducedMotion ? 0.35 : 1
+  
+  const accentColor = useMemo(() => new Color(themeColors[theme]), [theme])
 
   useFrame(() => {
     if (fogRef.current) {
-      // Shift fog color from toxic dark to clean white
-      const fogColor = new Color(sceneConfig.colors.fogNear).lerp(
-        new Color(sceneConfig.colors.fogFar),
-        scrollProgress
-      )
+      // Shift fog color from theme-tinted dark to clean white
+      const fogColor = new Color(sceneConfig.colors.fogNear)
+        .lerp(accentColor, 0.15)
+        .lerp(new Color(sceneConfig.colors.fogFar), scrollProgress)
       fogRef.current.color.copy(fogColor)
     }
   })
@@ -27,7 +47,7 @@ export function SceneLighting({ scrollProgress, quality }: { scrollProgress: num
 
       <hemisphereLight
         intensity={0.56 + scrollProgress * 0.46}
-        color={sceneConfig.colors.hazeEnd}
+        color={themeColors[theme]}
         groundColor={sceneConfig.colors.terrainBase}
       />
       
@@ -44,7 +64,7 @@ export function SceneLighting({ scrollProgress, quality }: { scrollProgress: num
         angle={0.15}
         penumbra={1}
         intensity={quality.isMobile ? 0 : 7 * (1 - scrollProgress + 0.25) * motionFactor}
-        color={sceneConfig.colors.terrainTrace}
+        color={themeColors[theme]}
         castShadow={!quality.isMobile && !quality.reducedMotion}
       />
 
@@ -54,14 +74,14 @@ export function SceneLighting({ scrollProgress, quality }: { scrollProgress: num
           intensity={quality.isMobile ? 1.4 : 3}
           position={[0, 10, -10]}
           scale={[20, 5, 1]}
-          color={sceneConfig.colors.vortexGlow}
+          color={themeColors[theme]}
         />
         <Lightformer
           form="circle"
           intensity={quality.isMobile ? 0.8 : 1.6}
           position={[-10, 5, 5]}
           scale={[10, 10, 1]}
-          color={sceneConfig.colors.deviceScreen}
+          color={themeColors[theme]}
         />
       </Environment>
     </>

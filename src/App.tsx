@@ -418,8 +418,29 @@ function renderBlock(block: ChapterBlock): ReactNode {
     )
   }
 
+
   if (block.type === 'bulletList' || block.type === 'numberedList') {
     const ListTag = block.type === 'numberedList' ? 'ol' : 'ul'
+
+    if (block.type === 'bulletList' && block.items.length > 5) {
+      return (
+        <section className="content-card bento-grid">
+          {block.items.map((item, index) => {
+            const [title, ...descParts] = item.split(': ')
+            const desc = descParts.join(': ')
+            return (
+              <div key={index} className="bento-item">
+                <div className="bento-icon">✦</div>
+                <div className="flex flex-col gap-1">
+                  <div className="bento-title">{title}</div>
+                  {desc && <div className="bento-desc">{desc}</div>}
+                </div>
+              </div>
+            )
+          })}
+        </section>
+      )
+    }
 
     return (
       <section className={`content-card list-card ${block.type === 'numberedList' ? 'list-numbered' : ''}`}>
@@ -717,26 +738,42 @@ function FullscreenButton() {
   )
 }
 
+
+
+function AppContent() {
+  const { id } = useParams()
+  const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
+
+  return (
+    <main className="page-shell">
+      <div className="filmic-grain" aria-hidden="true" />
+      <FullscreenButton />
+      <div className="page-background" aria-hidden="true">
+        <div className="page-background-tint" />
+        <div className="page-background-scene">
+          <Suspense fallback={<div className="hero-scene-fallback">Loading salvage lab...</div>}>
+            <EWasteBackground theme={chapter?.themeKey} />
+          </Suspense>
+        </div>
+      </div>
+
+      <Routes>
+        <Route path="/" element={<Navigate to="/1-0" replace />} />
+        <Route path="/chapter/:id" element={<ChapterPage />} />
+        <Route path="/:id" element={<ChapterPage />} />
+      </Routes>
+    </main>
+  )
+}
+
 function App() {
   return (
     <Router>
-      <main className="page-shell">
-        <FullscreenButton />
-        <div className="page-background" aria-hidden="true">
-          <div className="page-background-tint" />
-          <div className="page-background-scene">
-            <Suspense fallback={<div className="hero-scene-fallback">Loading salvage lab...</div>}>
-              <EWasteBackground />
-            </Suspense>
-          </div>
-        </div>
-
-        <Routes>
-          <Route path="/" element={<Navigate to="/1-0" replace />} />
-          <Route path="/chapter/:id" element={<ChapterPage />} />
-          <Route path="/:id" element={<ChapterPage />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path="/:id" element={<AppContent />} />
+        <Route path="/chapter/:id" element={<AppContent />} />
+        <Route path="/" element={<Navigate to="/1-0" replace />} />
+      </Routes>
     </Router>
   )
 }

@@ -1,9 +1,39 @@
+/* Global Card Styling Tokens */
+:root {
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 24px;
+  --card-radius: 24px;
+  --accent-glow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Base Glassmorphic Container */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--accent-glow);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel:hover {
+  border-color: var(--accent-color, rgba(20, 184, 166, 0.4));
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+              0 0 20px var(--accent-color-transparent, rgba(20, 184, 166, 0.1));
+}
+
 /* Flip Card Styles */
 .flip-card {
   background-color: transparent;
   width: 100%;
-  min-height: 400px;
-  perspective: 1500px;
+  min-height: 480px;
+  perspective: 2000px;
   cursor: pointer;
   margin-bottom: 2rem;
 }
@@ -13,7 +43,7 @@
   width: 100%;
   height: 100%;
   text-align: left;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform-style: preserve-3d;
 }
 
@@ -33,195 +63,160 @@
 
 .flip-card-back {
   transform: rotateY(180deg);
-  background: rgba(10, 10, 18, 0.95) !important;
+  background: rgba(15, 23, 42, 0.98) !important;
 }
 
-/* Card Content Styling */
-.card-header-telemetry {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.card-type-tag {
-  color: var(--accent-color, #3b82f6);
-}
-
-.card-hero-container {
-  position: relative;
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-hero-image {
-  display: block;
-  width: 100%;
-  height: auto;
-  transition: transform 0.5s ease;
-}
-
-.flip-card:hover .card-hero-image {
-  transform: scale(1.05);
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(10, 10, 18, 0.8) 0%, transparent 60%);
-}
-
-.card-title-group {
+/* Content Cards Typography */
+.card-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+  line-height: 1.1;
   margin-bottom: 1rem;
 }
 
-.card-subtitle {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 0.5rem;
+.card-summary {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(248, 250, 252, 0.7);
 }
 
-.card-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #f8fafc;
-  line-height: 1.2;
+/* Quote Block Styling */
+.quote-block {
+  position: relative;
+  padding: 2rem 2rem 2rem 3.5rem;
+  border-left: 4px solid var(--accent-color, #14b8a6);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 16px 16px 0;
+  margin: 2rem 0;
 }
 
-.flip-hint {
-  margin-top: auto;
+.quote-block::before {
+  content: '“';
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 4rem;
+  font-family: 'Poppins', sans-serif;
+  color: var(--accent-color, #14b8a6);
+  opacity: 0.3;
+  line-height: 1;
+}
+
+/* Bento Infographic Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.bento-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.hint-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.3);
+.bento-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--accent-color, #14b8a6);
+  transform: scale(1.02);
 }
 
-.hint-icon {
-  width: 24px;
-  height: 24px;
+.bento-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-color-transparent, rgba(20, 184, 166, 0.1));
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.5rem;
+  color: var(--accent-color, #14b8a6);
 }
 
-/* Back Side Specifics */
-.card-content-scrollable {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+.bento-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f1f5f9;
 }
 
-.back-title {
-  font-size: 1.2rem;
+.bento-desc {
+  font-size: 0.875rem;
+  color: rgba(241, 245, 249, 0.6);
+  line-height: 1.5;
+}
+
+/* Stat Grid Improvements */
+.stat-card {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent-color, #14b8a6);
   margin-bottom: 0.5rem;
-  color: var(--accent-color, #3b82f6);
+  font-family: 'Poppins', sans-serif;
 }
 
-.content-divider {
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent-color, #3b82f6), transparent);
-  margin-bottom: 1.5rem;
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Custom Scrollbar for Card */
 .card-content-scrollable::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 .card-content-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 .card-content-scrollable::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  border-radius: 10px;
 }
 
-/* Expandable Card Styles */
-.expandable-card {
-  margin-bottom: 2rem;
-  cursor: pointer;
+/* Callout Styling */
+.callout-box {
+  padding: 2rem;
+  border-radius: 24px;
+  border-left: 6px solid var(--accent-color, #14b8a6);
+  background: var(--accent-color-transparent, rgba(20, 184, 166, 0.05));
+  margin: 2rem 0;
 }
 
-.expandable-content {
-  overflow: hidden;
-  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.expand-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-family: 'JetBrains Mono', monospace;
+.callout-eyebrow {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  transition: color 0.3s;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-color, #14b8a6);
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
-.expandable-card:hover .expand-btn {
-  color: #3b82f6;
-}
-
-.expand-icon {
-  transition: transform 0.3s;
-}
-
-.expandable-card.expanded .expand-icon {
-  transform: rotate(180deg);
-}
-
-/* Image Card Styles */
-.image-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-}
-
-.image-card-bg {
-  position: absolute;
+/* Background Filmic Grain */
+.filmic-grain {
+  position: fixed;
   inset: 0;
-  z-index: 0;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.image-card:hover .image-card-bg {
-  transform: scale(1.08);
-}
-
-.image-card-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 10%, rgba(10, 10, 18, 0.4) 50%, transparent 100%);
-  z-index: 1;
-}
-
-.image-card-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 50;
 }

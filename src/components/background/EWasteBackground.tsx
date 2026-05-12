@@ -1,3 +1,4 @@
+
 import { Canvas } from '@react-three/fiber'
 import { Suspense, lazy, useEffect, useState } from 'react'
 import { sceneConfig } from '../../sceneConfig'
@@ -5,6 +6,7 @@ import { SceneLighting } from './SceneLighting'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { usePointerParallax } from './hooks/usePointerParallax'
 import type { SceneQuality } from './sceneQuality'
+import type { ChapterThemeKey } from '../../courseData'
 
 // Lazy load layers for performance
 const CircuitTerrain = lazy(() => import('./layers/CircuitTerrain').then(m => ({ default: m.CircuitTerrain })))
@@ -35,13 +37,18 @@ function getSceneQuality(): SceneQuality {
   }
 }
 
-export function EWasteBackground() {
+interface EWasteBackgroundProps {
+  theme?: ChapterThemeKey
+}
+
+export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
   const scrollProgress = useScrollProgress()
   const [quality, setQuality] = useState<SceneQuality>(() => getSceneQuality())
   const [webGLSupported] = useState(() => {
     if (typeof document === 'undefined') return true
     return getWebGLSupport()
   })
+  
   const parallax = usePointerParallax(
     quality.isMobile ? 0.025 : 0.06,
     0.045,
@@ -76,7 +83,7 @@ export function EWasteBackground() {
 
   return (
     <div 
-      className="ewaste-background"
+      className={`ewaste-background theme-${theme}`}
       style={{
         position: 'fixed',
         inset: 0,
@@ -99,14 +106,30 @@ export function EWasteBackground() {
             rotation={[parallax.y, parallax.x, 0]}
             position={[0, 0, 0]}
           >
-            <SceneLighting scrollProgress={scrollProgress} quality={quality} />
+            <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} />
             
-            <CircuitTerrain scrollProgress={scrollProgress} />
-            <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
-            <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
-            <ToxicParticles scrollProgress={scrollProgress} quality={quality} />
-            <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
-            <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
+            {(theme === 'diagnostic' || theme === 'mapping') && (
+              <CircuitTerrain scrollProgress={scrollProgress} />
+            )}
+            
+            {(theme === 'recycling' || theme === 'recovery') && (
+              <>
+                <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
+                <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
+              </>
+            )}
+            
+            {theme === 'hazard' && (
+              <>
+                <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
+                <ToxicParticles scrollProgress={scrollProgress} quality={quality} />
+              </>
+            )}
+            
+            {theme === 'action' && (
+              <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
+            )}
+            
           </group>
 
           {!quality.reducedMotion && <PostProcessingStack scrollProgress={scrollProgress} quality={quality} />}
