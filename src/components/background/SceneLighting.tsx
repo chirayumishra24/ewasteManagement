@@ -7,13 +7,20 @@ import { sceneConfig } from '../../sceneConfig'
 import type { SceneQuality } from './sceneQuality'
 import type { ChapterThemeKey } from '../../courseData'
 
+
 const themeColors: Record<ChapterThemeKey, string> = {
+  hub: '#64748b',
   hazard: '#f59e0b',
-  recycling: '#06b6d4',
-  action: '#ef4444',
-  recovery: '#10b981',
   diagnostic: '#14b8a6',
-  mapping: '#8b5cf6'
+  recovery: '#10b981',
+  maintenance: '#6366f1',
+  upcycle: '#a855f7',
+  recycling: '#06b6d4',
+  mapping: '#8b5cf6',
+  action: '#ef4444',
+  privacy: '#1e293b',
+  policy: '#4f46e5',
+  digital: '#22d3ee'
 }
 
 export function SceneLighting({ 

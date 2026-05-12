@@ -108,17 +108,20 @@ export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
           >
             <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} />
             
-            {(theme === 'diagnostic' || theme === 'mapping') && (
+            {/* Logic-focused layouts (Terrain) */}
+            {['diagnostic', 'mapping', 'hub', 'privacy', 'policy', 'digital'].includes(theme) && (
               <CircuitTerrain scrollProgress={scrollProgress} />
             )}
             
-            {(theme === 'recycling' || theme === 'recovery') && (
+            {/* Process-focused layouts (Recycling) */}
+            {['recycling', 'recovery', 'maintenance', 'upcycle'].includes(theme) && (
               <>
                 <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
                 <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
               </>
             )}
             
+            {/* Threat-focused layouts (Hazard) */}
             {theme === 'hazard' && (
               <>
                 <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
@@ -126,6 +129,7 @@ export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
               </>
             )}
             
+            {/* Dynamic layouts (Action) */}
             {theme === 'action' && (
               <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
             )}
