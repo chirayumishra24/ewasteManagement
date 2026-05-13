@@ -16,18 +16,18 @@ export function PostProcessingStack({
   return (
     <EffectComposer multisampling={quality.isMobile ? 0 : 2}>
       <Bloom 
-        luminanceThreshold={0.72}
+        luminanceThreshold={0.8}
         mipmapBlur 
-        intensity={bloomBase + scrollProgress * 0.12}
-        radius={quality.isMobile ? 0.28 : 0.42}
+        intensity={bloomBase + scrollProgress * 0.15}
+        radius={quality.isMobile ? 0.35 : 0.5}
       />
       {quality.isMobile ? (
         <></>
       ) : (
-        <DepthOfField focusDistance={0} focalLength={0.014} bokehScale={0.72} height={360} />
+        <DepthOfField focusDistance={0.02} focalLength={0.01} bokehScale={1.5} height={480} />
       )}
-      <Noise opacity={sceneConfig.postprocessing.noiseOpacity} />
-      <Vignette eskil={false} offset={0.2} darkness={sceneConfig.postprocessing.vignetteDarkness} />
+      <Noise opacity={0} />
+      <Vignette eskil={false} offset={0.15} darkness={0.2} />
     </EffectComposer>
   )
 }

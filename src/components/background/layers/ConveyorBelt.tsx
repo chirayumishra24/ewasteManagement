@@ -20,24 +20,22 @@ const beltFragmentShader = `
   varying vec2 vUv;
 
   void main() {
-    // Chevron pattern
+    // Playful stripe pattern
     vec2 uv = vUv;
-    uv.x *= 8.0; // Repeat along length
+    uv.x *= 10.0; // Repeat along length
     
     // Animate UV based on scroll and time
-    float move = uScroll * 10.0 + uTime * 0.2;
+    float move = uScroll * 12.0 + uTime * 0.4;
     uv.x += move;
     
-    float chevron = step(0.5, fract(uv.x + abs(uv.y - 0.5)));
+    float stripe = step(0.5, fract(uv.x));
     
-    vec3 baseColor = vec3(0.82, 0.79, 0.72);
-    vec3 accentColor = vec3(0.68, 0.64, 0.58);
-    vec3 highlight = vec3(0.95, 0.48, 0.23) * 0.22;
+    vec3 color1 = vec3(0.38, 0.65, 0.98); // Sky Blue
+    vec3 color2 = vec3(1.0, 1.0, 1.0);    // White
     
-    float edge = smoothstep(0.02, 0.0, abs(vUv.y - 0.5) - 0.48);
-    float glow = smoothstep(0.4, 0.5, chevron) * edge * 0.2;
+    float edge = smoothstep(0.01, 0.0, abs(vUv.y - 0.5) - 0.49);
+    vec3 finalColor = mix(color1, color2, stripe) * edge + vec3(0.9, 0.9, 1.0) * (1.0 - edge);
     
-    vec3 finalColor = mix(baseColor, accentColor, chevron) + highlight * glow;
     gl_FragColor = vec4(finalColor, 1.0);
   }
 `
@@ -104,12 +102,12 @@ export function ConveyorBelt({ scrollProgress, quality }: { scrollProgress: numb
 
       {/* Side Rails */}
       <mesh position={[0, 0.1, sceneConfig.conveyor.beltWidth / 2 + 0.1]}>
-        <boxGeometry args={[sceneConfig.conveyor.beltLength, 0.4, 0.1]} />
-        <meshStandardMaterial color="#8b949a" metalness={0.75} roughness={0.28} />
+        <boxGeometry args={[sceneConfig.conveyor.beltLength, 0.4, 0.15]} />
+        <meshStandardMaterial color="#FFFFFF" roughness={0.3} />
       </mesh>
       <mesh position={[0, 0.1, -sceneConfig.conveyor.beltWidth / 2 - 0.1]}>
-        <boxGeometry args={[sceneConfig.conveyor.beltLength, 0.4, 0.1]} />
-        <meshStandardMaterial color="#8b949a" metalness={0.75} roughness={0.28} />
+        <boxGeometry args={[sceneConfig.conveyor.beltLength, 0.4, 0.15]} />
+        <meshStandardMaterial color="#FFFFFF" roughness={0.3} />
       </mesh>
 
       {/* Rollers */}
@@ -121,7 +119,7 @@ export function ConveyorBelt({ scrollProgress, quality }: { scrollProgress: numb
           ref={(el) => { if (el) rollerRefs.current[i] = el }}
         >
           <cylinderGeometry args={[0.3, 0.3, sceneConfig.conveyor.beltWidth + 0.4, 16]} />
-          <meshStandardMaterial color="#707d86" metalness={0.92} roughness={0.18} />
+          <meshStandardMaterial color="#E3F2FD" metalness={0.2} roughness={0.5} />
         </mesh>
       ))}
 
@@ -139,11 +137,11 @@ export function ConveyorBelt({ scrollProgress, quality }: { scrollProgress: numb
               <meshStandardMaterial color="#707d86" />
             </mesh>
             <mesh position={[0, 0.6, 0]}>
-              <sphereGeometry args={[0.15, 16, 16]} />
+              <sphereGeometry args={[0.2, 24, 24]} />
               <meshStandardMaterial 
                 color={colors[i]} 
                 emissive={colors[i]} 
-                emissiveIntensity={2} 
+                emissiveIntensity={3} 
               />
             </mesh>
             {!quality.isMobile && <pointLight position={[0, 0.6, 0]} color={colors[i]} intensity={0.38} distance={3} />}
@@ -153,8 +151,8 @@ export function ConveyorBelt({ scrollProgress, quality }: { scrollProgress: numb
 
       {/* Items on belt */}
       <instancedMesh ref={itemMeshRef} args={[undefined, undefined, itemCount]}>
-        <boxGeometry args={[1, 0.5, 0.8]} />
-        <meshStandardMaterial color="#c6cdd1" metalness={0.5} roughness={0.42} />
+        <boxGeometry args={[1, 0.6, 0.8]} />
+        <meshStandardMaterial color="#FFD93D" roughness={0.4} metalness={0.1} />
       </instancedMesh>
     </group>
   )

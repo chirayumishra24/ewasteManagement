@@ -52,7 +52,7 @@ export function ToxicParticles({ scrollProgress, quality }: { scrollProgress: nu
 
   return (
     <group>
-      {/* Toxic Haze */}
+      {/* Soft Magical Haze */}
       <points ref={hazeRef}>
         <bufferGeometry>
           <bufferAttribute
@@ -64,16 +64,16 @@ export function ToxicParticles({ scrollProgress, quality }: { scrollProgress: nu
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.8}
-          color={new THREE.Color(sceneConfig.colors.hazeStart).lerp(new THREE.Color(sceneConfig.colors.hazeEnd), scrollProgress)}
+          size={1.2}
+          color="#EDE7F6"
           transparent
-          opacity={(quality.isMobile ? 0.14 : 0.18) * (1 - scrollProgress)}
+          opacity={(quality.isMobile ? 0.2 : 0.3) * (1 - scrollProgress)}
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
+          blending={THREE.NormalBlending}
         />
       </points>
 
-      {/* Sparks */}
+      {/* Magical Sparkles */}
       <points ref={sparksRef}>
         <bufferGeometry>
           <bufferAttribute
@@ -85,10 +85,10 @@ export function ToxicParticles({ scrollProgress, quality }: { scrollProgress: nu
           />
         </bufferGeometry>
         <pointsMaterial
-          size={0.08}
-          color={sceneConfig.colors.spark}
+          size={0.15}
+          color="#FFD93D"
           transparent
-          opacity={(quality.isMobile ? 0.28 : 0.46) * (1 - scrollProgress)}
+          opacity={(quality.isMobile ? 0.4 : 0.6) * (1 - scrollProgress)}
           blending={THREE.AdditiveBlending}
         />
       </points>

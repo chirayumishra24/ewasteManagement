@@ -198,39 +198,61 @@
                 const group = new THREE.Group();
                 const h = 3 + Math.random() * 5;
                 const w = 2 + Math.random() * 1.5;
-                
-                // Wireframe Hologram
+                const color = data.isSafe ? 0x61b8ff : 0xef4444;
+
+                // Main Building Body
                 const geo = new THREE.BoxGeometry(w, h, w);
                 const mat = new THREE.MeshStandardMaterial({ 
-                    color: data.isSafe ? 0x61b8ff : 0xef4444,
+                    color: color,
                     transparent: true,
-                    opacity: 0.2,
-                    wireframe: false
+                    opacity: 0.15
                 });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.y = h/2;
                 group.add(mesh);
 
-                // Internal core glow
-                const coreGeo = new THREE.BoxGeometry(w*0.8, h*0.9, w*0.8);
-                const coreMat = new THREE.MeshBasicMaterial({ 
-                    color: data.isSafe ? 0x61b8ff : 0xef4444, 
-                    transparent: true, 
-                    opacity: 0.1 
-                });
-                const core = new THREE.Mesh(coreGeo, coreMat);
-                core.position.y = h/2;
-                group.add(core);
+                // Industrial Roof Details
+                const roofType = Math.random();
+                if (roofType > 0.5) {
+                    // Cooling Towers / Cylinders
+                    const towerCount = Math.floor(Math.random() * 3) + 1;
+                    for(let t=0; t<towerCount; t++) {
+                        const tH = 0.5 + Math.random();
+                        const tW = 0.3 + Math.random() * 0.3;
+                        const tGeo = new THREE.CylinderGeometry(tW, tW, tH, 12);
+                        const tMesh = new THREE.Mesh(tGeo, mat);
+                        tMesh.position.set((Math.random()-0.5)*w*0.6, h + tH/2, (Math.random()-0.5)*w*0.6);
+                        group.add(tMesh);
+                    }
+                } else {
+                    // Penthouse / Box detail
+                    const pH = 0.8;
+                    const pW = w * 0.7;
+                    const pGeo = new THREE.BoxGeometry(pW, pH, pW);
+                    const pMesh = new THREE.Mesh(pGeo, mat);
+                    pMesh.position.y = h + pH/2;
+                    group.add(pMesh);
+                }
 
-                // Edges
-                const edges = new THREE.EdgesGeometry(geo);
-                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
-                    color: data.isSafe ? 0x61b8ff : 0xef4444,
-                    transparent: true,
-                    opacity: 0.5
-                }));
-                line.position.y = h/2;
-                group.add(line);
+                // Base Structure
+                const bH = 0.2;
+                const bW = w * 1.2;
+                const bGeo = new THREE.BoxGeometry(bW, bH, bW);
+                const bMesh = new THREE.Mesh(bGeo, mat);
+                bMesh.position.y = bH/2;
+                group.add(bMesh);
+
+                // Edges (Combined)
+                group.children.forEach(child => {
+                    const edges = new THREE.EdgesGeometry(child.geometry);
+                    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
+                        color: color,
+                        transparent: true,
+                        opacity: 0.4
+                    }));
+                    line.position.copy(child.position);
+                    group.add(line);
+                });
 
                 const angle = (i / facilityData.length) * Math.PI * 2;
                 const radius = 6 + Math.random() * 4;

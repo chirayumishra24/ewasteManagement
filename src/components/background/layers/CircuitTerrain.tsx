@@ -19,25 +19,31 @@ const fragmentShader = `
   uniform vec3 uBaseColor;
   uniform vec3 uTraceColor;
   varying vec2 vUv;
+
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+  }
+
   void main() {
-    vec2 uv = vUv * 40.0;
+    vec2 uv = vUv * 60.0;
     
-    // Industrial floor noise (concrete feel)
-    float n = fract(sin(dot(floor(uv * 10.0), vec2(12.9898, 78.233))) * 43758.5453);
-    vec3 base = mix(uBaseColor, uBaseColor * 0.8, n * 0.2);
+    // Playful meadow texture (soft color variation)
+    float n = random(floor(uv));
+    vec3 base = mix(uBaseColor, uBaseColor * 0.95, n);
     
-    // Subtle grid lines
-    vec2 p = fract(uv) - 0.5;
-    float grid = smoothstep(0.01, 0.0, min(abs(p.x), abs(p.y)) - 0.02);
-    float tracePulse = 0.55 + sin(uTime * 0.6 + vUv.x * 18.0) * 0.18;
+    // Subtle waving grass effect
+    float wave = sin(uv.x * 0.5 + uTime * 0.4) * cos(uv.y * 0.5 + uTime * 0.3);
+    base = mix(base, base * 1.05, wave * 0.1);
     
-    // Hazard stripes near center (where conveyor is)
-    float hazardArea = smoothstep(0.12, 0.1, abs(vUv.y - 0.5));
-    float stripes = step(0.5, fract(vUv.x * 20.0 + vUv.y * 20.0));
-    vec3 hazardColor = mix(vec3(0.49, 0.42, 0.3), vec3(0.89, 0.63, 0.16), stripes);
+    // Soft "flower" spots
+    float flower = smoothstep(0.48, 0.5, random(floor(uv * 0.5)));
+    vec3 flowerColor = mix(vec3(1.0, 0.85, 0.24), vec3(1.0, 0.42, 0.62), random(floor(uv * 0.5)));
     
-    vec3 color = mix(base, uTraceColor, grid * (0.08 + uScroll * 0.08) * tracePulse);
-    color = mix(color, hazardColor, hazardArea * (0.24 + (1.0 - uScroll) * 0.16));
+    vec3 color = mix(base, flowerColor, flower * 0.08);
+    
+    // Fade out towards edges
+    float dist = distance(vUv, vec2(0.5));
+    color = mix(color, vec3(1.0), smoothstep(0.3, 0.5, dist));
     
     gl_FragColor = vec4(color, 1.0);
   }

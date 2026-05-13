@@ -73,6 +73,16 @@
             pointer-events: none;
             transform: translate(-50%, -50%);
         }
+
+        .fullscreen-btn {
+            position: absolute; top: 24px; right: 24px; z-index: 100;
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1); color: white;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; pointer-events: auto;
+        }
+        .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body>
@@ -127,6 +137,10 @@
             <span class="font-bold text-amber-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
             To understand the seasonality of e-waste generation (e.g., after festivals or new product launches) and align collection efforts with community awareness windows.
         </div>
+
+        <button class="fullscreen-btn" id="fs-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
     </div>
 
     <script type="module">
@@ -209,6 +223,11 @@
                 emissiveIntensity: 0.8
             }));
             scene.add(center);
+
+            document.getElementById('fs-btn').onclick = () => {
+                if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+            };
 
             animate();
         }

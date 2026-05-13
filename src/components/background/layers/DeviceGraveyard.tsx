@@ -95,8 +95,8 @@ export function DeviceGraveyard({ scrollProgress, quality }: { scrollProgress: n
         args={[undefined, undefined, count]} 
         castShadow
       >
-        <boxGeometry args={[0.5, 0.9, 0.05]} />
-        <meshStandardMaterial roughness={0.2} metalness={0.8} />
+        <boxGeometry args={[0.5, 0.9, 0.08]} />
+        <meshStandardMaterial color="#FF6B9D" roughness={0.4} metalness={0.2} />
       </instancedMesh>
 
       {/* Monitors */}
@@ -105,8 +105,8 @@ export function DeviceGraveyard({ scrollProgress, quality }: { scrollProgress: n
         args={[undefined, undefined, count]} 
         castShadow
       >
-        <boxGeometry args={[1.2, 0.8, 0.1]} />
-        <meshStandardMaterial roughness={0.3} metalness={0.5} />
+        <boxGeometry args={[1.2, 0.8, 0.15]} />
+        <meshStandardMaterial color="#60A5FA" roughness={0.4} metalness={0.2} />
       </instancedMesh>
 
       {/* PCBs */}
@@ -115,8 +115,8 @@ export function DeviceGraveyard({ scrollProgress, quality }: { scrollProgress: n
         args={[undefined, undefined, count]} 
         castShadow
       >
-        <boxGeometry args={[0.7, 0.7, 0.02]} />
-        <meshStandardMaterial color={sceneConfig.colors.terrainTrace} roughness={0.5} metalness={0.2} />
+        <boxGeometry args={[0.7, 0.7, 0.04]} />
+        <meshStandardMaterial color="#A78BFA" roughness={0.4} metalness={0.2} />
       </instancedMesh>
     </group>
   )

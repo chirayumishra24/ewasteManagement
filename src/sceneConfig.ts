@@ -75,50 +75,51 @@ export type SceneConfig = {
 
 export const sceneConfig: SceneConfig = {
   colors: {
-    // Terrain
-    terrainBase: '#091522',
-    terrainTrace: '#2bc1a6',
-    terrainVia: '#f3a44a',
+    // Terrain (Lighter/Greener)
+    terrainBase: '#E8F5E9',
+    terrainTrace: '#4ECDC4',
+    terrainVia: '#FFD93D',
 
-    // Devices
-    deviceBody: '#9fb0ba',
-    deviceScreen: '#ff7f5e',
-    deviceMetal: '#5f7386',
+    // Devices (Cleaner/Whiter)
+    deviceBody: '#FFFFFF',
+    deviceScreen: '#60A5FA',
+    deviceMetal: '#A78BFA',
 
-    // Particles
-    hazeStart: '#07111b',
-    hazeEnd: '#112437',
-    spark: '#ffc26a',
+    // Particles (Playful)
+    hazeStart: '#F8FAFF',
+    hazeEnd: '#EDE7F6',
+    spark: '#FFD93D',
 
-    // Ribbons
-    ribbonMetal: '#f3a44a',
-    ribbonPlastic: '#61b8ff',
-    ribbonGlass: '#d8e6f0',
+    // Ribbons (Pastels)
+    ribbonMetal: '#FF6B9D',
+    ribbonPlastic: '#60A5FA',
+    ribbonGlass: '#4ECDC4',
 
-    // Vortex
-    vortexRing: '#ff7f5e',
-    vortexGlow: '#ffd48a',
+    // Vortex (Bright)
+    vortexRing: '#FFD93D',
+    vortexGlow: '#FFFFFF',
 
-    // Atmosphere
-    fogNear: '#07111b',
-    fogFar: '#0d1c2d',
-    skyGradientTop: '#08111b',
-    skyGradientBottom: '#112236',
-    // Conveyor Station Colors
-    stationCollection: '#61b8ff',
-    stationSorting: '#f3a44a',
-    stationRecycling: '#2bc1a6',
+    // Atmosphere (Sky Blue)
+    fogNear: '#E3F2FD',
+    fogFar: '#BBDEFB',
+    skyGradientTop: '#E3F2FD',
+    skyGradientBottom: '#BBDEFB',
+
+    // Conveyor Station Colors (Bright)
+    stationCollection: '#FF6B9D',
+    stationSorting: '#FFD93D',
+    stationRecycling: '#4ECDC4',
   },
   camera: {
-    position: [0, 7.4, 19.5],
-    fov: 30,
+    position: [0, 8.5, 24],
+    fov: 38,
   },
   conveyor: {
-    beltSpeed: 0.24,
+    beltSpeed: 0.18,
     beltWidth: 4.4,
     beltLength: 42,
-    itemCount: 14,
-    stationPositions: [-12, 0, 12], // Collection, Sorting, Recycling
+    itemCount: 12,
+    stationPositions: [-12, 0, 12],
   },
   scroll: {
     deviceLiftStart: 0.1,
@@ -129,20 +130,20 @@ export const sceneConfig: SceneConfig = {
     vortexFull: 0.84,
   },
   performance: {
-    desktopParticleCount: 220,
-    mobileParticleCount: 72,
-    desktopSparkCount: 72,
-    mobileSparkCount: 24,
+    desktopParticleCount: 180,
+    mobileParticleCount: 60,
+    desktopSparkCount: 60,
+    mobileSparkCount: 20,
     desktopDpr: 1.5,
     mobileDpr: 1,
-    desktopDeviceCount: 18,
+    desktopDeviceCount: 16,
     mobileDeviceCount: 8,
   },
   postprocessing: {
-    desktopBloom: 0.36,
-    mobileBloom: 0.18,
-    reducedMotionBloom: 0.08,
-    noiseOpacity: 0.018,
-    vignetteDarkness: 0.34,
+    desktopBloom: 0.4,
+    mobileBloom: 0.2,
+    reducedMotionBloom: 0.1,
+    noiseOpacity: 0.0,
+    vignetteDarkness: 0.15,
   },
 }

@@ -9,18 +9,18 @@ import type { ChapterThemeKey } from '../../courseData'
 
 
 const themeColors: Record<ChapterThemeKey, string> = {
-  hub: '#64748b',
-  hazard: '#f59e0b',
-  diagnostic: '#14b8a6',
-  recovery: '#10b981',
-  maintenance: '#6366f1',
-  upcycle: '#a855f7',
-  recycling: '#06b6d4',
-  mapping: '#8b5cf6',
-  action: '#ef4444',
-  privacy: '#1e293b',
-  policy: '#4f46e5',
-  digital: '#22d3ee'
+  hub: '#A78BFA',
+  hazard: '#FF6B9D',
+  diagnostic: '#60A5FA',
+  recovery: '#4ECDC4',
+  maintenance: '#34D399',
+  upcycle: '#C084FC',
+  recycling: '#F472B6',
+  mapping: '#818CF8',
+  action: '#FB923C',
+  privacy: '#67E8F9',
+  policy: '#FBBF24',
+  digital: '#A78BFA'
 }
 
 export function SceneLighting({ 

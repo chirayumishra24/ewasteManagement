@@ -92,6 +92,33 @@ export type ChapterBlock =
   | { type: 'callout'; eyebrow?: string; title: string; content: string; tone?: 'signal' | 'alert' | 'success' | 'neutral' }
   | { type: 'resourceLinks'; items: ResourceLink[] }
   | { type: 'lineChart'; eyebrow?: string; title: string; summary: string; labels: string[]; series: LineChartSeries[]; note?: string }
+  | { type: 'courseMap'; chapters: { id: string; title: string; status: 'done' | 'current' | 'locked' }[] }
+  | { type: 'flipCard'; front: { image: string; label: string }; back: { title: string; facts: string[] } }
+  | { type: 'liveTicker'; label: string; ratePerSecond: number; unit: string; startValue: number }
+  | { type: 'dragSort'; prompt: string; items: { label: string; correct: 'left' | 'right'; image?: string }[]; leftBin: string; rightBin: string }
+  | { type: 'explodedDiagram'; image: string; hotspots: { x: number; y: number; label: string; detail: string }[] }
+  | { type: 'interactivePie'; title: string; segments: { label: string; value: number; color: string; detail: string }[] }
+  | { type: 'valueCalculator'; materials: { name: string; perDevice: number; unit: string; pricePerUnit: number }[] }
+  | { type: 'beforeAfter'; leftImage: string; rightImage: string; leftLabel: string; rightLabel: string }
+  | { type: 'checklist'; title: string; items: { label: string; impact: string }[]; scoreLabel: string }
+  | { type: 'sliderCalculator'; title: string; sliders: { label: string; min: number; max: number; unit: string; impactPerUnit: number }[]; resultLabel: string }
+  | { type: 'ideaGenerator'; combinations: { device: string; purpose: string; steps: string[]; difficulty: 'easy' | 'medium' | 'hard' }[] }
+  | { type: 'storyCarousel'; stories: { title: string; before: string; after: string; image: string; quote: string }[] }
+  | { type: 'decisionTree'; root: { question: string; yes: DecisionNode; no: DecisionNode } }
+  | { type: 'processSimulator'; stages: { title: string; description: string; icon: string; output: string }[] }
+  | { type: 'quiz'; question: string; options: { label: string; correct: boolean; explanation: string }[]; reward: string }
+  | { type: 'mapLocator'; points: { lat: number; lng: number; label: string; type: string }[] }
+  | { type: 'campaignWizard'; steps: { title: string; prompt: string; options: string[] }[] }
+  | { type: 'impactDashboard'; stats: { label: string; value: string; trend: 'up' | 'down'; detail: string }[] }
+  | { type: 'dataWipeSim'; device: string; steps: { title: string; action: string; risk: string }[] }
+  | { type: 'policyTimeline'; events: { year: string; title: string; impact: string; region: string }[] }
+
+export type DecisionNode = {
+  question?: string
+  result?: string
+  yes?: DecisionNode
+  no?: DecisionNode
+}
 
 export type ChapterTab = {
   id: string
@@ -128,11 +155,10 @@ export type CourseChapter = {
 const p = (content: string, emphasis = false): ChapterBlock => ({ type: 'paragraph', content, emphasis })
 const q = (content: string, author?: string): ChapterBlock => ({ type: 'quote', content, author })
 const bullets = (...items: string[]): ChapterBlock => ({ type: 'bulletList', items })
-const steps = (...items: string[]): ChapterBlock => ({ type: 'numberedList', items })
 const stats = (...items: StatGridItem[]): ChapterBlock => ({ type: 'statGrid', items })
 const timeline = (...items: TimelineItem[]): ChapterBlock => ({ type: 'timeline', items })
 const compare = (...items: ComparisonItem[]): ChapterBlock => ({ type: 'comparison', items })
-const callout = (title: string, content: string, tone: 'signal' | 'alert' | 'success' | 'neutral' = 'signal', eyebrow = 'Salvage Lab'): ChapterBlock => ({
+const callout = (title: string, content: string, tone: 'signal' | 'alert' | 'success' | 'neutral' = 'signal', eyebrow = 'Learning Corner 📚'): ChapterBlock => ({
   type: 'callout',
   title,
   content,
@@ -146,7 +172,7 @@ const lineChart = (
   labels: string[],
   series: LineChartSeries[],
   note?: string,
-  eyebrow = 'Trend Scan',
+  eyebrow = 'Cool Numbers 📊',
 ): ChapterBlock => ({
   type: 'lineChart',
   title,
@@ -156,7 +182,7 @@ const lineChart = (
   note,
   eyebrow,
 })
-const activity = (title: string, url: string, summary: string, ctaLabel = 'Launch Lab'): ChapterBlock => ({
+const activity = (title: string, url: string, summary: string, ctaLabel = 'Play Now! 🚀'): ChapterBlock => ({
   type: 'activity',
   title,
   url,
@@ -164,6 +190,25 @@ const activity = (title: string, url: string, summary: string, ctaLabel = 'Launc
   ctaLabel,
 })
 const video = (title: string, url: string, note?: string): ChapterBlock => ({ type: 'video', title, url, note })
+const courseMap = (chapters: { id: string; title: string; status: 'done' | 'current' | 'locked' }[]): ChapterBlock => ({ type: 'courseMap', chapters })
+const flipCard = (front: { image: string; label: string }, back: { title: string; facts: string[] }): ChapterBlock => ({ type: 'flipCard', front, back })
+const liveTicker = (label: string, ratePerSecond: number, unit: string, startValue: number): ChapterBlock => ({ type: 'liveTicker', label, ratePerSecond, unit, startValue })
+const dragSort = (prompt: string, items: { label: string; correct: 'left' | 'right'; image?: string }[], leftBin: string, rightBin: string): ChapterBlock => ({ type: 'dragSort', prompt, items, leftBin, rightBin })
+const explodedDiagram = (image: string, hotspots: { x: number; y: number; label: string; detail: string }[]): ChapterBlock => ({ type: 'explodedDiagram', image, hotspots })
+const interactivePie = (title: string, segments: { label: string; value: number; color: string; detail: string }[]): ChapterBlock => ({ type: 'interactivePie', title, segments })
+const valueCalculator = (materials: { name: string; perDevice: number; unit: string; pricePerUnit: number }[]): ChapterBlock => ({ type: 'valueCalculator', materials })
+const beforeAfter = (leftImage: string, rightImage: string, leftLabel: string, rightLabel: string): ChapterBlock => ({ type: 'beforeAfter', leftImage, rightImage, leftLabel, rightLabel })
+const checklist = (title: string, items: { label: string; impact: string }[], scoreLabel: string): ChapterBlock => ({ type: 'checklist', title, items, scoreLabel })
+const sliderCalculator = (title: string, sliders: { label: string; min: number; max: number; unit: string; impactPerUnit: number }[], resultLabel: string): ChapterBlock => ({ type: 'sliderCalculator', title, sliders, resultLabel })
+const ideaGenerator = (combinations: { device: string; purpose: string; steps: string[]; difficulty: 'easy' | 'medium' | 'hard' }[]): ChapterBlock => ({ type: 'ideaGenerator', combinations })
+const decisionTree = (root: { question: string; yes: DecisionNode; no: DecisionNode }): ChapterBlock => ({ type: 'decisionTree', root })
+const processSimulator = (stages: { title: string; description: string; icon: string; output: string }[]): ChapterBlock => ({ type: 'processSimulator', stages })
+const quiz = (question: string, options: { label: string; correct: boolean; explanation: string }[], reward: string): ChapterBlock => ({ type: 'quiz', question, options, reward })
+const mapLocator = (points: { lat: number; lng: number; label: string; type: string }[]): ChapterBlock => ({ type: 'mapLocator', points })
+const campaignWizard = (steps: { title: string; prompt: string; options: string[] }[]): ChapterBlock => ({ type: 'campaignWizard', steps })
+const impactDashboard = (stats: { label: string; value: string; trend: 'up' | 'down'; detail: string }[]): ChapterBlock => ({ type: 'impactDashboard', stats })
+const dataWipeSim = (device: string, steps: { title: string; action: string; risk: string }[]): ChapterBlock => ({ type: 'dataWipeSim', device, steps })
+const policyTimeline = (events: { year: string; title: string; impact: string; region: string }[]): ChapterBlock => ({ type: 'policyTimeline', events })
 
 export const chapters: CourseChapter[] = [
   {
@@ -174,8 +219,8 @@ export const chapters: CourseChapter[] = [
     strapline: 'Mission control for the full salvage campaign: what the course covers, how the robot rebuilds, and where each module takes you next.',
     summary:
       'Use orientation as the course hub. It frames the crisis, previews the learning path, and turns the final project into a concrete community action brief.',
-    robotStatus: 'Mission control calibrated. Salvage bay online.',
-    scrapFact: 'A well-run recovery chain starts with classification, not collection.',
+    robotStatus: 'Hi there! Ready to be an E-Waste Hero? 🌟',
+    scrapFact: 'Did you know? Every old phone is a treasure chest of cool materials!',
     accentColor: '#61b8ff',
     themeKey: 'hub',
     layout: 'hub',
@@ -232,11 +277,19 @@ export const chapters: CourseChapter[] = [
           { label: 'Module 3', value: 'Act locally' },
         ],
         blocks: [
-          timeline(
-            { step: '01', title: 'Map the problem', detail: 'Define e-waste, identify device categories, and understand toxic versus recoverable components.' },
-            { step: '02', title: 'Work the 3Rs', detail: 'Reduce early disposal, reuse working hardware, and understand formal recycling pathways.' },
-            { step: '03', title: 'Build local action', detail: 'Locate certified networks, organize collection drives, and translate policy into public practice.' },
-          ),
+          courseMap([
+            { id: '1-0', title: 'Orientation', status: 'current' },
+            { id: '1-1', title: 'Defining E-Waste', status: 'locked' },
+            { id: '1-2', title: 'Composition', status: 'locked' },
+            { id: '1-3', title: 'Urban Mining', status: 'locked' },
+            { id: '2-1', title: 'The First R: Reduce', status: 'locked' },
+            { id: '2-2', title: 'The Second R: Reuse', status: 'locked' },
+            { id: '2-3', title: 'The Third R: Recycle', status: 'locked' },
+            { id: '3-1', title: 'Drop-off & Events', status: 'locked' },
+            { id: '3-2', title: 'Awareness Campaign', status: 'locked' },
+            { id: '3-3', title: 'Data Security', status: 'locked' },
+            { id: '3-4', title: 'Policy & Innovation', status: 'locked' },
+          ]),
           resources(
             { label: 'Launch Module 1', href: '/1-1', description: 'Enter the hazard and materials chapters that establish the problem.' },
             { label: 'Urban Mining (1.3)', href: '/1-3', description: 'See the market value and material density inside the waste stream.' },
@@ -332,6 +385,7 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           p('Electronic waste includes electrical and electronic devices that are obsolete, broken, or discarded before their materials are safely recovered. That covers everything from chargers and phones to refrigerators and monitors.', true),
+          liveTicker('E-Waste Generated Right Now', 1.9, 'kg', 0),
           callout('Why definition matters', 'If households treat electronics like ordinary trash, hazardous substances move into air, soil, and water long before formal recycling can intervene.', 'alert'),
           stats(
             { label: 'Toxic substances', value: 'Lead / mercury / cadmium', detail: 'Improper disposal creates persistent contamination pathways.' },
@@ -374,6 +428,14 @@ export const chapters: CourseChapter[] = [
               insight: 'Obsolescence pressure is a major driver of e-waste volume.',
             },
           ),
+          dragSort('Sort the Tech!', [
+            { label: 'Smartphone', correct: 'left', image: 'smartphone_modern_1778658711613.png' },
+            { label: 'Old Laptop', correct: 'left' },
+            { label: 'Banana Peel', correct: 'right' },
+            { label: 'Cracked Tablet', correct: 'left' },
+            { label: 'Plastic Bottle', correct: 'right' },
+            { label: 'AA Battery', correct: 'left' },
+          ], 'E-Waste', 'Other Waste'),
         ],
       },
       {
@@ -394,6 +456,14 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           video('E-Waste Explained by a Sustainability Expert', 'https://youtu.be/_Y2ePj3wr8M', 'Watch 0:20 to 1:14.'),
+          flipCard(
+            { image: 'lead_acid_battery_1778658558252.png', label: 'Lead-Acid Battery' },
+            { title: 'The Toxic Truth', facts: ['Contains lead and sulfuric acid', 'Damages soil and groundwater', 'Affects human development'] }
+          ),
+          flipCard(
+            { image: 'crt_monitor_1778658608296.png', label: 'Old CRT Monitor' },
+            { title: 'Hidden Dangers', facts: ['Contains up to 4kg of lead', 'Phosphor coating is toxic', 'High voltage risk if broken'] }
+          ),
           bullets(
             'Lead from older displays and solder can damage nervous systems and development.',
             'Mercury and cadmium can move through water and food chains and remain hazardous for long periods.',
@@ -467,12 +537,17 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           p('International standards vary, but the most useful grouping system sorts electronics by use type and scale. That makes public education, pickup design, and safe storage easier.'),
-          steps(
+          explodedDiagram('exploded_smartphone_1778658636240.png', [
+            { x: 50, y: 30, label: 'Screen & Glass', detail: 'Contains indium tin oxide and glass-strengthening compounds.' },
+            { x: 40, y: 50, label: 'Logic Board', detail: 'The value hub: gold, silver, palladium, and copper.' },
+            { x: 60, y: 70, label: 'Battery', detail: 'Lithium, cobalt, and graphite. High fire risk if damaged.' },
+            { x: 20, y: 40, label: 'Plastic Chassis', detail: 'Bulk material that can be recycled into new products.' },
+          ]),
+          bullets(
             'Large household appliances such as refrigerators and washing machines.',
             'Small appliances such as irons, vacuum cleaners, and kettles.',
             'IT and telecom equipment such as laptops, routers, and phones.',
             'Consumer electronics such as televisions, cameras, and audio gear.',
-            'Lighting units, electrical tools, toys, medical devices, control instruments, and automatic dispensers.',
           ),
           callout('Operational benefit', 'When people understand the categories, collection points can separate hazards earlier and reduce damage to recoverable equipment.', 'signal'),
         ],
@@ -493,6 +568,13 @@ export const chapters: CourseChapter[] = [
           { label: 'Risk layer', value: 'Lead / mercury / arsenic' },
         ],
         blocks: [
+          interactivePie('What makes up the weight?', [
+            { label: 'Iron & Steel', value: 48, color: '#94a3b8', detail: 'Chassis, screws, and motors.' },
+            { label: 'Plastics', value: 21, color: '#4ade80', detail: 'Casings, insulation, and buttons.' },
+            { label: 'Non-Ferrous Metals', value: 13, color: '#facc15', detail: 'Copper, aluminum, and brass.' },
+            { label: 'Glass', value: 5, color: '#60a5fa', detail: 'Screens and lenses.' },
+            { label: 'Other (PCB/Logic)', value: 13, color: '#f472b6', detail: 'Circuit boards and sensors.' },
+          ]),
           stats(
             { label: 'Bulk materials', value: 'High volume', detail: 'Iron, aluminum, plastics, and glass dominate physical mass.' },
             { label: 'Precious metals', value: 'High value', detail: 'Gold, silver, palladium, and platinum drive urban mining economics.' },
@@ -563,7 +645,13 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           p('A tonne of smartphones can contain more gold than a tonne of mined gold ore. That is why urban mining matters: the material density is already concentrated by manufacturing.', true),
+          valueCalculator([
+            { name: 'Gold', perDevice: 0.034, unit: 'g', pricePerUnit: 65 },
+            { name: 'Copper', perDevice: 15, unit: 'g', pricePerUnit: 0.009 },
+            { name: 'Silver', perDevice: 0.35, unit: 'g', pricePerUnit: 0.8 },
+          ]),
           q('Recovery begins when we stop describing electronics as dead objects and start describing them as stored materials.', 'Salvage brief'),
+          beforeAfter('raw_ore_mine_1778658870536.png', 'urban_mine_recycling_1778658947185.png', 'Raw Ore Mine', 'Urban Mine'),
           compare(
             {
               title: 'Extraction logic',
@@ -692,11 +780,12 @@ export const chapters: CourseChapter[] = [
           { label: 'Protection', value: 'Prevent damage' },
         ],
         blocks: [
-          timeline(
-            { step: '01', title: 'Protect the shell', detail: 'Use cases, screen protection, and careful storage to reduce physical damage.' },
-            { step: '02', title: 'Reduce thermal stress', detail: 'Avoid constant overheating, heavy charging strain, and blocked vents.' },
-            { step: '03', title: 'Manage the battery', detail: 'Use optimized charging, avoid deep cycling when possible, and replace degraded batteries before replacing the device.' },
-          ),
+          checklist('Device Longevity Habits', [
+            { label: 'Clean charging ports', impact: 'Prevents connector failure' },
+            { label: 'Avoid extreme heat', impact: 'Protects battery chemistry' },
+            { label: 'Optimize storage space', impact: 'Reduces SSD wear' },
+            { label: 'Use screen protection', impact: 'Prevents physical scrap' },
+          ], 'Habit Score'),
           callout('Reduction mindset', 'Maintenance is not glamorous, but it is one of the highest-impact ways to cut waste before recycling ever begins.', 'success'),
           activity('Battery Health Simulator', '/activities/2-1-battery-sim.html?embedded=true', 'Interact with a 3D lithium-ion cell and see how charging habits like overnight charging and heat accelerate chemical degradation.'),
         ],
@@ -717,6 +806,11 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           video('E-Waste Explained By A Sustainability Expert', 'https://youtu.be/_Y2ePj3wr8M', 'Watch 5:41 to 7:21 for practical reduce strategies.'),
+          sliderCalculator('Lifespan Extension Calculator', [
+            { label: 'Careful Battery Usage', min: 0, max: 1, unit: 'habit', impactPerUnit: 12 },
+            { label: 'Physical Protection', min: 0, max: 1, unit: 'habit', impactPerUnit: 18 },
+            { label: 'Component Repair', min: 0, max: 1, unit: 'habit', impactPerUnit: 24 },
+          ], 'Estimated Life Added'),
           compare(
             {
               title: 'Performance drop',
@@ -796,11 +890,19 @@ export const chapters: CourseChapter[] = [
           { label: 'Security', value: 'Camera nodes' },
         ],
         blocks: [
-          timeline(
-            { step: '01', title: 'Audit the hardware', detail: 'Check screen, battery, and connectivity of retired devices.' },
-            { step: '02', title: 'Wipe and Strip', detail: 'Reset to factory settings and remove all non-essential apps for speed.' },
-            { step: '03', title: 'Deploy Mission', detail: 'Install dedicated software (e.g., Home Assistant, Digital Frame apps) and mount the device.' },
-          ),
+          decisionTree({
+            question: 'Is the screen functional?',
+            yes: {
+              question: 'Is the battery reliable?',
+              yes: { result: 'Repurpose as a Smart Home Hub or Digital Frame' },
+              no: { result: 'Use as a fixed Security Camera or Server (plugged in)' }
+            },
+            no: {
+              question: 'Does the motherboard work?',
+              yes: { result: 'Use as a Headless Server or Media Controller' },
+              no: { result: 'Route to Material Recovery (Recycle)' }
+            }
+          }),
           activity('Second Life Workshop', '/activities/2-2-second-life.html?embedded=true', 'Match retired hardware with new mission profiles like security nodes, media servers, and smart hubs.'),
         ],
       },
@@ -819,6 +921,11 @@ export const chapters: CourseChapter[] = [
           { label: 'Output', value: 'Art / Jewelry' },
         ],
         blocks: [
+          ideaGenerator([
+            { device: 'Old Tablet', purpose: 'Smart Wall Clock', steps: ['Reset OS', 'Install Fullscreen Clock App', 'Mount with hidden cable'], difficulty: 'easy' },
+            { device: 'Broken Phone', purpose: 'Macro Keyboard', steps: ['Install Touch Portal', 'Map shortcuts for PC', 'Connect via USB'], difficulty: 'medium' },
+            { device: 'Laptop Screen', purpose: 'External Monitor', steps: ['Extract panel', 'Buy LVDS controller board', 'Build custom frame'], difficulty: 'hard' },
+          ]),
           bullets(
             'Convert old CRT monitor shells into unique planters or pet beds.',
             'Transform retired circuit boards into high-tech jewelry and decorative wall art.',
@@ -902,6 +1009,17 @@ export const chapters: CourseChapter[] = [
           video('I went down a rabbit hole trying to recycle all my tech waste', 'https://youtu.be/i03W6cdnlx8', 'Watch 1:32 to 2:09 and 5:00 to 14:25.'),
           activity('Urban Mine Explorer', '/activities/2-3-shredder.html?embedded=true', 'Witness the industrial precision of a vertical shredder and magnetic separator in 3D.'),
           activity('Hazardous Material Sort', '/activities/2-3-hazard-sort.html?embedded=true', 'Identify and isolate toxic components before they contaminate the recycling stream.'),
+          processSimulator([
+            { title: 'Triage', description: 'Manual sorting to remove batteries and hazard risks.', icon: '🔍', output: 'Clean waste stream' },
+            { title: 'Shredding', description: 'Industrial shredders break devices into tiny pieces.', icon: '⚙️', output: 'Mixed material fractions' },
+            { title: 'Separation', description: 'Magnets and eddy currents pull out metals.', icon: '🧲', output: 'Sorted metal streams' },
+            { title: 'Refining', description: 'High-temp smelting purifies precious metals.', icon: '🔥', output: '99% Pure Raw Material' },
+          ]),
+          quiz('Which component MUST be removed before shredding?', [
+            { label: 'The screen glass', correct: false, explanation: 'Glass is shredded with the chassis.' },
+            { label: 'Lithium-Ion Battery', correct: true, explanation: 'Batteries can explode or cause fires in shredders.' },
+            { label: 'Plastic Case', correct: false, explanation: 'Plastic is separated later in the process.' },
+          ], 'Battery Handler Badge'),
           timeline(
             { step: '01', title: 'Collect and triage', detail: 'Remove batteries, reusable parts, and hazardous items before bulk processing.' },
             { step: '02', title: 'Dismantle and shred', detail: 'Break devices into fractions that mechanical systems can actually separate.' },
@@ -1030,26 +1148,33 @@ export const chapters: CourseChapter[] = [
         ],
       },
       {
-        id: 'interactive',
-        label: 'Map Feed',
-        navLabel: 'Map',
-        title: 'Interactive Resource Map',
-        summary: 'Use the Rajasthan map feed as a practical interface for regional action.',
-        robotNote: 'A blue dot on a map is only useful if the learner understands what kind of facility it represents.',
+        id: 'resellers',
+        label: 'Resellers',
+        navLabel: 'Resellers',
+        title: 'The Reseller Network',
+        summary: 'Explore the regional network of authorized e-waste resellers and collection nodes across Rajasthan.',
+        robotNote: 'Resellers are the critical first link in the formal recovery chain. Locating them is step one.',
         heroVariant: 'atlas',
         accentColor: '#2bc1a6',
         pulses: [
           { label: 'Region', value: 'Rajasthan' },
-          { label: 'Nodes', value: 'Recycler / dismantler' },
-          { label: 'Use', value: 'Nearest certified route' },
+          { label: 'Nodes', value: 'Authorized Resellers' },
+          { label: 'Focus', value: 'Local Collection' },
         ],
         blocks: [
-          p('The map feed gives the chapter a live operational layer. Use it to compare distance, facility type, and local feasibility before recommending a disposal path.'),
-          resources(
-            { label: 'Open Rajasthan map feed', href: 'https://chirayumishra24.github.io/Map/rajasthan-ewaste-map.html', description: 'Browse authorized nodes and identify the nearest practical option.', external: true },
+          activity(
+            'Rajasthan Reseller Map', 
+            'https://chirayumishra24.github.io/Map/rajasthan-ewaste-map.html', 
+            'Interactive dashboard for locating certified resellers, dismantlers, and collection points across the state.',
+            'Launch Map Explorer'
           ),
-          activity('Resource Radar', '/activities/3-1-resource-radar.html?embedded=true', 'Adjust filters and scan for nearby recycling resources on a 3D sonar visualization.'),
-          q('Local trust matters. Safe disposal starts when the last mile is visible and verified.', 'Disposal protocol'),
+          mapLocator([
+            { lat: 26.9124, lng: 75.7873, label: 'Jaipur Central Hub', type: 'Collection Center' },
+            { lat: 26.2389, lng: 73.0243, label: 'Jodhpur E-Waste Park', type: 'Recycling Plant' },
+            { lat: 24.5854, lng: 73.7125, label: 'Udaipur Smart Collection', type: 'Drop-off Point' },
+            { lat: 28.1487, lng: 75.3871, label: 'Jhunjhunu Recovery Node', type: 'Dismantler' },
+          ]),
+          q('Visibility is the enemy of informal dumping. When authorized routes are mapped, they become the default.', 'Network protocol'),
         ],
       },
     ],
@@ -1097,11 +1222,11 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           video('Managing E-Waste', 'https://youtu.be/dGxU4w1MDco'),
-          timeline(
-            { step: '01', title: 'Set the objective', detail: 'Choose the audience, the waste categories, and the event scope.' },
-            { step: '02', title: 'Secure the recycler', detail: 'Confirm pickup, accepted materials, and compliance needs before promotion begins.' },
-            { step: '03', title: 'Build awareness', detail: 'Use flyers, announcements, workshops, and short explainers to make the drive feel concrete.' },
-          ),
+          campaignWizard([
+            { title: 'Audience', prompt: 'Who are we reaching?', options: ['Students & Faculty', 'Local Neighborhood', 'Corporate Park'] },
+            { title: 'Goal', prompt: 'What is the main target?', options: ['Small Gadgets (Phones/Tablets)', 'Cables & Accessories', 'Old Laptops & PCs'] },
+            { title: 'Partner', prompt: 'Who will handle recovery?', options: ['Authorized Recycler', 'Local Tech NGO', 'Municipal Collection'] },
+          ]),
           activity('Outreach Message Builder', '/activities/3-2-outreach-builder.html?embedded=true', 'Assemble awareness campaign materials and score messaging clarity for different target audiences.'),
         ],
       },
@@ -1143,12 +1268,12 @@ export const chapters: CourseChapter[] = [
           { label: 'Future cycle', value: 'Repeatable plan' },
         ],
         blocks: [
-          stats(
-            { label: 'Diversion total', value: 'kg collected', detail: 'The clearest metric for landfill avoidance and community participation.' },
-            { label: 'Participation', value: 'People or households', detail: 'Shows whether outreach worked beyond the core volunteer circle.' },
-            { label: 'Continuity', value: 'Next date / next partner step', detail: 'Locks the event into a longer-term local rhythm.' },
-          ),
-          activity('Impact Dashboard Simulator', '/activities/3-2-impact-dashboard.html?embedded=true', 'Input collection data and generate professional impact reports with a 3D animated globe.'),
+          impactDashboard([
+            { label: 'Diversion Rate', value: '450kg', trend: 'up', detail: 'Weight diverted from local landfills this month.' },
+            { label: 'Participation', value: '120+', trend: 'up', detail: 'Unique households contributing to the drive.' },
+            { label: 'Material Value', value: '₹12k', trend: 'up', detail: 'Estimated recovery value of sorted metals.' },
+            { label: 'Carbon Saved', value: '1.2t', trend: 'up', detail: 'Equivalent CO2 reduction from circular sourcing.' },
+          ]),
           q('A drive becomes culture when the community can see what changed and what happens next.', 'Action lead'),
         ],
       },
@@ -1197,11 +1322,12 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           video('Digital Footprint & Security', 'https://youtu.be/8pkv_T0a80g'),
-          bullets(
-            'Use strong, unique passwords and enable two-factor authentication on core accounts.',
-            'Review privacy settings regularly instead of accepting broad default exposure.',
-            'Share personal information only when there is a clear reason and trusted context.',
-          ),
+          dataWipeSim('Android Smartphone', [
+            { title: 'Cloud Sync', action: 'Unsync all Google and Cloud accounts.', risk: 'Personal data remains accessible in the cloud.' },
+            { title: 'Encryption', action: 'Check if device encryption is ON.', risk: 'Data can be recovered even after deletion.' },
+            { title: 'Factory Reset', action: 'Perform a Secure Factory Reset.', risk: 'Leftover files might be accessible to new users.' },
+            { title: 'SD Card', action: 'Physically remove or format the SD card.', risk: 'Stored photos and media stay on the storage card.' },
+          ]),
           activity('Privacy Fortress Builder', '/activities/3-3-privacy-fortress.html?embedded=true', 'Build a digital fortress by enabling security layers on a 3D shield model.'),
         ],
       },
@@ -1326,11 +1452,12 @@ export const chapters: CourseChapter[] = [
           { label: 'Challenge', value: 'Compliance gap' },
         ],
         blocks: [
-          timeline(
-            { step: '01', title: 'Producer responsibility', detail: 'Manufacturers must ensure products reach authorized recyclers instead of disappearing after sale.' },
-            { step: '02', title: 'Tracking and targets', detail: 'Digitized systems aim to make compliance measurable instead of symbolic.' },
-            { step: '03', title: 'Enforcement challenge', detail: 'Infrastructure gaps, illegal movement, and low awareness still weaken outcomes.' },
-          ),
+          policyTimeline([
+            { year: '2011', title: 'First E-Waste Rules', impact: 'Formal definitions and recycler registration started.', region: 'India' },
+            { year: '2016', title: 'EPR Introduction', impact: 'Producers held responsible for collection targets.', region: 'India' },
+            { year: '2022', title: 'New E-Waste Management Rules', impact: 'Strict digitized tracking and expanded device scope.', region: 'India' },
+            { year: '2025', title: 'Circular Economy Focus', impact: 'Integration of informal workers into formal parks.', region: 'India' },
+          ]),
           activity('EPR Policy Simulator', '/activities/3-4-epr-simulator.html?embedded=true', 'Adjust policy levers and simulate the impact of EPR rules on formal recycling rates.'),
         ],
       },
@@ -1368,7 +1495,17 @@ export const chapters: CourseChapter[] = [
 
 export function toSkillizeeImageUrl(path: string) {
   const skillizeeAssetPrefix = 'https://login.skillizee.io'
-  return path.startsWith('http') || path.startsWith('/images/') ? path : `${skillizeeAssetPrefix}${path}`
+  const skillizeeArticleImagePrefix = `${skillizeeAssetPrefix}/s/articles/69f4527b41e01b23b9093dae/images/`
+
+  if (path.startsWith('http') || path.startsWith('/images/')) {
+    return path
+  }
+
+  if (path.startsWith('/')) {
+    return `${skillizeeAssetPrefix}${path}`
+  }
+
+  return `${skillizeeArticleImagePrefix}${path}`
 }
 
 export function toYouTubeEmbedUrl(url: string) {

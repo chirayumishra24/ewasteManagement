@@ -58,9 +58,10 @@ function Ribbon({
 export function SortingRibbons({ scrollProgress, quality }: { scrollProgress: number; quality: SceneQuality }) {
   return (
     <group position={[0, quality.isMobile ? 4.2 : 5, -5]}>
-      <Ribbon color={sceneConfig.colors.ribbonMetal} offset={0} scrollProgress={scrollProgress} quality={quality} />
-      <Ribbon color={sceneConfig.colors.ribbonPlastic} offset={Math.PI * 0.6} scrollProgress={scrollProgress} quality={quality} />
-      <Ribbon color={sceneConfig.colors.ribbonGlass} offset={Math.PI * 1.2} scrollProgress={scrollProgress} quality={quality} />
+      <Ribbon color="#FF6B9D" offset={0} scrollProgress={scrollProgress} quality={quality} />
+      <Ribbon color="#60A5FA" offset={Math.PI * 0.6} scrollProgress={scrollProgress} quality={quality} />
+      <Ribbon color="#A78BFA" offset={Math.PI * 1.2} scrollProgress={scrollProgress} quality={quality} />
+      <Ribbon color="#4ECDC4" offset={Math.PI * 1.8} scrollProgress={scrollProgress} quality={quality} />
     </group>
   )
 }
