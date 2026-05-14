@@ -99,7 +99,7 @@ function ScrapRobot({
         <div className={`robot-wheel ${hasMobility ? 'assembled' : 'hologram'}`} />
       </div>
       <div className="robot-caption">
-        <strong>Your Eco-Buddy! 🌱</strong>
+        <strong>Your Eco-Buddy! ≡ƒî▒</strong>
         <span>Learning with you!</span>
       </div>
     </div>
@@ -421,9 +421,9 @@ function FlipCardComponent({ block }: { block: Extract<ChapterBlock, { type: 'fl
 
   const getFlipIcon = (label: string) => {
     const normalized = label.toLowerCase()
-    if (normalized.includes('battery')) return '🔋'
-    if (normalized.includes('monitor')) return '🖥'
-    return '⚠'
+    if (normalized.includes('battery')) return '≡ƒöï'
+    if (normalized.includes('monitor')) return '≡ƒûÑ'
+    return 'ΓÜá'
   }
 
   return (
@@ -458,7 +458,7 @@ function FlipCardComponent({ block }: { block: Extract<ChapterBlock, { type: 'fl
             <p>Tap the card to inspect why this item becomes dangerous when dumped, broken, or burned.</p>
           </div>
           <div className="flip-hint">
-            <span className="flip-hint-arrow" aria-hidden="true">↻</span>
+            <span className="flip-hint-arrow" aria-hidden="true">Γå╗</span>
             Click to flip
           </div>
         </article>
@@ -471,7 +471,7 @@ function FlipCardComponent({ block }: { block: Extract<ChapterBlock, { type: 'fl
             {block.back.facts.map((fact, i) => <li key={i}>{fact}</li>)}
           </ul>
           <div className="flip-hint">
-            <span className="flip-hint-arrow" aria-hidden="true">↺</span>
+            <span className="flip-hint-arrow" aria-hidden="true">Γå║</span>
             Click to return
           </div>
         </article>
@@ -537,13 +537,13 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
 
   const getSortVisual = (label: string) => {
     const normalized = label.toLowerCase()
-    if (normalized.includes('phone')) return '📱'
-    if (normalized.includes('laptop')) return '💻'
-    if (normalized.includes('tablet')) return '🧾'
-    if (normalized.includes('battery')) return '🔋'
-    if (normalized.includes('bottle')) return '🧴'
-    if (normalized.includes('banana')) return '🍌'
-    return '📦'
+    if (normalized.includes('phone')) return '≡ƒô▒'
+    if (normalized.includes('laptop')) return '≡ƒÆ╗'
+    if (normalized.includes('tablet')) return '≡ƒº╛'
+    if (normalized.includes('battery')) return '≡ƒöï'
+    if (normalized.includes('bottle')) return '≡ƒº┤'
+    if (normalized.includes('banana')) return '≡ƒìî'
+    return '≡ƒôª'
   }
 
   return (
@@ -567,7 +567,7 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
       </div>
       <div className="drag-sort-area">
         <div className="drop-zone drop-zone-left" onDragOver={e => e.preventDefault()}>
-          <span className="drop-zone-icon" aria-hidden="true">♻</span>
+          <span className="drop-zone-icon" aria-hidden="true">ΓÖ╗</span>
           <strong>{block.leftBin}</strong>
           <small>Devices, chargers, and batteries</small>
         </div>
@@ -610,7 +610,7 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
           )}
         </div>
         <div className="drop-zone drop-zone-right" onDragOver={e => e.preventDefault()}>
-          <span className="drop-zone-icon" aria-hidden="true">🧺</span>
+          <span className="drop-zone-icon" aria-hidden="true">≡ƒº║</span>
           <strong>{block.rightBin}</strong>
           <small>Organic or regular household waste</small>
         </div>
@@ -648,7 +648,7 @@ function ExplodedDiagramCard({ block }: { block: Extract<ChapterBlock, { type: '
                 e.currentTarget.style.display = 'none'
               }}
             />
-            <div className="diagram-fallback" aria-hidden="true">📱</div>
+            <div className="diagram-fallback" aria-hidden="true">≡ƒô▒</div>
             {block.hotspots.map((spot, i) => (
               <button
                 key={i}
@@ -853,7 +853,7 @@ function BeforeAfterCard({ block }: { block: Extract<ChapterBlock, { type: 'befo
               e.currentTarget.style.display = 'none'
             }}
           />
-          <div className="ba-fallback" aria-hidden="true">⛏</div>
+          <div className="ba-fallback" aria-hidden="true">Γ¢Å</div>
           <span className="ba-label">{block.leftLabel}</span>
         </div>
         <div className="ba-layer ba-right">
@@ -864,7 +864,7 @@ function BeforeAfterCard({ block }: { block: Extract<ChapterBlock, { type: 'befo
               e.currentTarget.style.display = 'none'
             }}
           />
-          <div className="ba-fallback" aria-hidden="true">♻</div>
+          <div className="ba-fallback" aria-hidden="true">ΓÖ╗</div>
           <span className="ba-label">{block.rightLabel}</span>
         </div>
         <div className="ba-overlay-copy">
@@ -881,7 +881,7 @@ function BeforeAfterCard({ block }: { block: Extract<ChapterBlock, { type: 'befo
         />
         <div className="ba-handle" style={{ left: `${sliderPos}%` }}>
           <div className="handle-line" />
-          <div className="handle-circle">↔</div>
+          <div className="handle-circle">Γåö</div>
         </div>
       </div>
       <div className="ba-footer">
@@ -913,7 +913,7 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
             onClick={() => toggle(i)}
           >
             <div className="check-box">
-              {checked.has(i) && <span>✓</span>}
+              {checked.has(i) && <span>Γ£ô</span>}
             </div>
             <div className="check-copy">
               <strong>{item.label}</strong>
@@ -1014,7 +1014,7 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
         </div>
         <div className="idea-route">
           <span className="idea-device">{idea.device}</span>
-          <span className="idea-arrow" aria-hidden="true">→</span>
+          <span className="idea-arrow" aria-hidden="true">ΓåÆ</span>
           <span className="idea-purpose">{idea.purpose}</span>
         </div>
         <p className="idea-note">Repurpose the device with a simple transformation path instead of sending it straight to storage or scrap.</p>
@@ -1026,7 +1026,7 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
         </div>
       </div>
       <button className="spin-btn" onClick={spin} disabled={isSpinning}>
-        {isSpinning ? 'Mixing...' : 'Inspire Me! 🎨'}
+        {isSpinning ? 'Mixing...' : 'Inspire Me! ≡ƒÄ¿'}
       </button>
     </section>
   )
@@ -1038,9 +1038,9 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
   return (
     <section className="content-card story-carousel">
       <div className="carousel-nav">
-        <button onClick={() => setIndex(i => (i - 1 + block.stories.length) % block.stories.length)}>←</button>
+        <button onClick={() => setIndex(i => (i - 1 + block.stories.length) % block.stories.length)}>ΓåÉ</button>
         <span>{index + 1} / {block.stories.length}</span>
-        <button onClick={() => setIndex(i => (i + 1) % block.stories.length)}>→</button>
+        <button onClick={() => setIndex(i => (i + 1) % block.stories.length)}>ΓåÆ</button>
       </div>
       <div className="story-frame">
         <div className="story-media">
@@ -1081,7 +1081,7 @@ function DecisionTreeCard({ block }: { block: Extract<ChapterBlock, { type: 'dec
           const prev = history[history.length - 1]
           setHistory(history.slice(0, -1))
           setCurrentNode(prev)
-        }}>← Back</button>}
+        }}>ΓåÉ Back</button>}
       </div>
       <div className="tree-content">
         {currentNode.question ? (
@@ -1160,7 +1160,7 @@ function QuizCard({ block }: { block: Extract<ChapterBlock, { type: 'quiz' }> })
       ) : (
         <div className="quiz-feedback">
           <p>{block.options[selected!].explanation}</p>
-          {block.options[selected!].correct && <div className="reward">Reward: {block.reward} 🎁</div>}
+          {block.options[selected!].correct && <div className="reward">Reward: {block.reward} ≡ƒÄü</div>}
           <button className="reset-btn" onClick={() => { setSelected(null); setSubmitted(false); }}>Try Again</button>
         </div>
       )}
@@ -1230,7 +1230,7 @@ function CampaignWizardCard({ block }: { block: Extract<ChapterBlock, { type: 'c
                   <span className="text-[10px] font-bold text-muted uppercase">{s.title}</span>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-text">{selections[i]}</span>
-                    <span className="text-xs text-success">Optimal Choice ✓</span>
+                    <span className="text-xs text-success">Optimal Choice Γ£ô</span>
                   </div>
                 </li>
               ))}
@@ -1280,7 +1280,7 @@ function ImpactDashboardCard({ block }: { block: Extract<ChapterBlock, { type: '
             <span className="stat-label">{s.label}</span>
             <div className="stat-value">
               <strong>{s.value}</strong>
-              <span className={`trend ${s.trend}`}>{s.trend === 'up' ? '↑' : '↓'}</span>
+              <span className={`trend ${s.trend}`}>{s.trend === 'up' ? 'Γåæ' : 'Γåô'}</span>
             </div>
             <p className="stat-detail">{s.detail}</p>
           </div>
@@ -1315,7 +1315,7 @@ function DataWipeSimCard({ block }: { block: Extract<ChapterBlock, { type: 'data
         {step < block.steps.length - 1 ? (
           <button className="next-btn" onClick={() => setStep(step + 1)}>Execute Step</button>
         ) : (
-          <button className="finish-btn" onClick={() => setStep(0)}>Process Completed ✅</button>
+          <button className="finish-btn" onClick={() => setStep(0)}>Process Completed Γ£à</button>
         )}
       </div>
     </section>
@@ -1353,7 +1353,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
   if (block.type === 'quote') {
     return (
       <section className="content-card quote-card">
-        <span className="quote-badge">Fun Fact! 💡</span>
+        <span className="quote-badge">Fun Fact! ≡ƒÆí</span>
         <p>{block.content}</p>
         {block.author && <cite>{block.author}</cite>}
       </section>
@@ -1382,7 +1382,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
             const desc = descParts.join(': ')
             return (
               <div key={index} className="bento-item">
-                <div className="bento-icon">✦</div>
+                <div className="bento-icon">Γ£ª</div>
                 <div className="flex flex-col gap-1">
                   <div className="bento-title">{title}</div>
                   {desc && <div className="bento-desc">{desc}</div>}
@@ -1445,7 +1445,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       <section className="content-card activity-card">
         <div className="activity-card-head">
           <div className="activity-card-copy">
-            <span className="activity-pill">Game Time! 🎮</span>
+            <span className="activity-pill">Game Time! ≡ƒÄ«</span>
             <div>
               <h4>{block.title}</h4>
               {block.summary && <p>{block.summary}</p>}
@@ -1470,7 +1470,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
     return (
       <section className="content-card media-card video-card">
         <div className="media-card-head">
-          <span className="media-pill">Watch & Learn 📺</span>
+          <span className="media-pill">Watch & Learn ≡ƒô║</span>
           <div>
             <h4>{block.title}</h4>
             {block.note && <p className="media-note">{block.note}</p>}
@@ -1599,7 +1599,7 @@ function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout })
       <div className="topic-intro">
         <p className="topic-summary">{tab.summary}</p>
         <aside className="robot-note">
-          <span className="robot-note-chip">Eco-Buddy Says 🤖</span>
+          <span className="robot-note-chip">Eco-Buddy Says ≡ƒñû</span>
           <p>{tab.robotNote}</p>
         </aside>
       </div>
@@ -1634,7 +1634,7 @@ function ChapterRail({ currentChapter }: { currentChapter: CourseChapter }) {
   return (
     <aside className="chapter-rail">
       <section className="rail-card rail-assembly-card">
-        <span className="rail-label">Upgrade your Buddy! 🛠️</span>
+        <span className="rail-label">Upgrade your Buddy! ≡ƒ¢á∩╕Å</span>
         <h3>{currentChapter.assembly.title}</h3>
         <p>{currentChapter.assembly.summary}</p>
         <div className="rail-assembly-meta">
@@ -1669,14 +1669,14 @@ function ChapterPage() {
       <section className="hero-panel">
         <div className="hero-copy">
           <span className="hero-kicker">
-            {chapter.moduleLabel} · Chapter {chapter.id}
+            {chapter.moduleLabel} ┬╖ Chapter {chapter.id}
           </span>
           <h1>{chapter.title}</h1>
           <p className="hero-subtitle">{getHeroSubtitle(chapter)}</p>
           <div className="hero-actions">
             <a href={`#topic-${chapter.tabs[0]?.id ?? 'overview'}`} className="hero-primary-link">
               Start lab scan
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">ΓåÆ</span>
             </a>
             {nextChapter && (
               <Link to={`/${nextChapter.id}`} className="hero-secondary-link">
@@ -1795,29 +1795,20 @@ function FullscreenButton() {
 
 
 
-function CourseTopbar() {
+function VerticalProgress() {
   const { id } = useParams()
   const currentChapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
   const chapterIndex = chapters.findIndex((entry) => entry.id === currentChapter.id)
   const progress = Math.round(((chapterIndex + 1) / chapters.length) * 100)
 
   return (
-    <header className="course-topbar">
-      <div className="course-brand">
-        <span className="brand-stamp">Project Skilizee</span>
-        <strong>♻️ E-Waste Heroes</strong>
+    <div className="vertical-progress-container">
+      <div className="vertical-progress-percent">{progress}%</div>
+      <div className="vertical-progress-bar">
+        <div className="vertical-progress-fill" style={{ height: `${progress}%` }} />
       </div>
-
-      <div className="course-progress">
-        <div className="progress-label">
-          <span>Campaign Progress</span>
-          <strong>{progress}%</strong>
-        </div>
-        <div className="course-progress-meter">
-          <span style={{ width: `${progress}%`, transition: 'width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)' }} />
-        </div>
-      </div>
-    </header>
+      <div className="vertical-progress-label">Campaign Progress</div>
+    </div>
   )
 }
 
@@ -1840,7 +1831,7 @@ function AppLayout() {
 
       <div className="content-layer" style={{ position: 'relative', zIndex: 10 }}>
         <div className="course-shell">
-          <CourseTopbar />
+          <VerticalProgress />
           <Outlet />
         </div>
       </div>
