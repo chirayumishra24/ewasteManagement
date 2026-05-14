@@ -7,6 +7,7 @@ import { useScrollProgress } from './hooks/useScrollProgress'
 import { usePointerParallax } from './hooks/usePointerParallax'
 import type { SceneQuality } from './sceneQuality'
 import type { ChapterThemeKey } from '../../courseData'
+import { SceneErrorBoundary } from '../SceneStability'
 
 // Lazy load layers for performance
 const CircuitTerrain = lazy(() => import('./layers/CircuitTerrain').then(m => ({ default: m.CircuitTerrain })))
@@ -92,53 +93,55 @@ export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
         background: sceneConfig.colors.terrainBase
       }}
     >
-      <Canvas
-        shadows={!quality.isMobile && !quality.reducedMotion}
-        dpr={[1, quality.isMobile ? sceneConfig.performance.mobileDpr : sceneConfig.performance.desktopDpr]}
-        camera={{
-          position: sceneConfig.camera.position,
-          fov: sceneConfig.camera.fov
-        }}
-        gl={{ antialias: false, stencil: false, depth: true, powerPreference: quality.isMobile ? 'low-power' : 'high-performance' }}
-      >
-        <Suspense fallback={null}>
-          <group 
-            rotation={[parallax.y, parallax.x, 0]}
-            position={[0, 0, 0]}
-          >
-            <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} />
-            
-            {/* Logic-focused layouts (Terrain) */}
-            {['diagnostic', 'mapping', 'hub', 'privacy', 'policy', 'digital'].includes(theme) && (
-              <CircuitTerrain scrollProgress={scrollProgress} />
-            )}
-            
-            {/* Process-focused layouts (Recycling) */}
-            {['recycling', 'recovery', 'maintenance', 'upcycle'].includes(theme) && (
-              <>
-                <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
-                <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
-              </>
-            )}
-            
-            {/* Threat-focused layouts (Hazard) */}
-            {theme === 'hazard' && (
-              <>
-                <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
-                <ToxicParticles scrollProgress={scrollProgress} quality={quality} />
-              </>
-            )}
-            
-            {/* Dynamic layouts (Action) */}
-            {theme === 'action' && (
-              <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
-            )}
-            
-          </group>
+      <SceneErrorBoundary fallback={<div className="fixed inset-0 bg-slate-900" style={{ zIndex: 0 }} />}>
+        <Canvas
+          shadows={!quality.isMobile && !quality.reducedMotion}
+          dpr={[1, quality.isMobile ? sceneConfig.performance.mobileDpr : sceneConfig.performance.desktopDpr]}
+          camera={{
+            position: sceneConfig.camera.position,
+            fov: sceneConfig.camera.fov
+          }}
+          gl={{ antialias: false, stencil: false, depth: true, powerPreference: quality.isMobile ? 'low-power' : 'high-performance' }}
+        >
+          <Suspense fallback={null}>
+            <group 
+              rotation={[parallax.y, parallax.x, 0]}
+              position={[0, 0, 0]}
+            >
+              <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} />
+              
+              {/* Logic-focused layouts (Terrain) */}
+              {['diagnostic', 'mapping', 'hub', 'privacy', 'policy', 'digital'].includes(theme) && (
+                <CircuitTerrain scrollProgress={scrollProgress} />
+              )}
+              
+              {/* Process-focused layouts (Recycling) */}
+              {['recycling', 'recovery', 'maintenance', 'upcycle'].includes(theme) && (
+                <>
+                  <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
+                  <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
+                </>
+              )}
+              
+              {/* Threat-focused layouts (Hazard) */}
+              {theme === 'hazard' && (
+                <>
+                  <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
+                  <ToxicParticles scrollProgress={scrollProgress} quality={quality} />
+                </>
+              )}
+              
+              {/* Dynamic layouts (Action) */}
+              {theme === 'action' && (
+                <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
+              )}
+              
+            </group>
 
-          {!quality.reducedMotion && <PostProcessingStack scrollProgress={scrollProgress} quality={quality} />}
-        </Suspense>
-      </Canvas>
+            {!quality.reducedMotion && <PostProcessingStack scrollProgress={scrollProgress} quality={quality} />}
+          </Suspense>
+        </Canvas>
+      </SceneErrorBoundary>
     </div>
   )
 }
