@@ -252,14 +252,17 @@ export const chapters: CourseChapter[] = [
           { label: 'Final output', value: 'Community action plan' },
         ],
         blocks: [
-          callout('Mission brief', 'This course teaches learners how to identify e-waste, understand its material logic, and turn that knowledge into safer local action.'),
-          p('Electronic waste is one of the fastest-growing waste streams in the world. The problem is not just volume. It is the combination of hazardous substances, rapid obsolescence, weak collection systems, and wasted recoverable materials.'),
-          stats(
-            { label: 'Hazard layer', value: 'Heavy metals', detail: 'Lead, mercury, cadmium, and brominated compounds create direct health risks.' },
-            { label: 'Value layer', value: 'Urban mine', detail: 'Gold, copper, lithium, palladium, and aluminum are already concentrated inside devices.' },
-            { label: 'Skill outcome', value: 'Actionable literacy', detail: 'Learners finish able to sort, explain, and mobilize others.' },
-          ),
-          q('The point is not only to throw less away. The point is to understand the system well enough to intervene in it.', 'Mission protocol'),
+          callout('The Mission Core', 'Stop valuable materials from becoming toxic liabilities by understanding the system well enough to intervene.', 'signal'),
+          {
+            type: 'impactDashboard',
+            stats: [
+              { label: 'Toxic Load', value: '70%', trend: 'up', detail: 'Of heavy metals in landfills come from mismanaged e-waste.' },
+              { label: 'Value Reserve', value: '$57B', trend: 'down', detail: 'Annual value of raw materials wasted in unrecovered devices.' },
+              { label: 'Growth Rate', value: '3x', trend: 'up', detail: 'Faster than any other household waste stream.' }
+            ]
+          },
+          p('This course moves from identification to action. You will learn to read the waste stream, extend device life, and mobilize your community.'),
+          q('Sustainable tech is not just about better batteries; it is about better disposal systems.', 'System Recovery Protocol'),
         ],
       },
       {
@@ -317,30 +320,24 @@ export const chapters: CourseChapter[] = [
           { label: 'Goal', value: 'Safer disposal behavior' },
         ],
         blocks: [
-          compare(
-            {
-              title: 'Weak awareness campaign',
-              leftLabel: 'Looks like',
-              leftValue: 'Facts only, no clear next step',
-              rightLabel: 'Stronger version',
-              rightValue: 'Specific sorting, drop-off, and action instructions',
-              insight: 'The project should reduce confusion, not just raise concern.',
-            },
-            {
-              title: 'Weak event concept',
-              leftLabel: 'Looks like',
-              leftValue: 'A generic collection drive idea',
-              rightLabel: 'Stronger version',
-              rightValue: 'A drive with partners, bins, outreach, and reporting metrics',
-              insight: 'Treat the final output as an operational plan, not only a poster.',
-            },
-          ),
-          bullets(
-            'Choose a real audience and define the behavior you want to change.',
-            'Explain what counts as e-waste, why informal dumping is dangerous, and what certified recovery looks like.',
-            'Include a practical action layer: where to store, sort, donate, repair, or drop off devices safely.',
-          ),
-          callout('Completion standard', 'A strong final project makes the local recovery chain feel possible, specific, and worth participating in.', 'success', 'Capstone'),
+          {
+            type: 'checklist',
+            title: "Project Milestone: Recovery Blueprint",
+            items: [
+              { label: "Community Audit", impact: "Identify top 3 e-waste hotspots in your area." },
+              { label: "Recovery Chain Design", impact: "Define exactly where devices go after collection." },
+              { label: "Awareness Campaign", impact: "Create 1 communication asset (video/infographic)." }
+            ],
+            scoreLabel: "Project Readiness"
+          },
+          {
+            type: 'storyCarousel',
+            stories: [
+              { title: "School Bins", before: "Scattered waste", after: "240kg recovered", image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800", quote: "The collection drive changed how our school handles tech." },
+              { title: "Repair Hubs", before: "Broken devices", after: "85 units revived", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?auto=format&fit=crop&q=80&w=800", quote: "Extending life is the first step in responsible salvage." }
+            ]
+          },
+          callout('Final Objective', 'A strong final project makes the local recovery chain feel possible, specific, and worth participating in.', 'success', 'Capstone'),
         ],
       },
     ],

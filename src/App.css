@@ -1095,7 +1095,7 @@ progress-label strong {
 
 .chapter-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 3rem;
   max-width: 1440px;
   margin: 0 auto;
@@ -1116,6 +1116,8 @@ progress-label strong {
   flex-direction: column;
   gap: 4rem;
   min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .chapter-briefing-lead {
@@ -2855,7 +2857,9 @@ progress-label strong {
 }
 
 .resource-link-grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .resource-link-card {
