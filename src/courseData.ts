@@ -289,6 +289,8 @@ export const chapters: CourseChapter[] = [
             { id: '3-2', title: 'Awareness Campaign', status: 'locked' },
             { id: '3-3', title: 'Data Security', status: 'locked' },
             { id: '3-4', title: 'Policy & Innovation', status: 'locked' },
+            { id: '4-1', title: 'Capstone: Project A', status: 'locked' },
+            { id: '4-2', title: 'Capstone: Project B', status: 'locked' },
           ]),
           resources(
             { label: 'Launch Module 1', href: '/1-1', description: 'Enter the hazard and materials chapters that establish the problem.' },
@@ -1491,13 +1493,182 @@ export const chapters: CourseChapter[] = [
       },
     ],
   },
+  {
+    id: '4-1',
+    moduleLabel: 'Module 04',
+    navLabel: '4.1',
+    title: 'Capstone: E-Waste Warriors Website',
+    strapline: 'Your mission comes together here. Build an awareness platform and propose your innovative solution.',
+    summary:
+      'Project A focuses on communication: framing the e-waste crisis, explaining material logic, and presenting a concrete local innovation to your community.',
+    robotStatus: 'Creativity modules engaged. Synthesis logic running.',
+    scrapFact: 'Awareness is the first step toward building a reliable recovery chain.',
+    accentColor: '#A78BFA',
+    themeKey: 'digital',
+    layout: 'bento',
+    featuredMetrics: [
+      { label: 'Project type', value: 'Awareness Web', detail: 'Creating a high-impact digital presence for local change.' },
+      { label: 'Scope', value: '5-7 Sections', detail: 'From problem framing to innovative solution pitch.' },
+      { label: 'Core Goal', value: 'Behavior Change', detail: 'Motivating safer disposal through better understanding.' },
+    ],
+    assembly: {
+      part: 'head',
+      title: 'Synthesis Core',
+      schematic: 'Advanced neural link',
+      summary: 'Project A allows the robot to broadcast its findings to the world.',
+      reward: 'Unlocks digital outreach capability.',
+    },
+    tabs: [
+      {
+        id: 'overview',
+        label: 'The Brief',
+        navLabel: 'Brief',
+        title: 'Project A: E-Waste Warriors',
+        summary: 'Create a website that spreads awareness and presents your innovative solution.',
+        robotNote: 'Your Old Tech Is Harming the Planet. Let’s Fix It Together.',
+        heroImage: '/local/ewaste_warriors_hero.png',
+        heroVariant: 'spotlight',
+        accentColor: '#A78BFA',
+        pulses: [
+          { label: 'Format', value: '5-7 Sections' },
+          { label: 'Focus', value: 'Awareness + Solution' },
+          { label: 'Output', value: 'LMS Link' },
+        ],
+        blocks: [
+          callout('Headline Prompt', '“Your Old Tech Is Harming the Planet. Let’s Fix It Together.”', 'success', 'Mission Statement'),
+          stats(
+            { label: 'India Stat', value: '3.8 MMT', detail: 'Total e-waste generated annually across the nation.' },
+            { label: 'Global Rank', value: '3rd Place', detail: 'India is one of the world\'s largest e-waste generators.' },
+            { label: 'Impact', value: 'Local Reach', detail: 'Target your school or local neighborhood for change.' },
+          ),
+          bullets(
+            '1. Home Page: The E-Waste Problem (Headline + Stats)',
+            '2. What Is E-Waste? (Clear definitions)',
+            '3. Why It’s Dangerous (Health & Eco risks)',
+            '4. Hidden Treasure (Material value in scrap)',
+            '5. 3R’s Action (Reduce, Reuse, Recycle)',
+            '6. Local Disposal Guide (Where to drop off)',
+            '7. Your Big Solution (Innovation Page)',
+          ),
+        ],
+      },
+      {
+        id: 'innovation',
+        label: 'Innovation',
+        navLabel: 'Ideas',
+        title: 'The Big Solution',
+        summary: 'Propose a specific, actionable idea to solve e-waste in your community.',
+        robotNote: 'The idea must be practical: explain how it works and who benefits.',
+        heroImage: '/local/ewaste_atm.png',
+        heroVariant: 'signal',
+        accentColor: '#2bc1a6',
+        pulses: [
+          { label: 'Type', value: 'Innovation' },
+          { label: 'Goal', value: 'Reduce Toxics' },
+          { label: 'Metric', value: 'Recycling Rate' },
+        ],
+        blocks: [
+          callout('Featured Idea: E-Waste ATM', 'Deposit old tech & earn reward points for school supplies!', 'success'),
+          timeline(
+            { step: '01', title: 'The Concept', detail: 'A smart kiosk placed in schools where students can drop small e-waste.' },
+            { step: '02', title: 'How it Works', detail: 'Deposit device -> Scan ID -> Earn points on a digital wallet app.' },
+            { step: '03', title: 'The Benefit', detail: 'Incentivizes responsible disposal and feeds formal recycling chains.' },
+          ),
+          compare({
+            title: 'Solution Impact',
+            leftLabel: 'Without ATM',
+            leftValue: 'Devices pile up in desk drawers or enter ordinary trash.',
+            rightLabel: 'With ATM',
+            rightValue: 'Incentivized, tracked, and safely channeled collection.',
+            insight: 'Small rewards can trigger massive shifts in community behavior.',
+          }),
+        ],
+      },
+    ],
+  },
+  {
+    id: '4-2',
+    moduleLabel: 'Module 04',
+    navLabel: '4.2',
+    title: 'Capstone: Reflection & Pitch',
+    strapline: 'Reflect on your journey and pitch your solution to the world.',
+    summary:
+      'Project B focuses on the human element: personal reflection and a 2-minute pitch to persuade others to take action.',
+    robotStatus: 'Communication link stable. Recording ready.',
+    scrapFact: 'A powerful story is as important as a powerful machine.',
+    accentColor: '#FBBF24',
+    themeKey: 'policy',
+    layout: 'split',
+    featuredMetrics: [
+      { label: 'Part 1', value: 'Reflection', detail: 'Deep dive into your personal learning and impact potential.' },
+      { label: 'Part 2', value: 'Pitch Video', detail: 'A 120-second persuasive argument for your e-waste solution.' },
+      { label: 'Output', value: 'Video + Doc', detail: 'Submission of links on your learning management system.' },
+    ],
+    assembly: {
+      part: 'arm_l',
+      title: 'Outreach Module',
+      schematic: 'Voice modulator + Camera link',
+      summary: 'Project B gives the robot its voice and a way to connect with humans.',
+      reward: 'Unlocks capstone completion badge.',
+    },
+    tabs: [
+      {
+        id: 'reflection',
+        label: 'Reflection',
+        navLabel: 'Reflect',
+        title: 'PART 1: Reflection & Impact',
+        summary: 'Answer the key questions about your journey and future impact.',
+        robotNote: 'Change starts with a personal commitment to the recovery system.',
+        heroImage: '/local/reflection_hero.png',
+        heroVariant: 'spotlight',
+        accentColor: '#FBBF24',
+        pulses: [
+          { label: 'Task', value: 'Answer Questions' },
+          { label: 'Medium', value: 'Google Doc' },
+          { label: 'Submit', value: 'LMS Link' },
+        ],
+        blocks: [
+          q('What was the most important thing you learned from Skillizee’s E-Waste modules?', 'Question 1'),
+          q('How can YOU create impact in your school/community?', 'Question 2'),
+          p('Create a Google Doc with your answers and share the link via your LMS portal. Focus on how your perspective shifted from "trash" to "resource".'),
+        ],
+      },
+      {
+        id: 'pitch',
+        label: 'Pitch Video',
+        navLabel: 'Pitch',
+        title: 'PART 2: The 2-Minute Pitch',
+        summary: '🚀 “My Solution to the E-Waste Crisis” — Record a short, persuasive video of your project.',
+        robotNote: 'You have 120 seconds to change a mind. Be clear, be bold, be an E-Waste Warrior.',
+        heroImage: '/local/pitch_guide.png',
+        heroVariant: 'signal',
+        accentColor: '#FB923C',
+        pulses: [
+          { label: 'Duration', value: '1.5 - 2 mins' },
+          { label: 'Target', value: 'Community leaders' },
+          { label: 'Status', value: 'Record Now' },
+        ],
+        blocks: [
+          callout('Suggested Script Structure', 'Follow this 120-second roadmap for maximum impact.', 'neutral'),
+          timeline(
+            { step: '0:00-0:15', title: 'Hook', detail: 'Introduce yourself and the 3.8 million tonne crisis.' },
+            { step: '0:15-0:45', title: 'The Problem', detail: 'Explain what you learned about toxics, treasures, and the 3Rs.' },
+            { step: '0:45-1:30', title: 'The Solution', detail: 'Clearly explain your Project A idea (e.g., The E-Waste ATM).' },
+            { step: '1:30-2:00', title: 'The Call', detail: 'Inspire others and close with your vision for an e-waste conscious India.' },
+          ),
+          q('This project taught me that even small steps—like repairing instead of replacing—can reduce massive amounts of waste.', 'Pitch Script Sample'),
+          callout('Submission Tip', 'Upload your video to Google Drive and submit the shareable link on the LMS.', 'success'),
+        ],
+      },
+    ],
+  },
 ]
 
 export function toSkillizeeImageUrl(path: string) {
   const skillizeeAssetPrefix = 'https://login.skillizee.io'
   const skillizeeArticleImagePrefix = `${skillizeeAssetPrefix}/s/articles/69f4527b41e01b23b9093dae/images/`
 
-  if (path.startsWith('http') || path.startsWith('/images/')) {
+  if (path.startsWith('http') || path.startsWith('/images/') || path.startsWith('/local/')) {
     return path
   }
 
