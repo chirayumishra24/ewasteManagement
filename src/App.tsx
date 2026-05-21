@@ -898,6 +898,730 @@ function BeforeAfterCard({ block }: { block: Extract<ChapterBlock, { type: 'befo
   )
 }
 
+function InteractiveMindfulnessInfographic() {
+  const [activeTab, setActiveTab] = useState<'phishing' | 'permissions' | 'slider'>('phishing')
+  const { addXP, unlockAchievement } = useGameEngine()
+  const [phishingFlags, setPhishingFlags] = useState<{ sender: boolean; link: boolean; attachment: boolean }>({ sender: false, link: false, attachment: false })
+  const [permissions, setPermissions] = useState({ camera: false, location: false, contacts: false, mic: false, storage: false })
+  const [sliderVal, setSliderVal] = useState(25)
+  const [scoreRewarded, setScoreRewarded] = useState(false)
+
+  const handlePhishClick = (type: 'sender' | 'link' | 'attachment') => {
+    setPhishingFlags(prev => {
+      const next = { ...prev, [type]: true }
+      if (next.sender && next.link && next.attachment && !scoreRewarded) {
+        addXP(XP_REWARDS.CALCULATOR_USED || 50, 'All Phishing Indicators Found')
+        unlockAchievement('hygiene_detective')
+        setScoreRewarded(true)
+      }
+      return next
+    })
+  }
+
+  const togglePermission = (perm: keyof typeof permissions) => {
+    setPermissions(prev => ({ ...prev, [perm]: !prev[perm] }))
+  }
+
+  const safetyScore = 100 - 
+    (permissions.camera ? 25 : 0) - 
+    (permissions.location ? 25 : 0) - 
+    (permissions.contacts ? 25 : 0) - 
+    (permissions.mic ? 15 : 0) - 
+    (permissions.storage ? 10 : 0)
+
+  return (
+    <div className="border-4 border-[#1A1A2E] rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden my-6">
+      <div className="bg-[#1A1A2E] text-white p-4 border-b-4 border-[#1A1A2E] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+          <span className="bg-amber-400 text-[#1A1A2E] text-xs font-black px-2 py-0.5 rounded border-2 border-[#1A1A2E] inline-block mb-1">CYBER-HYGIENE SIMULATOR</span>
+          <h3 className="font-extrabold text-xl tracking-tight">Active Mindfulness Console</h3>
+        </div>
+        <div className="flex gap-2">
+          {(['phishing', 'permissions', 'slider'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 py-1.5 rounded-lg border-2 border-white font-extrabold text-xs transition-all ${
+                activeTab === tab 
+                  ? 'bg-amber-400 text-[#1A1A2E] border-amber-400 shadow-[2px_2px_0px_white]' 
+                  : 'bg-transparent text-white hover:bg-white/10'
+              }`}
+            >
+              {tab === 'phishing' && '🔍 Phishing Protocol'}
+              {tab === 'permissions' && '🛡️ Permission Sandbox'}
+              {tab === 'slider' && '📊 Habit Radar'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-6">
+        {activeTab === 'phishing' && (
+          <div>
+            <div className="mb-4">
+              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 01: Suspicion Protocol</h4>
+              <p className="text-slate-600 text-sm font-bold">Unexpected message detected. Click on the suspicious elements (Sender, Link, Attachment) to inspect them.</p>
+            </div>
+            <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-4 shadow-[4px_4px_0px_#1A1A2E] max-w-xl mx-auto">
+              <div className="border-b-2 border-slate-200 pb-3 mb-3 text-sm">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-extrabold text-slate-500">From:</span>
+                  <button 
+                    onClick={() => handlePhishClick('sender')}
+                    className={`font-mono text-xs px-2 py-0.5 rounded border transition-colors ${
+                      phishingFlags.sender ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-slate-100 border-slate-300 hover:bg-slate-200 text-slate-800'
+                    }`}
+                  >
+                    security-update@paypal-verify-alert.com
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-slate-500">Subject:</span>
+                  <span className="font-bold text-red-600">URGENT: Your account will be suspended in 2 hours</span>
+                </div>
+              </div>
+              <div className="text-slate-700 text-sm leading-relaxed mb-4 space-y-2">
+                <p>Dear Customer,</p>
+                <p>Our automated systems detected unusual hardware access from your IP. To prevent total lock, click the authorization node immediately to verify identity:</p>
+                <div className="my-3 text-center">
+                  <button 
+                    onClick={() => handlePhishClick('link')}
+                    className={`font-mono text-xs px-3 py-1.5 rounded border transition-all ${
+                      phishingFlags.link ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-blue-50 border-blue-300 hover:bg-blue-100 text-blue-700 underline'
+                    }`}
+                  >
+                    http://sec-paypaI.com/verify-identity
+                  </button>
+                </div>
+                <p>Alternatively, review the incident log attached below and load the secure executable utility:</p>
+              </div>
+              <div className="bg-slate-50 border-2 border-dashed border-slate-300 p-3 rounded-lg flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">📄</span>
+                  <div>
+                    <div className="text-xs font-bold text-slate-800">security_patch_v4.2.exe</div>
+                    <div className="text-[10px] text-slate-400">Executable application (1.8 MB)</div>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => handlePhishClick('attachment')}
+                  className={`text-xs px-3 py-1 rounded border-2 transition-all font-extrabold ${
+                    phishingFlags.attachment ? 'bg-red-100 border-red-500 text-red-700' : 'bg-[#1A1A2E] text-white border-[#1A1A2E] hover:bg-slate-800'
+                  }`}
+                >
+                  {phishingFlags.attachment ? 'Inspected' : 'Inspect Attachment'}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.sender ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-lg">{phishingFlags.sender ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Sender Audit</h5>
+                </div>
+                <p className="text-xs text-slate-600 font-bold leading-normal">
+                  {phishingFlags.sender 
+                    ? "Domain Spoofing! The domain 'paypal-verify-alert.com' is not official. Spoofers set up official-looking domains to bypass basic mail security filters." 
+                    : "Inspect the 'From' address. Phishers use domain variants resembling trusted services to deceive busy eyes."}
+                </p>
+              </div>
+
+              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.link ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-lg">{phishingFlags.link ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Link Audit</h5>
+                </div>
+                <p className="text-xs text-slate-600 font-bold leading-normal">
+                  {phishingFlags.link 
+                    ? "Typosquatting alert! The URL uses a capital 'I' instead of lower 'l' (sec-paypaI.com instead of paypal.com). Clicking this routes logins directly to hacker databases." 
+                    : "Inspect the URL node. Phishers buy typo-squatted domains containing homoglyphs or clever visual substitutions."}
+                </p>
+              </div>
+
+              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.attachment ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-lg">{phishingFlags.attachment ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Attachment Audit</h5>
+                </div>
+                <p className="text-xs text-slate-600 font-bold leading-normal">
+                  {phishingFlags.attachment 
+                    ? "Malicious Extension! Patches are never distributed as unprompted '.exe' emails. Executing this registers a trojan directly in the operating system." 
+                    : "Inspect the file suffix. Official channels distribute alerts inside secure application dashboards, never loose scripts or executables."}
+                </p>
+              </div>
+            </div>
+            {phishingFlags.sender && phishingFlags.link && phishingFlags.attachment && (
+              <div className="mt-4 text-center text-xs font-black text-emerald-600 border-2 border-dashed border-emerald-400 p-2 rounded-lg bg-emerald-50">
+                🎉 Phishing Protocol Completed! All indicators cataloged. +50 XP
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'permissions' && (
+          <div>
+            <div className="mb-4">
+              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 02: Permission Sandbox</h4>
+              <p className="text-slate-600 text-sm font-bold">Configure permissions for <strong>Simple Flashlight Pro</strong>. Toggle options and see how privacy score changes.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto items-center">
+              <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-5 shadow-[4px_4px_0px_#1A1A2E] space-y-3">
+                <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">App Permissions Request</span>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">📷</span>
+                    <div>
+                      <div className="text-sm font-extrabold text-[#1A1A2E]">Camera Access</div>
+                      <div className="text-[10px] text-slate-400">Required for flash control on older APIs</div>
+                    </div>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={permissions.camera} 
+                    onChange={() => togglePermission('camera')}
+                    className="w-5 h-5 accent-amber-400 cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">📍</span>
+                    <div>
+                      <div className="text-sm font-extrabold text-[#1A1A2E]">Location Coordinates</div>
+                      <div className="text-[10px] text-slate-400">Used for localized service optimizations</div>
+                    </div>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={permissions.location} 
+                    onChange={() => togglePermission('location')}
+                    className="w-5 h-5 accent-amber-400 cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">👤</span>
+                    <div>
+                      <div className="text-sm font-extrabold text-[#1A1A2E]">Contact Lists</div>
+                      <div className="text-[10px] text-slate-400">Share flashlight achievements with friends</div>
+                    </div>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={permissions.contacts} 
+                    onChange={() => togglePermission('contacts')}
+                    className="w-5 h-5 accent-amber-400 cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🎤</span>
+                    <div>
+                      <div className="text-sm font-extrabold text-[#1A1A2E]">Microphone Input</div>
+                      <div className="text-[10px] text-slate-400">Sound-activated strobe features</div>
+                    </div>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={permissions.mic} 
+                    onChange={() => togglePermission('mic')}
+                    className="w-5 h-5 accent-amber-400 cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">💾</span>
+                    <div>
+                      <div className="text-sm font-extrabold text-[#1A1A2E]">Local Storage</div>
+                      <div className="text-[10px] text-slate-400">Cache local user layout settings</div>
+                    </div>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={permissions.storage} 
+                    onChange={() => togglePermission('storage')}
+                    className="w-5 h-5 accent-amber-400 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center justify-center p-6 border-4 border-[#1A1A2E] rounded-xl bg-amber-50/50 shadow-[4px_4px_0px_#1A1A2E] text-center">
+                <span className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">PRIVACY & SAFETY GRADE</span>
+                <div className={`text-5xl font-black mb-3 ${safetyScore >= 80 ? 'text-emerald-600' : safetyScore >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
+                  {safetyScore}/100
+                </div>
+                <div className="w-full bg-slate-200 h-4 rounded-full border-2 border-[#1A1A2E] overflow-hidden mb-4">
+                  <div 
+                    className={`h-full transition-all duration-300 ${safetyScore >= 80 ? 'bg-emerald-500' : safetyScore >= 50 ? 'bg-amber-400' : 'bg-red-500'}`}
+                    style={{ width: `${safetyScore}%` }}
+                  />
+                </div>
+                <p className="text-xs font-bold text-slate-700 leading-relaxed">
+                  {safetyScore === 100 
+                    ? "Perfect! Flashlights need zero extra permissions. Keeping them disabled prevents tracking engines and ads from logging background analytics."
+                    : safetyScore >= 70 
+                    ? "Warning: Medium leak hazard. While storage and mic aren't highly critical individually, cumulative permissions build identifiers for device fingerprinting."
+                    : "Dangerous: High leak hazard! Flashlights NEVER require access to contacts, precise GPS location, or cameras. This is likely spyware harvesting data in the background."}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'slider' && (
+          <div>
+            <div className="mb-4">
+              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 03: Adaptability Radar</h4>
+              <p className="text-slate-600 text-sm font-bold">Use the slider to see how security tactics change from passive trusting habits to modern zero-trust active defense.</p>
+            </div>
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-6 shadow-[4px_4px_0px_#1A1A2E]">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-black text-slate-400 uppercase">Strictness Quotient</span>
+                  <span className="font-black text-[#1A1A2E] bg-amber-400 border-2 border-[#1A1A2E] px-2 py-0.5 rounded text-sm">{sliderVal}%</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={sliderVal}
+                  onChange={e => setSliderVal(parseInt(e.target.value))}
+                  className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1A1A2E] border-2 border-[#1A1A2E] mb-4"
+                />
+                
+                <div className="border-3 border-[#1A1A2E] rounded-lg p-4 bg-[#FFFDF7] min-h-[100px] flex flex-col justify-center">
+                  {sliderVal < 35 ? (
+                    <div>
+                      <div className="font-extrabold text-red-600 text-sm mb-1">🔴 Passive Trust Mode (0% - 34%)</div>
+                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                        "If it looks like a bank email, I click it. If an app works, I allow whatever it wants."
+                        <br/>
+                        <span className="text-red-500">Modern Risk:</span> Vulnerable to automated typosquatting, session harvesting, and background metadata mining.
+                      </p>
+                    </div>
+                  ) : sliderVal < 70 ? (
+                    <div>
+                      <div className="font-extrabold text-amber-500 text-sm mb-1">🟡 Standard Protection Mode (35% - 69%)</div>
+                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                        "I use 2FA and passwords. I only install apps from official stores."
+                        <br/>
+                        <span className="text-amber-600">Modern Risk:</span> 2FA via SMS can be intercepted by SIM-swaps. Session tokens can be stolen via active cookie sniffers, rendering passwords useless.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="font-extrabold text-emerald-600 text-sm mb-1">🟢 Zero-Trust Active Defense (70% - 100%)</div>
+                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                        "Verify every domain segment, revoke all camera/mic permissions by default, update device parameters frequently."
+                        <br/>
+                        <span className="text-emerald-600">Defense Impact:</span> Proactively shuts down data harvesting pipelines before they exploit sandbox vulnerabilities in modern OS systems.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ChecklistPreview({ title, checked, total }: { title: string; checked: Set<number>; total: number }) {
+  const isWebTracker = title.toLowerCase().includes('website')
+  
+  if (isWebTracker) {
+    return (
+      <div className="w-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white overflow-hidden flex flex-col min-h-[350px] shadow-[4px_4px_0px_rgba(26,26,46,0.15)] relative">
+        <div className="bg-[#242445] px-3 py-2 flex items-center justify-between border-b-2 border-[#1A1A2E]">
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+          </div>
+          <div className="bg-[#1A1A2E] text-[10px] font-mono font-bold px-4 py-0.5 rounded text-slate-400 w-1/2 text-center truncate">
+            https://ewaste-tracker.local
+          </div>
+          <div className="text-[10px] text-amber-400 font-extrabold animate-pulse">
+            LIVE PREVIEW
+          </div>
+        </div>
+
+        <div className="p-3 flex-1 flex flex-col gap-2 bg-slate-900 font-mono text-[10px] overflow-y-auto">
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(0) 
+              ? 'border-amber-400 bg-amber-500/10 text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[HERO SECTION]</span>
+              <span className="text-[8px] opacity-70">{checked.has(0) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(0) ? '⚡ LANDING: Impact stats showing 3.8 MMT generated annually in India.' : 'Waiting for Community Audit stats...'}
+            </p>
+          </div>
+
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(1) 
+              ? 'border-emerald-400 bg-emerald-500/10 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[DEFINITIONS PORTAL]</span>
+              <span className="text-[8px] opacity-70">{checked.has(1) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(1) ? '📖 CATALOG: Categories spanning IT, Telecommunications & consumer items.' : 'Waiting for category scope definitions...'}
+            </p>
+          </div>
+
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(2) 
+              ? 'border-red-400 bg-red-500/10 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[HAZARDS REGISTRY]</span>
+              <span className="text-[8px] opacity-70">{checked.has(2) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(2) ? '☠ HEATMAP: Active chemical indicators showing Lead, Cadmium, and BFR hazards.' : 'Waiting for toxic chemical mapping data...'}
+            </p>
+          </div>
+
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(3) 
+              ? 'border-sky-400 bg-sky-500/10 text-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[URBAN MINING INDEX]</span>
+              <span className="text-[8px] opacity-70">{checked.has(3) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(3) ? '💎 METRICS: Value comparison metrics showing recovery ratios of Gold and Copper.' : 'Waiting for urban mining recovery ratios...'}
+            </p>
+          </div>
+
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(4) 
+              ? 'border-purple-400 bg-purple-500/10 text-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[3Rs PROTOCOL]</span>
+              <span className="text-[8px] opacity-70">{checked.has(4) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(4) ? '♻ ACTION MODULE: Steps detailing Reduce, Repair, and Recycle workflows.' : 'Waiting for action guide implementation...'}
+            </p>
+          </div>
+
+          <div className={`border-2 rounded p-2 transition-all duration-300 ${
+            checked.has(5) 
+              ? 'border-indigo-400 bg-indigo-500/10 text-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.15)]' 
+              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
+          }`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="font-extrabold">[DISPOSAL LOCATOR]</span>
+              <span className="text-[8px] opacity-70">{checked.has(5) ? '✔ COMPILED' : '◦ PENDING'}</span>
+            </div>
+            <p className="text-[8px] leading-tight">
+              {checked.has(5) ? '📍 GEO-ROUTING: Authorized collection center locator and directions.' : 'Waiting for mapping module parameters...'}
+            </p>
+          </div>
+        </div>
+
+        {checked.size === total && (
+          <div className="absolute inset-0 bg-[#1A1A2E]/95 flex flex-col items-center justify-center p-6 text-center animate-fade-in z-20">
+            <span className="text-emerald-400 text-3xl mb-2 animate-bounce">⚡</span>
+            <h4 className="text-xl font-black text-white uppercase tracking-wider">Compile Success</h4>
+            <div className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono px-3 py-1.5 border-2 border-emerald-400 rounded-lg max-w-[250px] my-3 leading-relaxed">
+              BUILD: ewaste-tracker v1.0.0<br/>
+              COMPLIANCE AUDIT: PASSED<br/>
+              DEPLOY STATUS: ACTIVE ✅
+            </div>
+            <p className="text-xs text-slate-300 font-bold max-w-xs">
+              All website sections have compiled successfully. Ready for public deployment.
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white p-5 overflow-hidden flex flex-col min-h-[350px] justify-between relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)]">
+      <div>
+        <div className="flex justify-between items-center border-b-2 border-slate-700 pb-2.5 mb-4">
+          <span className="text-xs font-black text-amber-400 uppercase tracking-wider">Console Blueprint</span>
+          <span className="font-mono text-[10px] text-slate-400">SYS: ACTIVE</span>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          {Array.from({ length: total }).map((_, i) => {
+            const isCompleted = checked.has(i)
+            return (
+              <div 
+                key={i} 
+                className={`border-3 p-3 rounded-lg flex flex-col justify-between min-h-[80px] transition-all duration-300 ${
+                  isCompleted 
+                    ? 'border-[#1A1A2E] bg-amber-400 text-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E]' 
+                    : 'border-dashed border-slate-700 text-slate-500 bg-slate-900/40'
+                }`}
+              >
+                <span className="font-mono text-xs font-black">NODE {i + 1}</span>
+                <span className="text-[10px] font-bold leading-normal truncate">
+                  {isCompleted ? '✔ CALIBRATED' : '◦ PENDING'}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {checked.size === total ? (
+        <div className="mt-4 bg-emerald-500/10 border-2 border-emerald-500/40 text-emerald-400 text-xs font-black p-3 rounded-lg text-center">
+          🎉 SYSTEM INTEGRATED: 100% Ready
+        </div>
+      ) : (
+        <div className="mt-4 bg-slate-900 border-2 border-dashed border-slate-700 text-slate-400 text-[10px] font-bold p-3 rounded-lg text-center leading-normal">
+          Awaiting validation on {total - checked.size} remaining nodes...
+        </div>
+      )}
+    </div>
+  )
+}
+
+function IdeaIllustration({ device, purpose }: { device: string; purpose: string }) {
+  const isKiosk = purpose.toLowerCase().includes('kiosk') || purpose.toLowerCase().includes('atm')
+  const isClock = purpose.toLowerCase().includes('clock')
+  const isKeyboard = purpose.toLowerCase().includes('keyboard')
+  const isMonitor = purpose.toLowerCase().includes('monitor')
+  const isBank = purpose.toLowerCase().includes('bank')
+  const isTradeIn = purpose.toLowerCase().includes('trade-in') || purpose.toLowerCase().includes('counter')
+
+  if (isKiosk) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>KIOSK SYSTEM PROT-04</span>
+          <span className="text-emerald-400 font-extrabold animate-pulse">● ONLINE</span>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 relative bg-[#0D0D1F]">
+          <img 
+            src="/images/ewaste_atm.png" 
+            alt="E-waste Kiosk System"
+            className="w-40 h-40 object-contain"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+              const fallback = e.currentTarget.nextElementSibling as HTMLElement
+              if (fallback) fallback.style.display = 'flex'
+            }}
+          />
+          <div className="hidden flex-col items-center justify-center w-full h-full text-slate-400" style={{ display: 'none' }}>
+            <svg width="100" height="130" viewBox="0 0 100 130" fill="none">
+              <rect x="25" y="10" width="50" height="110" rx="6" fill="#242445" stroke="#FFF" strokeWidth="3" />
+              <rect x="32" y="20" width="36" height="30" rx="3" fill="#FFF" />
+              <text x="35" y="38" fill="#1A1A2E" fontSize="8" fontWeight="bold">DEPOSIT</text>
+              <circle cx="50" cy="70" r="10" fill="#EF4444" />
+              <rect x="35" y="95" width="30" height="15" fill="#10B981" />
+              <text x="40" y="105" fill="#FFF" fontSize="6" fontWeight="bold">RECEIPT</text>
+            </svg>
+          </div>
+          <div className="absolute bottom-2 left-2 text-[8px] font-mono text-slate-500">
+            Source: /images/ewaste_atm.png
+          </div>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+          Incentivized Deposit Station: Link to student/citizen IDs
+        </div>
+      </div>
+    )
+  }
+
+  if (isClock) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>SMART WALL CLOCK CORE</span>
+          <span className="text-amber-400 font-extrabold">TABLET MOUNT</span>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F] relative">
+          <div className="w-48 h-32 rounded-xl border-4 border-slate-500 bg-black flex flex-col items-center justify-center p-3 relative shadow-[0_0_20px_rgba(250,204,21,0.2)]">
+            <span className="absolute top-1 right-2 text-[6px] font-mono text-slate-400">🔋 100% Connected</span>
+            <div className="text-3xl font-black font-mono text-emerald-400 tracking-wider mb-1 animate-pulse">
+              10:42<span className="text-slate-500 text-xl font-bold">:15</span>
+            </div>
+            <div className="text-[8px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
+              Thursday, May 21
+            </div>
+            <div className="text-[6px] text-amber-400 mt-2 font-bold px-2 py-0.5 border border-amber-400/40 rounded bg-amber-500/5">
+              💡 LUNCH PROTOCOL: Recovery stats active
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+          Fullscreen Clock Dashboard: Re-purposed Android/iOS Tablet
+        </div>
+      </div>
+    )
+  }
+
+  if (isKeyboard) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>MACRO KEYBOARD CONSOLE</span>
+          <span className="text-purple-400 font-extrabold">TOUCH DECK</span>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F]">
+          <div className="grid grid-cols-3 gap-2 border-3 border-slate-600 bg-slate-800 p-3.5 rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+            {[
+              { label: '🔇 MUTE', color: 'bg-red-500/20 text-red-400 border-red-500/50' },
+              { label: '📷 CAM', color: 'bg-blue-500/20 text-blue-400 border-blue-500/50' },
+              { label: '⏺ REC', color: 'bg-amber-500/20 text-amber-400 border-amber-500/50' },
+              { label: '🚀 RUN', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' },
+              { label: '📝 EDIT', color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50' },
+              { label: '🔄 SYNC', color: 'bg-pink-500/20 text-pink-400 border-pink-500/50' }
+            ].map((btn, idx) => (
+              <button 
+                key={idx}
+                className={`border-2 p-2 rounded font-mono text-[9px] font-extrabold hover:scale-105 active:scale-95 transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${btn.color}`}
+                onClick={() => alert(`Macro Active: ${btn.label}`)}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+          Touch portal shortkey interface: Re-mapped phone grid
+        </div>
+      </div>
+    )
+  }
+
+  if (isMonitor) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>LVDS DRIVER INTEGRATION</span>
+          <span className="text-sky-400 font-extrabold">MONITOR FRAME</span>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 bg-[#0D0D1F] space-y-4">
+          <svg width="220" height="140" viewBox="0 0 220 140" fill="none">
+            <rect x="20" y="10" width="120" height="80" rx="3" fill="#1e293b" stroke="#FFF" strokeWidth="2.5" />
+            <text x="35" y="50" fill="#a7f3d0" fontSize="8" fontFamily="monospace" fontWeight="bold">EXTRACTED PANEL</text>
+            <text x="35" y="62" fill="#64748b" fontSize="6" fontFamily="monospace">LCD/LED Matrix</text>
+            
+            <rect x="155" y="45" width="50" height="40" rx="2" fill="#065f46" stroke="#34d399" strokeWidth="1.5" />
+            <circle cx="165" cy="55" r="2" fill="#facc15" />
+            <circle cx="175" cy="55" r="2" fill="#facc15" />
+            <rect x="185" y="70" width="15" height="10" fill="#475569" />
+            <text x="158" y="80" fill="#FFF" fontSize="5" fontFamily="monospace">LVDS CTRL</text>
+            
+            <path d="M140,50 L155,50" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 2" />
+            <path d="M140,70 L155,70" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3 2" />
+            
+            <path d="M185,85 L185,120" stroke="#94a3b8" strokeWidth="2" />
+            <rect x="180" y="120" width="10" height="6" fill="#0f172a" />
+            <text x="194" y="115" fill="#94a3b8" fontSize="5" fontFamily="monospace">HDMI IN</text>
+          </svg>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xs font-bold text-amber-400">
+          Extracted laptop display panel connected via standard LVDS card
+        </div>
+      </div>
+    )
+  }
+
+  if (isBank) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>SORTING HUB METRICS</span>
+          <span className="text-emerald-400 font-extrabold">E-WASTE BANK</span>
+        </div>
+        <div className="flex-1 flex flex-col justify-center p-6 bg-[#0D0D1F] space-y-4">
+          <div className="space-y-3">
+            <div>
+              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+                <span>🔌 Cables & Power Adapters</span>
+                <span>75% Capacity</span>
+              </div>
+              <div className="w-full h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
+                <div className="h-full bg-amber-400 rounded-full" style={{ width: '75%' }} />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+                <span>📱 Mobiles & Small Tablets</span>
+                <span>20% Capacity</span>
+              </div>
+              <div className="w-full h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
+                <div className="h-full bg-emerald-400 rounded-full" style={{ width: '20%' }} />
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+                <span>💻 Laptops & Mainboards</span>
+                <span>45% Capacity</span>
+              </div>
+              <div className="w-full h-3 bg-slate-800 rounded-full border border-slate-600 overflow-hidden">
+                <div className="h-full bg-sky-400 rounded-full" style={{ width: '45%' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+          Community Sorting Hub: Local complex drop-off shelf & recycler links
+        </div>
+      </div>
+    )
+  }
+
+  if (isTradeIn) {
+    return (
+      <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+          <span>SCANNER RADAR CORE</span>
+          <span className="text-emerald-400 font-extrabold">TRADE-IN DESK</span>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 bg-[#0D0D1F] relative">
+          <div className="w-40 h-32 border-3 border-[#1A1A2E] bg-white rounded-lg p-3 relative overflow-hidden flex flex-col justify-between shadow-lg">
+            <div className="absolute left-0 right-0 top-[40%] h-0.5 bg-red-500 shadow-[0_0_8px_red] animate-bounce" />
+            <div className="flex justify-between items-center border-b pb-1">
+              <span className="text-[8px] font-black text-slate-500 uppercase">Verification Scan</span>
+              <span className="text-[6px] font-mono bg-emerald-100 text-emerald-800 px-1 rounded font-bold">READY</span>
+            </div>
+            <div className="text-center my-1.5">
+              <div className="text-[14px] font-black text-slate-800 font-mono tracking-tight">$25.00</div>
+              <div className="text-[6px] text-slate-400 font-mono">VOUCHER REWARD ID: #4819</div>
+            </div>
+            <div className="border-t pt-1 flex justify-between text-[6px] font-mono text-slate-500 font-bold">
+              <span>Partner: Local Repair</span>
+              <span>Ref: 2026-E</span>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xs font-bold text-amber-400">
+          Scan-line validator: Partners trade-in electronics for discount store cards
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white p-5 flex flex-col justify-center items-center min-h-[300px] shadow-[4px_4px_0px_rgba(26,26,46,0.15)]">
+      <span className="text-4xl mb-2">💡</span>
+      <h5 className="font-extrabold text-sm text-center">{device}</h5>
+      <p className="text-xs text-slate-400 text-center mt-1">Ready for transition into a custom build layout.</p>
+    </div>
+  )
+}
+
 function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checklist' }> }) {
   const [checked, setChecked] = useState<Set<number>>(new Set())
   const { addXP, unlockAchievement } = useGameEngine()
@@ -910,7 +1634,7 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
     setChecked(next)
 
     if (next.size === block.items.length && !hasCompleted) {
-      addXP(XP_REWARDS.DRAG_SORT_COMPLETE, 'Checklist Completed')
+      addXP(XP_REWARDS.DRAG_SORT_COMPLETE || 100, 'Checklist Completed')
       unlockAchievement('recycler_pro')
       setHasCompleted(true)
     }
@@ -919,32 +1643,62 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
   const progress = Math.round((checked.size / block.items.length) * 100)
 
   return (
-    <section className="content-card checklist-card">
-      <div className="checklist-items">
-        {block.items.map((item, i) => (
-          <div 
-            key={i} 
-            className={`checklist-item ${checked.has(i) ? 'is-checked' : ''}`}
-            onClick={() => toggle(i)}
-          >
-            <div className="check-box">
-              {checked.has(i) && <span>✓</span>}
+    <section className="content-card checklist-card bg-transparent border-0 p-0 shadow-none my-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <span className="bg-[#1A1A2E] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">
+                  {block.scoreLabel || 'Blueprint'}
+                </span>
+                <h4 className="font-black text-[#1A1A2E] text-xl mt-1.5">{block.title}</h4>
+              </div>
             </div>
-            <div className="check-copy">
-              <strong>{item.label}</strong>
-              <span>{item.impact}</span>
+
+            <div className="space-y-4">
+              {block.items.map((item, i) => {
+                const isChecked = checked.has(i)
+                return (
+                  <div 
+                    key={i} 
+                    className={`border-3 rounded-xl p-3 flex items-center gap-3 cursor-pointer transition-all ${
+                      isChecked 
+                        ? 'border-[#1A1A2E] bg-emerald-50 shadow-[2px_2px_0px_#1A1A2E]' 
+                        : 'border-[#1A1A2E] bg-white hover:bg-slate-50 shadow-[2px_2px_0px_#1A1A2E] hover:translate-y-[-1px]'
+                    }`}
+                    onClick={() => toggle(i)}
+                  >
+                    <div className={`w-6 h-6 rounded border-2 border-[#1A1A2E] flex items-center justify-center font-black text-sm flex-shrink-0 transition-colors ${
+                      isChecked ? 'bg-amber-400' : 'bg-white'
+                    }`}>
+                      {isChecked && '✓'}
+                    </div>
+                    <div className="flex flex-col">
+                      <strong className="text-sm text-[#1A1A2E] font-extrabold">{item.label}</strong>
+                      <span className="text-xs text-slate-500 font-bold">{item.impact}</span>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
-        ))}
-      </div>
-      <div className="checklist-footer">
-        <div className="checklist-score">
-          <span>Completion</span>
-          <strong>{progress}%</strong>
+
+          <div className="mt-8 border-t-2 border-slate-200 pt-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs font-black text-slate-400 uppercase">Progress</span>
+              <span className="text-xs font-black text-[#1A1A2E]">{progress}%</span>
+            </div>
+            <div className="w-full bg-slate-200 h-3.5 rounded-full border-2 border-[#1A1A2E] overflow-hidden">
+              <div 
+                className="h-full bg-amber-400 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
         </div>
-        <div className="checklist-progress-bar">
-          <div className="checklist-progress-fill" style={{ width: `${progress}%` }} />
-        </div>
+
+        <ChecklistPreview title={block.title} checked={checked} total={block.items.length} />
       </div>
     </section>
   )
