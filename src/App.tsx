@@ -1,8 +1,26 @@
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState, useMemo } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
-import { BrowserRouter as Router, Link, Navigate, Route, Routes, useParams, Outlet } from 'react-router-dom'
+import { BrowserRouter as Router, Link, Route, Routes, useParams, Outlet, useNavigate } from 'react-router-dom'
 import './App.css'
 import './components/cards/Cards.css'
+import './components/ContentCard.css'
+import './components/TopicPanel.css'
+import Preloader from './components/Preloader'
+import PlanetaryHUD from './components/PlanetaryHUD'
+import OrbitalMap from './components/OrbitalMap'
+import ChapterShell from './components/ChapterShell'
+import { getBiomeFromTheme } from './components/background/SceneLighting'
+import { VillainProfileCard } from './components/cards/VillainProfileCard'
+import { PowerUpCard } from './components/cards/PowerUpCard'
+import { ComicStripCard } from './components/cards/ComicStripCard'
+import { BattleMeterCard } from './components/cards/BattleMeterCard'
+import { EvidenceBoardCard } from './components/cards/EvidenceBoardCard'
+
+import AchievementToast from './components/AchievementToast'
+import ConfettiEffect from './components/ConfettiEffect'
+import CodeEntryPopin from './components/CodeEntryPopin'
+import Dashboard from './components/Dashboard'
+import { GameProvider, useGameEngine, XP_REWARDS } from './gameEngine'
 import {
   chapters,
   toSkillizeeImageUrl,
@@ -19,7 +37,7 @@ import {
   type DecisionNode,
 } from './courseData'
 
-const EWasteBackground = lazy(() => import('./components/background/EWasteBackground'))
+const Silk = lazy(() => import('./components/background/Silk'))
 
 function isExternalLink(href: string) {
   return /^https?:\/\//.test(href)
@@ -43,73 +61,6 @@ function renderResourceLink(link: ResourceLink) {
   )
 }
 
-function ScrapRobot({
-  accentColor,
-  unlockedParts,
-}: {
-  accentColor: string
-  unlockedParts: Array<'head' | 'torso' | 'mobility' | 'arm_l'>
-}) {
-  const hasHead = unlockedParts.includes('head')
-  const hasTorso = unlockedParts.includes('torso')
-  const hasMobility = unlockedParts.includes('mobility')
-  const hasArmL = unlockedParts.includes('arm_l')
-
-  return (
-    <div className="robot-stage" style={{ '--accent-color': accentColor } as CSSProperties} aria-hidden="true">
-      <div className="robot-grid" />
-      <div className="robot-splash robot-splash-one" />
-      <div className="robot-splash robot-splash-two" />
-      <div className="robot-shadow" />
-      <div className="robot-tag">ECO-BUDDY</div>
-      <div className="robot-body">
-        <div className={`robot-antenna ${hasHead ? 'assembled' : 'hologram'}`}>
-          <span className="antenna-ball" />
-        </div>
-        <div className={`robot-head ${hasHead ? 'assembled' : 'hologram'}`}>
-          <div className="robot-brow" />
-          <div className="robot-eyes">
-            <span className="robot-eye robot-eye-alert" />
-            <span className="robot-eye robot-eye-happy" />
-          </div>
-          <div className="robot-mouth">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="robot-bolt robot-bolt-left" />
-          <div className="robot-bolt robot-bolt-right" />
-        </div>
-        <div className={`robot-arm robot-arm-left ${hasArmL ? 'assembled' : hasTorso ? 'assembled' : 'hologram'}`}>
-          <span className="robot-joint" />
-        </div>
-        <div className={`robot-arm robot-arm-right ${hasTorso ? 'assembled' : 'hologram'} ${hasTorso ? 'broken' : ''}`}>
-          <span className="robot-joint" />
-        </div>
-        <div className={`robot-torso ${hasTorso ? 'assembled' : 'hologram'}`}>
-          <div className="torso-plate torso-plate-top" />
-          <div className="torso-plate torso-plate-bottom" />
-          <div className="torso-core">
-            <span />
-            <span />
-            <span />
-          </div>
-        </div>
-        <div className={`robot-leg robot-leg-left ${hasMobility ? 'assembled' : 'hologram'}`} />
-        <div className={`robot-leg robot-leg-right ${hasMobility ? 'assembled bent' : 'hologram'}`} />
-        <div className={`robot-wheel ${hasMobility ? 'assembled' : 'hologram'}`} />
-      </div>
-      <div className="robot-caption">
-        <strong>Your Eco-Buddy! 🌱</strong>
-        <span>Learning with you!</span>
-      </div>
-    </div>
-  )
-}
-
-function getHeroSubtitle(chapter: CourseChapter) {
-  return chapter.strapline
-}
 
 function ChapterBriefing({ chapter }: { chapter: CourseChapter }) {
   return (
@@ -326,19 +277,23 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
 
             <path d={areaPath} className="trend-area" fill={`url(#trend-gradient-${activeSeriesIndex})`} />
             <path d={linePath} className="trend-line" style={{ '--accent-color': activeSeries.accentColor } as CSSProperties} />
-
-            {points.map((p, i) => (
-              <circle
-                key={i}
-                cx={p.x}
-                cy={p.y}
-                r={i === hoverIndex ? 3.5 : 2.2}
-                className={`trend-point ${i === hoverIndex ? 'active' : ''}`}
-                style={{ '--accent-color': activeSeries.accentColor } as CSSProperties}
-                onMouseEnter={() => setHoverIndex(i)}
-              />
-            ))}
           </svg>
+
+          {/* Interactive markers in HTML to prevent aspect ratio distortion */}
+          {points.map((p, i) => (
+            <div
+              key={i}
+              className={`trend-point-marker ${i === hoverIndex ? 'active' : ''}`}
+              style={{
+                position: 'absolute',
+                left: `${(p.x / chartWidth) * 100}%`,
+                top: `${(p.y / chartHeight) * 100}%`,
+                transform: 'translate(-50%, -50%)',
+                '--accent-color': activeSeries.accentColor
+              } as CSSProperties}
+              onMouseEnter={() => setHoverIndex(i)}
+            />
+          ))}
 
           <div
             className="trend-tooltip"
@@ -354,16 +309,28 @@ function LineChartCard({ block }: { block: Extract<ChapterBlock, { type: 'lineCh
         </div>
       </div>
 
-      <div className="trend-x-axis">
-        {block.labels.map((label, i) => (
-          <button
-            key={label}
-            className={`trend-x-tick ${i === activePointIndex ? 'active' : ''}`}
-            onMouseEnter={() => setHoverIndex(i)}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="trend-x-axis" style={{ position: 'relative', height: '28px', marginTop: '0.75rem' }}>
+        {block.labels.map((label, i) => {
+          const percent = ((inset.left + (i / (block.labels.length - 1)) * (chartWidth - inset.left - inset.right)) / chartWidth) * 100;
+          return (
+            <button
+              key={label}
+              className={`trend-x-tick ${i === activePointIndex ? 'active' : ''}`}
+              onMouseEnter={() => setHoverIndex(i)}
+              style={{
+                position: 'absolute',
+                left: `${percent}%`,
+                transform: 'translateX(-50%)',
+                whiteSpace: 'nowrap',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
 
       <div className="trend-insights">
@@ -419,14 +386,6 @@ function FlipCardComponent({ block }: { block: Extract<ChapterBlock, { type: 'fl
     if (normalized.includes('monitor')) return 'Legacy display'
     return 'Hazard item'
   }
-
-  const getFlipIcon = (label: string) => {
-    const normalized = label.toLowerCase()
-    if (normalized.includes('battery')) return '🔋'
-    if (normalized.includes('monitor')) return '🖥️'
-    return '⚠️'
-  }
-
   return (
     <div
       className={`flip-card-container ${isFlipped ? 'flipped' : ''}`}
@@ -443,16 +402,6 @@ function FlipCardComponent({ block }: { block: Extract<ChapterBlock, { type: 'fl
     >
       <div className="flip-card-inner">
         <article className="content-card flip-card-front">
-          <div className="flip-visual">
-            <span className="flip-emoji" aria-hidden="true">{getFlipIcon(block.front.label)}</span>
-            <img
-              src={toSkillizeeImageUrl(block.front.image)}
-              alt=""
-              onError={(e) => {
-                e.currentTarget.style.display = 'none'
-              }}
-            />
-          </div>
           <div className="flip-front-copy">
             <span className="flip-badge">{getFlipBadge(block.front.label)}</span>
             <div className="flip-label">{block.front.label}</div>
@@ -519,21 +468,32 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
   const [items, setItems] = useState(block.items.map((item, id) => ({ ...item, id, status: 'pending' as 'pending' | 'correct' | 'wrong', image: item.image })))
   const [leftCount, setLeftCount] = useState(0)
   const [rightCount, setRightCount] = useState(0)
+  const [feedback, setFeedback] = useState<{ id: number; side: 'left' | 'right'; isCorrect: boolean } | null>(null)
+  
   const pendingItems = items.filter(i => i.status === 'pending')
   const activeItem = pendingItems[0]
 
   const handleSort = (itemId: number, side: 'left' | 'right') => {
-    setItems(prev => prev.map(item => {
-      if (item.id === itemId) {
-        const isCorrect = item.correct === side
-        if (isCorrect) {
-          if (side === 'left') setLeftCount(c => c + 1)
-          else setRightCount(c => c + 1)
+    if (feedback) return
+    const targetItem = items.find(i => i.id === itemId)
+    if (!targetItem) return
+    
+    const isCorrect = targetItem.correct === side
+    setFeedback({ id: itemId, side, isCorrect })
+    
+    setTimeout(() => {
+      setItems(prev => prev.map(item => {
+        if (item.id === itemId) {
+          if (isCorrect) {
+            if (side === 'left') setLeftCount(c => c + 1)
+            else setRightCount(c => c + 1)
+          }
+          return { ...item, status: isCorrect ? 'correct' : 'wrong' }
         }
-        return { ...item, status: isCorrect ? 'correct' : 'wrong' }
-      }
-      return item
-    }))
+        return item
+      }))
+      setFeedback(null)
+    }, 1000)
   }
 
   const getSortVisual = (label: string) => {
@@ -567,7 +527,17 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
         </div>
       </div>
       <div className="drag-sort-area">
-        <div className="drop-zone drop-zone-left" onDragOver={e => e.preventDefault()}>
+        <div 
+          className={`drop-zone drop-zone-left cursor-pointer transition-all duration-300 ${
+            feedback && feedback.side === 'left'
+              ? feedback.isCorrect 
+                ? 'bg-green-100 border-green-500 border-dashed scale-105 shadow-[0_0_15px_rgba(34,197,94,0.3)]' 
+                : 'bg-red-100 border-red-500 border-dashed animate-shake'
+              : 'hover:bg-[#1A1A2E]/5'
+          }`}
+          onDragOver={e => e.preventDefault()}
+          onClick={() => activeItem && handleSort(activeItem.id, 'left')}
+        >
           <span className="drop-zone-icon" aria-hidden="true">♻️</span>
           <strong>{block.leftBin}</strong>
           <small>Devices, chargers, and batteries</small>
@@ -577,15 +547,30 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
           {activeItem ? (
             <div 
               key={activeItem.id} 
-              className="draggable-item"
-              draggable
+              className={`draggable-item relative transition-all duration-300 ${
+                feedback 
+                  ? feedback.isCorrect 
+                    ? 'border-green-500 bg-green-50 shadow-[0_0_20px_rgba(34,197,94,0.4)] pointer-events-none scale-95 opacity-50' 
+                    : 'border-red-500 bg-red-50 shadow-[0_0_20px_rgba(239,68,68,0.4)] pointer-events-none animate-shake' 
+                  : ''
+              }`}
+              draggable={!feedback}
               onDragEnd={(e) => {
+                if (feedback) return
                 const rect = e.currentTarget.parentElement?.getBoundingClientRect()
                 if (!rect) return
                 if (e.clientX < rect.left + rect.width / 2) handleSort(activeItem.id, 'left')
                 else handleSort(activeItem.id, 'right')
               }}
             >
+              {feedback && (
+                <div className={`absolute inset-0 flex flex-col items-center justify-center rounded-lg font-display text-xl font-bold uppercase tracking-wider z-20 ${
+                  feedback.isCorrect ? 'text-green-600 bg-green-50/90' : 'text-red-600 bg-red-50/90'
+                }`}>
+                  <span className="text-3xl mb-1">{feedback.isCorrect ? '👍' : '👎'}</span>
+                  <span>{feedback.isCorrect ? 'Correct!' : 'Incorrect'}</span>
+                </div>
+              )}
               <div className="draggable-item-visual">
                 <span className="draggable-item-fallback" aria-hidden="true">{getSortVisual(activeItem.label)}</span>
                 {activeItem.image ? (
@@ -610,7 +595,17 @@ function DragSortCard({ block }: { block: Extract<ChapterBlock, { type: 'dragSor
             <div className="sort-complete">All sorted! The tray is clear.</div>
           )}
         </div>
-        <div className="drop-zone drop-zone-right" onDragOver={e => e.preventDefault()}>
+        <div 
+          className={`drop-zone drop-zone-right cursor-pointer transition-all duration-300 ${
+            feedback && feedback.side === 'right'
+              ? feedback.isCorrect 
+                ? 'bg-green-100 border-green-500 border-dashed scale-105 shadow-[0_0_15px_rgba(34,197,94,0.3)]' 
+                : 'bg-red-100 border-red-500 border-dashed animate-shake'
+              : 'hover:bg-[#1A1A2E]/5'
+          }`}
+          onDragOver={e => e.preventDefault()}
+          onClick={() => activeItem && handleSort(activeItem.id, 'right')}
+        >
           <span className="drop-zone-icon" aria-hidden="true">🗑️</span>
           <strong>{block.rightBin}</strong>
           <small>Organic or regular household waste</small>
@@ -699,7 +694,20 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
   const [activeIndex, setActiveIndex] = useState(0)
   const total = block.segments.reduce((acc, s) => acc + s.value, 0)
   const activeSegment = block.segments[activeIndex]
-  let currentRotation = 0
+
+  const segmentsWithRotation = useMemo(() => {
+    return block.segments.map((seg, i) => {
+      const percentage = (seg.value / total) * 100
+      const rotation = block.segments
+        .slice(0, i)
+        .reduce((sum, s) => sum + (s.value / total) * 360, 0)
+      return {
+        ...seg,
+        percentage,
+        rotation,
+      }
+    })
+  }, [block.segments, total])
 
   return (
     <section className="content-card pie-card">
@@ -718,11 +726,8 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
         <div className="pie-visual">
           <svg viewBox="0 0 100 100" className="pie-svg" aria-label="Material composition chart">
             <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(148, 163, 184, 0.15)" strokeWidth="20" />
-            {block.segments.map((seg, i) => {
-              const percentage = (seg.value / total) * 100
-              const dashArray = `${percentage} ${100 - percentage}`
-              const rotation = currentRotation
-              currentRotation += (seg.value / total) * 360
+            {segmentsWithRotation.map((seg, i) => {
+              const dashArray = `${seg.percentage} ${100 - seg.percentage}`
               return (
                 <circle
                   key={seg.label}
@@ -732,7 +737,7 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
                   strokeWidth="20"
                   strokeDasharray={dashArray}
                   strokeDashoffset="25"
-                  transform={`rotate(${rotation} 50 50)`}
+                  transform={`rotate(${seg.rotation} 50 50)`}
                   onMouseEnter={() => setActiveIndex(i)}
                   onFocus={() => setActiveIndex(i)}
                   className={`pie-segment ${activeIndex === i ? 'active' : ''}`}
@@ -895,11 +900,20 @@ function BeforeAfterCard({ block }: { block: Extract<ChapterBlock, { type: 'befo
 
 function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checklist' }> }) {
   const [checked, setChecked] = useState<Set<number>>(new Set())
+  const { addXP, unlockAchievement } = useGameEngine()
+  const [hasCompleted, setHasCompleted] = useState(false)
+
   const toggle = (i: number) => {
     const next = new Set(checked)
     if (next.has(i)) next.delete(i)
     else next.add(i)
     setChecked(next)
+
+    if (next.size === block.items.length && !hasCompleted) {
+      addXP(XP_REWARDS.DRAG_SORT_COMPLETE, 'Checklist Completed')
+      unlockAchievement('recycler_pro')
+      setHasCompleted(true)
+    }
   }
 
   const progress = Math.round((checked.size / block.items.length) * 100)
@@ -938,9 +952,22 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
 
 function SliderCalculatorCard({ block }: { block: Extract<ChapterBlock, { type: 'sliderCalculator' }> }) {
   const [values, setValues] = useState<number[]>(block.sliders.map(s => s.min))
+  const { addXP, unlockAchievement } = useGameEngine()
+  const [hasAwarded, setHasAwarded] = useState(false)
+
   const totalImpact = values.reduce((acc, v, i) => acc + (v * block.sliders[i].impactPerUnit), 0)
   const maxImpact = block.sliders.reduce((acc, slider) => acc + (slider.max * slider.impactPerUnit), 0)
   const progress = maxImpact > 0 ? Math.round((totalImpact / maxImpact) * 100) : 0
+
+  const handleSliderChange = (i: number, val: number) => {
+    setValues(prev => prev.map((v, idx) => idx === i ? val : v))
+    if (!hasAwarded) {
+      addXP(XP_REWARDS.CALCULATOR_USED, 'Calculator Analyzed')
+      unlockAchievement('calculator_wizard')
+      setHasAwarded(true)
+    }
+  }
+
   return (
     <section className="content-card slider-calc-card">
       <div className="slider-calc-header">
@@ -972,7 +999,7 @@ function SliderCalculatorCard({ block }: { block: Extract<ChapterBlock, { type: 
                 min={s.min}
                 max={s.max}
                 value={values[i]}
-                onChange={e => setValues(prev => prev.map((v, idx) => idx === i ? parseInt(e.target.value) : v))}
+                onChange={e => handleSliderChange(i, parseInt(e.target.value))}
                 aria-label={s.label}
               />
               <span>{s.max}</span>
@@ -1140,7 +1167,16 @@ function ProcessSimulatorCard({ block }: { block: Extract<ChapterBlock, { type: 
 function QuizCard({ block }: { block: Extract<ChapterBlock, { type: 'quiz' }> }) {
   const [selected, setSelected] = useState<number | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const { addXP, unlockAchievement } = useGameEngine()
   
+  const handleCheckAnswer = () => {
+    setSubmitted(true)
+    if (selected !== null && block.options[selected].correct) {
+      addXP(XP_REWARDS.QUIZ_CORRECT, 'Quiz Answered Correctly')
+      unlockAchievement('quiz_master')
+    }
+  }
+
   return (
     <section className="content-card quiz-block">
       <h4>{block.question}</h4>
@@ -1157,7 +1193,7 @@ function QuizCard({ block }: { block: Extract<ChapterBlock, { type: 'quiz' }> })
         ))}
       </div>
       {!submitted ? (
-        <button className="submit-btn" disabled={selected === null} onClick={() => setSubmitted(true)}>Check Answer</button>
+        <button className="submit-btn" disabled={selected === null} onClick={handleCheckAnswer}>Check Answer</button>
       ) : (
         <div className="quiz-feedback">
           <p>{block.options[selected!].explanation}</p>
@@ -1172,6 +1208,20 @@ function QuizCard({ block }: { block: Extract<ChapterBlock, { type: 'quiz' }> })
 function MapLocatorCard({ block }: { block: Extract<ChapterBlock, { type: 'mapLocator' }> }) {
   const [active, setActive] = useState(0)
   const currentPoint = block.points[active]
+  const { addXP, unlockAchievement } = useGameEngine()
+  const [visited, setVisited] = useState<number[]>([0])
+
+  const handlePointClick = (idx: number) => {
+    setActive(idx)
+    if (!visited.includes(idx)) {
+      const nextVisited = [...visited, idx]
+      setVisited(nextVisited)
+      if (nextVisited.length === block.points.length) {
+        addXP(XP_REWARDS.ALL_HOTSPOTS_EXPLORED, 'All Locations Explored')
+        unlockAchievement('explorer_pro')
+      }
+    }
+  }
 
   return (
     <section className="content-card map-locator">
@@ -1185,7 +1235,7 @@ function MapLocatorCard({ block }: { block: Extract<ChapterBlock, { type: 'mapLo
               r={active === i ? 10 : 6}
               className={`map-pin ${active === i ? 'active' : ''}`}
               fill={active === i ? 'var(--accent)' : 'var(--muted)'}
-              onClick={() => setActive(i)}
+              onClick={() => handlePointClick(i)}
             />
           ))}
         </svg>
@@ -1395,6 +1445,26 @@ function renderBlock(block: ChapterBlock): ReactNode {
       )
     }
 
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('IT and communication devices')) {
+      return (
+        <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
+          <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
+            <img src="/images/ewaste_infographic.png" alt="E-waste Categories Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+          </div>
+        </section>
+      )
+    }
+
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Lead from older displays')) {
+      return (
+        <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
+          <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
+            <img src="/images/ewaste_toxins_infographic.png" alt="E-waste Dangers Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+          </div>
+        </section>
+      )
+    }
+
     return (
       <section className={`content-card list-card ${block.type === 'numberedList' ? 'list-numbered' : ''}`}>
         <ListTag>
@@ -1456,10 +1526,11 @@ function renderBlock(block: ChapterBlock): ReactNode {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
           </button>
         </div>
-        <div className="activity-iframe-container">
+        <div className="activity-iframe-container" style={block.url.includes('1-1-global-flow') ? { height: '700px', minHeight: '700px' } : undefined}>
           <iframe 
             src={block.url} 
             className="activity-iframe"
+            style={block.url.includes('1-1-global-flow') ? { height: '700px' } : undefined}
             title={block.title}
           />
         </div>
@@ -1570,6 +1641,54 @@ function renderBlock(block: ChapterBlock): ReactNode {
     return <PolicyTimelineCard block={block} />
   }
 
+  if (block.type === 'villainProfile') {
+    return (
+      <VillainProfileCard
+        name={block.name}
+        chemical={block.chemical}
+        dangerLevel={block.dangerLevel}
+        hideouts={block.hideouts}
+        weakness={block.weakness}
+        bounty={block.bounty}
+        emoji={block.emoji}
+        description={block.description}
+      />
+    )
+  }
+
+  if (block.type === 'powerUp') {
+    return (
+      <PowerUpCard
+        title={block.title}
+        superpower={block.superpower}
+        hpReward={block.hpReward}
+        icon={block.icon}
+        description={block.description}
+      />
+    )
+  }
+
+  if (block.type === 'comicStrip') {
+    return <ComicStripCard title={block.title} panels={block.panels} />
+  }
+
+  if (block.type === 'battleMeter') {
+    return (
+      <BattleMeterCard
+        title={block.title}
+        heroLabel={block.heroLabel}
+        villainLabel={block.villainLabel}
+        heroDesc={block.heroDesc}
+        villainDesc={block.villainDesc}
+        initialValue={block.initialValue}
+      />
+    )
+  }
+
+  if (block.type === 'evidenceBoard') {
+    return <EvidenceBoardCard title={block.title} clues={block.clues} />
+  }
+
   return (
     <section className={`image-grid ${block.columns ?? 'two'}`}>
       {block.images.map((image, index) => (
@@ -1621,124 +1740,103 @@ function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout })
       </div>
 
       <div className={`topic-blocks topic-blocks-${layout}`}>
-        {tab.blocks.map((block, index) => (
-          <div key={`${tab.id}-${index}`} className={`topic-block-slot topic-block-${block.type}`}>
-            {renderBlock(block)}
-          </div>
-        ))}
+        {(() => {
+          const rendered: ReactNode[] = []
+          let tempFlipCards: Extract<ChapterBlock, { type: 'flipCard' }>[] = []
+
+          const flushFlipCards = (keyPrefix: string) => {
+            if (tempFlipCards.length === 0) return
+            rendered.push(
+              <div key={`${keyPrefix}-flips`} className="topic-block-slot topic-block-flipCard-grid w-full">
+                <div className="flip-cards-row-grid">
+                  {tempFlipCards.map((fcBlock, fcIndex) => (
+                    <FlipCardComponent key={fcIndex} block={fcBlock} />
+                  ))}
+                </div>
+              </div>
+            )
+            tempFlipCards = []
+          }
+
+          tab.blocks.forEach((block, index) => {
+            if (block.type === 'flipCard') {
+              tempFlipCards.push(block)
+            } else {
+              flushFlipCards(`${tab.id}-${index}`)
+              rendered.push(
+                <div key={`${tab.id}-${index}`} className={`topic-block-slot topic-block-${block.type}`}>
+                  {renderBlock(block)}
+                </div>
+              )
+            }
+          })
+          flushFlipCards(`${tab.id}-end`)
+          return rendered
+        })()}
       </div>
     </article>
   )
 }
 
-function ChapterRail({ currentChapter }: { currentChapter: CourseChapter }) {
-  return (
-    <aside className="chapter-rail">
-      <section className="rail-card rail-assembly-card">
-        <span className="rail-label">Upgrade your Buddy! 🛠️</span>
-        <h3>{currentChapter.assembly.title}</h3>
-        <p>{currentChapter.assembly.summary}</p>
-        <div className="rail-assembly-meta">
-          <span>{currentChapter.assembly.schematic}</span>
-          <strong>{currentChapter.assembly.reward}</strong>
-        </div>
-      </section>
-    </aside>
-  )
-}
 
 function ChapterPage() {
   const { id } = useParams()
   const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
   const chapterIndex = chapters.findIndex((entry) => entry.id === chapter.id)
-  const unlockedParts = chapters.slice(0, chapterIndex + 1).map((entry) => entry.assembly.part)
+  
+  const { 
+    state, 
+    unlockChapter, 
+    addXP, 
+    unlockAchievement, 
+    addRobotPart,
+    restoreBiome
+  } = useGameEngine()
+
   const previousChapter = chapterIndex > 0 ? chapters[chapterIndex - 1] : null
   const nextChapter = chapterIndex < chapters.length - 1 ? chapters[chapterIndex + 1] : null
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
+
+    // Auto-restore biome on entering chapter
+    const biomeKey = getBiomeFromTheme(chapter.themeKey)
+    restoreBiome(biomeKey)
+
+    if (!state.unlockedChapters.includes(chapter.id)) {
+      unlockChapter(chapter.id)
+      addXP(XP_REWARDS.CHAPTER_VIEW, `Chapter ${chapter.id} Scan`)
+
+      if (chapter.id === '1-0') {
+        unlockAchievement('first_chapter')
+      }
+      if (chapter.id === '2-0') {
+        addRobotPart('head')
+      }
+      if (chapter.id === '4-0') {
+        addRobotPart('torso')
+      }
+      if (chapter.id === '5-0') {
+        addRobotPart('mobility')
+      }
+      if (chapter.id === '7-0') {
+        addRobotPart('arm_l')
+      }
+    }
   }, [chapter.id])
 
   return (
-    <div
-      className={`course-shell chapter-theme-${chapter.themeKey}`}
-      style={{ 
-        '--accent-color': chapter.accentColor,
-        '--accent-color-transparent': `${chapter.accentColor}20`
-      } as CSSProperties}
+    <ChapterShell
+      chapter={chapter}
+      previousChapter={previousChapter}
+      nextChapter={nextChapter}
     >
-      <section className="hero-panel">
-        <div className="hero-copy">
-          <span className="hero-kicker">
-            {chapter.moduleLabel} ┬╖ Chapter {chapter.id}
-          </span>
-          <h1>{chapter.title}</h1>
-          <p className="hero-subtitle">{getHeroSubtitle(chapter)}</p>
-          <div className="hero-actions">
-            <a href={`#topic-${chapter.tabs[0]?.id ?? 'overview'}`} className="hero-primary-link">
-              Start lab scan
-              <span aria-hidden="true">→</span>
-            </a>
-            {nextChapter && (
-              <Link to={`/${nextChapter.id}`} className="hero-secondary-link">
-                Next chapter
-              </Link>
-            )}
-          </div>
-        </div>
+      <ChapterBriefing chapter={chapter} />
 
-        <ScrapRobot accentColor={chapter.accentColor} unlockedParts={unlockedParts} />
-      </section>
-
-      <div className="chapter-layout">
-        <ChapterRail currentChapter={chapter} />
-
-        <main className="chapter-stage">
-          <ChapterBriefing chapter={chapter} />
-
-          <section className="topic-jump-card">
-            <span className="rail-label">Chapter Sections</span>
-            <div className="topic-jump-links">
-              {chapter.tabs.map((tab) => (
-                <a key={tab.id} href={`#topic-${tab.id}`} className="topic-jump-link">
-                  <span>{tab.navLabel}</span>
-                  <strong>{tab.title}</strong>
-                </a>
-              ))}
-            </div>
-          </section>
-
-          {chapter.tabs.map((tab) => (
-            <TopicPanel key={tab.id} tab={tab} layout={chapter.layout} />
-          ))}
-
-          <section className="chapter-pager">
-            {previousChapter ? (
-              <Link to={`/${previousChapter.id}`} className="chapter-nav-link">
-                <span>Previous</span>
-                <strong>{previousChapter.title}</strong>
-              </Link>
-            ) : (
-              <div className="chapter-nav-link chapter-nav-link-placeholder">
-                <span>Previous</span>
-                <strong>Orientation hub is the first stop</strong>
-              </div>
-            )}
-            {nextChapter ? (
-              <Link to={`/${nextChapter.id}`} className="chapter-nav-link">
-                <span>Next</span>
-                <strong>{nextChapter.title}</strong>
-              </Link>
-            ) : (
-              <div className="chapter-nav-link chapter-nav-link-placeholder">
-                <span>Course complete</span>
-                <strong>Move the final project into the real world</strong>
-              </div>
-            )}
-          </section>
-        </main>
-      </div>
-    </div>
+      {chapter.tabs.map((tab) => (
+        <TopicPanel key={tab.id} tab={tab} layout={chapter.layout} />
+      ))}
+    </ChapterShell>
   )
 }
 
@@ -1796,61 +1894,124 @@ function FullscreenButton() {
 
 
 
-function VerticalProgress() {
-  const { id } = useParams()
-  const currentChapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
-  const chapterIndex = chapters.findIndex((entry) => entry.id === currentChapter.id)
-  const progress = Math.round(((chapterIndex + 1) / chapters.length) * 100)
 
-  return (
-    <div className="vertical-progress-container">
-      <div className="vertical-progress-percent">{progress}%</div>
-      <div className="vertical-progress-bar">
-        <div className="vertical-progress-fill" style={{ height: `${progress}%` }} />
-      </div>
-      <div className="vertical-progress-label">Campaign Progress</div>
-    </div>
-  )
-}
+
+
 
 function AppLayout() {
   const { id } = useParams()
   const chapter = chapters.find((entry) => entry.id === id) ?? chapters[0]
+  const silkColor = id && chapter ? chapter.accentColor : '#0ea5e9'
+  const { state, addXP, unlockAchievement } = useGameEngine()
+  const navigate = useNavigate()
+
+  const [showCodeEntry, setShowCodeEntry] = useState(false)
+  const [showPreloader, setShowPreloader] = useState(() => {
+    return !sessionStorage.getItem('preloader_shown')
+  })
+
+  const handlePreloaderComplete = () => {
+    sessionStorage.setItem('preloader_shown', 'true')
+    setShowPreloader(false)
+  }
 
   return (
     <main className="page-shell">
+      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
+      
+      <PlanetaryHUD
+        xp={state.xp}
+        level={state.level}
+        planetHealth={Math.min(100, Math.round((state.unlockedChapters.filter(cid => chapters.some(c => c.id === cid)).length / chapters.length) * 100))}
+        currentBiome={chapter ? chapter.themeKey : 'Space Hub'}
+        biomeColor={chapter ? chapter.accentColor : '#0ea5e9'}
+        onNavigateHome={() => navigate('/')}
+        onNavigateObservatory={() => navigate('/dashboard')}
+        onOpenScanner={() => setShowCodeEntry(true)}
+      />
+
       <FullscreenButton />
       
-      <div className="page-background" aria-hidden="true">
-        <div className="page-background-tint" />
-        <div className="page-background-scene">
-          <Suspense fallback={<div className="hero-scene-fallback">Building your Eco-World...</div>}>
-            <EWasteBackground theme={chapter?.themeKey} />
-          </Suspense>
-        </div>
+      <div className="page-background" aria-hidden="true" style={{ backgroundColor: '#0B0F19' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, backgroundColor: 'rgba(11, 15, 25, 0.85)' }} />
+        <Suspense fallback={null}>
+          <Silk color={silkColor} speed={4} scale={1.2} noiseIntensity={1.5} rotation={0} />
+        </Suspense>
       </div>
 
       <div className="content-layer" style={{ position: 'relative', zIndex: 10 }}>
         <div className="course-shell">
-          <VerticalProgress />
-          <Outlet />
+          <Outlet context={{}} />
         </div>
       </div>
+
+      <AchievementToast />
+      <ConfettiEffect />
+
+      {showCodeEntry && (
+        <CodeEntryPopin
+          onSuccess={(code) => {
+            addXP(XP_REWARDS.CODE_ENTERED, `Secret Code: ${code}`)
+            unlockAchievement('secret_code')
+          }}
+          onClose={() => setShowCodeEntry(false)}
+        />
+      )}
     </main>
+  )
+}
+
+function CaseBoardWrapper() {
+  const { state } = useGameEngine()
+  const navigate = useNavigate()
+
+  const orbitalChapters = chapters.map((ch, idx) => {
+    const isUnlocked = state.unlockedChapters.includes(ch.id)
+    let status: 'completed' | 'current' | 'locked' = 'locked'
+    if (isUnlocked) {
+      const nextCh = chapters[idx + 1]
+      if (!nextCh || state.unlockedChapters.includes(nextCh.id)) {
+        status = 'completed'
+      } else {
+        status = 'current'
+      }
+    }
+    return {
+      id: ch.id,
+      title: ch.title,
+      moduleLabel: ch.moduleLabel,
+      themeKey: ch.themeKey,
+      accentColor: ch.accentColor,
+      status,
+    }
+  })
+
+  const planetHealth = Math.min(100, Math.round((state.unlockedChapters.filter(cid => chapters.some(c => c.id === cid)).length / chapters.length) * 100))
+
+  return (
+    <OrbitalMap
+      chapters={orbitalChapters}
+      planetHealth={planetHealth}
+      onSelectChapter={(id) => navigate(`/${id}`)}
+      onNavigateObservatory={() => navigate('/dashboard')}
+    />
   )
 }
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Navigate to="/1-0" replace />} />
-          <Route path="/chapter/:id" element={<ChapterPage />} />
-          <Route path="/:id" element={<ChapterPage />} />
-        </Route>
-      </Routes>
-    </Router>
+    <GameProvider>
+      <Router>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<CaseBoardWrapper />} />
+            <Route path="/chapter/:id" element={<ChapterPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/:id" element={<ChapterPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </GameProvider>
   )
 }
 

@@ -13,65 +13,62 @@ interface FlippableCardProps {
 export function FlippableCard({ title, subtitle, heroImage, accentColor, readingTime, children }: FlippableCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      setIsFlipped(!isFlipped)
+    }
+  }
+
   return (
     <div 
-      className={`flip-card ${isFlipped ? 'flipped' : ''}`} 
+      className={`flip-card-container comic-panel-card ${isFlipped ? 'flipped' : ''}`} 
       onClick={() => setIsFlipped(!isFlipped)}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      style={{ '--accent-color': accentColor || '#3b82f6' } as React.CSSProperties}
     >
       <div className="flip-card-inner">
         {/* Front Side */}
-        <div className="flip-card-front bezel-outer" style={{ borderLeft: `4px solid ${accentColor || '#3b82f6'}` }}>
-          <div className="bezel-inner">
-            <div className="card-header-telemetry">
-              <span className="card-type-tag">[ DATA_PACK: SUMMARY ]</span>
-              {readingTime && <span className="reading-time">⏱ {readingTime} min read</span>}
+        <div className="flip-card-front">
+          {heroImage && (
+            <div className="flip-visual">
+              <img src={heroImage} alt={title} />
             </div>
-            
-            {heroImage && (
-              <div className="card-hero-container">
-                <img src={heroImage} alt={title} className="card-hero-image" />
-                <div className="hero-overlay" />
-              </div>
-            )}
-            
-            <div className="card-title-group">
-              <span className="card-subtitle">{subtitle || 'MODULE_01_UNIT'}</span>
-              <h3 className="card-title">{title}</h3>
-            </div>
-            
-            <div className="flip-hint">
-              <span className="hint-text">CLICK_TO_DECRYPT_FULL_DATA</span>
-              <div className="hint-icon">→</div>
-            </div>
-            
-            <div className="bezel-corner top-left" />
-            <div className="bezel-corner top-right" />
-            <div className="bezel-corner bottom-left" />
-            <div className="bezel-corner bottom-right" />
+          )}
+          
+          <div className="flip-front-copy">
+            <span className="flip-badge comic-badge-flat">{subtitle || 'BIOME MODULE'}</span>
+            <h3 className="flip-label comic-title">{title}</h3>
+          </div>
+          
+          <div className="flip-hint">
+            <span className="flip-hint-arrow">→</span>
+            <span>Tap to read mission details</span>
           </div>
         </div>
 
         {/* Back Side */}
-        <div className="flip-card-back bezel-outer">
-          <div className="bezel-inner">
-            <div className="card-header-telemetry">
-              <span className="card-type-tag">[ DATA_PACK: FULL_CONTENT ]</span>
-              <span className="flip-back-btn">← BACK</span>
-            </div>
-            
-            <div className="card-content-scrollable">
-              <h4 className="back-title">{title}</h4>
-              <div className="content-divider" />
-              {children}
-            </div>
+        <div className="flip-card-back">
+          <div className="flip-back-topline">
+            {readingTime && (
+              <span className="flip-back-badge comic-badge-flat">INTEL: {readingTime} MIN READ</span>
+            )}
+            <h4 className="comic-title">{title}</h4>
+          </div>
+          
+          <div className="card-content-scrollable flex-1 overflow-y-auto mt-4 pr-1">
+            {children}
+          </div>
 
-            <div className="bezel-corner top-left" />
-            <div className="bezel-corner top-right" />
-            <div className="bezel-corner bottom-left" />
-            <div className="bezel-corner bottom-right" />
+          <div className="flip-hint mt-auto pt-4 border-t border-slate-100">
+            <span className="flip-hint-arrow">←</span>
+            <span>Tap to flip back</span>
           </div>
         </div>
       </div>
     </div>
   )
 }
+

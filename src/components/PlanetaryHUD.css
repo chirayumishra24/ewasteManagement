@@ -1,0 +1,214 @@
+.planetary-hud {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: 64px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5rem 0 2rem;
+  background: var(--paper-warm);
+  border-bottom: 4px solid var(--ink-dark);
+  transition: all 0.3s ease;
+}
+
+.planetary-hud[data-scrolling="true"] {
+  box-shadow: 0 4px 15px rgba(26, 26, 46, 0.1);
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+}
+
+.hud-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.875rem;
+  background: var(--pow-yellow);
+  border: 2.5px solid var(--ink-dark);
+  box-shadow: 2px 2px 0 var(--ink-dark);
+  transform: rotate(-1deg);
+}
+
+.biome-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-dark);
+  background: var(--biome-active);
+}
+
+.biome-name {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  text-transform: uppercase;
+}
+
+.hud-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  background: transparent;
+  padding: 0;
+}
+
+.hud-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  background: var(--paper-warm);
+  border: 2.5px solid var(--ink-dark);
+  box-shadow: 2.5px 2.5px 0 var(--ink-dark);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  text-transform: uppercase;
+  transform: skewX(-4deg);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.hud-btn:hover {
+  transform: translate(-1px, -1px) skewX(-4deg);
+  box-shadow: 4px 4px 0 var(--ink-dark);
+}
+
+.hud-btn:active {
+  transform: translate(1px, 1px) skewX(-4deg);
+  box-shadow: 1px 1px 0 var(--ink-dark);
+}
+
+.hud-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--ink-dark);
+  stroke-width: 2.5px;
+}
+
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hud-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.hud-stat .stat-label {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--hero-blue);
+  letter-spacing: 0.05em;
+}
+
+.hud-stat .stat-value {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+}
+
+.xp-stat.glow .stat-value {
+  color: var(--hero-blue);
+  animation: pulse-hud 0.3s ease;
+}
+
+@keyframes pulse-hud {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.health-gauge-comic {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2.5px solid var(--ink-dark);
+  background: #ffffff;
+  padding: 4px 8px;
+  box-shadow: 2px 2px 0 var(--ink-dark);
+}
+
+.health-label-comic {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+}
+
+.health-bar-container-comic {
+  width: 60px;
+  height: 10px;
+  background: var(--paper-warm);
+  border: 2px solid var(--ink-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.health-bar-fill-comic {
+  height: 100%;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-text-comic {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+}
+
+@media (max-width: 768px) {
+  .planetary-hud {
+    left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .planetary-hud {
+    padding: 0 4.25rem 0 0.75rem;
+  }
+
+  .biome-name {
+    display: none;
+  }
+
+  .hud-btn-text {
+    display: none;
+  }
+
+  .hud-btn {
+    padding: 0.375rem;
+  }
+
+  .hud-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hud-stat {
+    display: none;
+  }
+  
+  .health-gauge-comic {
+    padding: 2px 4px;
+  }
+  
+  .health-bar-container-comic {
+    width: 40px;
+  }
+}

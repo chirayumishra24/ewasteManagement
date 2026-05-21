@@ -35,6 +35,15 @@ export type SceneConfig = {
     stationSorting: string
     stationRecycling: string
   }
+  biomes: {
+    ocean: { fogNear: string; skyTop: string; terrain: string }
+    forest: { fogNear: string; skyTop: string; terrain: string }
+    desert: { fogNear: string; skyTop: string; terrain: string }
+    arctic: { fogNear: string; skyTop: string; terrain: string }
+    volcanic: { fogNear: string; skyTop: string; terrain: string }
+    coral: { fogNear: string; skyTop: string; terrain: string }
+    urban: { fogNear: string; skyTop: string; terrain: string }
+  }
   camera: {
     position: [number, number, number]
     fov: number
@@ -109,6 +118,15 @@ export const sceneConfig: SceneConfig = {
     stationCollection: '#FF6B9D',
     stationSorting: '#FFD93D',
     stationRecycling: '#4ECDC4',
+  },
+  biomes: {
+    ocean:    { fogNear: '#0a2540', skyTop: '#0ea5e9', terrain: '#064e3b' },
+    forest:   { fogNear: '#0a1f0a', skyTop: '#22c55e', terrain: '#14532d' },
+    desert:   { fogNear: '#451a03', skyTop: '#f59e0b', terrain: '#92400e' },
+    arctic:   { fogNear: '#0c4a6e', skyTop: '#67e8f9', terrain: '#e0f2fe' },
+    volcanic: { fogNear: '#450a0a', skyTop: '#ef4444', terrain: '#7f1d1d' },
+    coral:    { fogNear: '#500724', skyTop: '#f472b6', terrain: '#831843' },
+    urban:    { fogNear: '#1e1b4b', skyTop: '#a78bfa', terrain: '#4c1d95' },
   },
   camera: {
     position: [0, 8.5, 24],

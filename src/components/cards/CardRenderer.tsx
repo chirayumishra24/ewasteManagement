@@ -20,23 +20,30 @@ export function CardRenderer({ tab }: CardRendererProps) {
       switch (block.type) {
         case 'paragraph':
           return (
-            <p key={idx} className={`mb-6 text-slate-300 leading-relaxed ${block.emphasis ? 'text-lg font-medium text-white border-l-4 border-teal-500 pl-4 py-2 bg-white/5 rounded-r-xl' : ''}`}>
+            <p 
+              key={idx} 
+              className={`mb-6 text-slate-800 leading-relaxed text-base font-medium ${block.emphasis ? 'text-lg font-bold p-4 bg-amber-50 border-3 border-ink-dark shadow-comic font-comic' : ''}`}
+            >
               {block.content}
             </p>
           )
         case 'bulletList':
           if (block.items.length > 5) {
             return (
-              <div key={idx} className="bento-grid">
+              <div key={idx} className="comic-bento-grid mb-8">
                 {block.items.map((item: string, i: number) => {
                   const [title, ...descParts] = item.split(': ')
                   const desc = descParts.join(': ')
                   return (
-                    <div key={i} className="bento-item">
-                      <div className="bento-icon">✦</div>
+                    <div 
+                      key={i} 
+                      className="comic-bento-item"
+                      style={{ '--accent-color': accentColor || '#10b981' } as React.CSSProperties}
+                    >
+                      <div className="bento-icon">★</div>
                       <div className="flex flex-col gap-1">
-                        <div className="bento-title">{title}</div>
-                        {desc && <div className="bento-desc">{desc}</div>}
+                        <div className="bento-title font-bold text-base">{title}</div>
+                        {desc && <div className="bento-desc text-sm">{desc}</div>}
                       </div>
                     </div>
                   )
@@ -48,8 +55,13 @@ export function CardRenderer({ tab }: CardRendererProps) {
             <ul key={idx} className="space-y-4 mb-8">
               {block.items.map((item: string, i: number) => (
                 <li key={i} className="flex gap-3 items-start group">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 shrink-0 group-hover:scale-150 transition-transform" />
-                  <span className="text-slate-400 group-hover:text-white transition-colors">{item}</span>
+                  <span 
+                    className="text-lg leading-none shrink-0" 
+                    style={{ color: accentColor || '#10b981' }}
+                  >
+                    ★
+                  </span>
+                  <span className="text-slate-800 font-bold transition-colors">{item}</span>
                 </li>
               ))}
             </ul>
@@ -59,19 +71,27 @@ export function CardRenderer({ tab }: CardRendererProps) {
             <ol key={idx} className="space-y-6 mb-8">
               {block.items.map((item: string, i: number) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-teal-400 shrink-0 group-hover:bg-teal-500 group-hover:text-white transition-all">
-                    {String(i + 1).padStart(2, '0')}
+                  <span 
+                    className="w-8 h-8 bg-pow-yellow border-2 border-ink-dark flex items-center justify-center text-sm font-bold text-ink-dark shrink-0 transform skewX(-6deg)"
+                    style={{ borderColor: '#1a1a2e' }}
+                  >
+                    {i + 1}
                   </span>
-                  <span className="text-slate-400 group-hover:text-white transition-colors leading-relaxed pt-1">{item}</span>
+                  <span className="text-slate-800 font-bold leading-relaxed pt-1">{item}</span>
                 </li>
               ))}
             </ol>
           )
         case 'quote':
           return (
-            <blockquote key={idx} className="quote-block">
-              <p className="text-xl italic font-medium text-slate-100 mb-2">{block.content}</p>
-              {block.author && <footer className="text-sm uppercase tracking-widest text-teal-500/60 font-bold">— {block.author}</footer>}
+            <blockquote 
+              key={idx} 
+              className="comic-quote-bubble mb-8"
+              style={{ '--accent-color': accentColor || '#10b981' } as React.CSSProperties}
+            >
+              <p className="text-lg italic font-bold text-ink-dark mb-2">"{block.content}"</p>
+              {block.author && <footer className="text-xs uppercase tracking-widest font-extrabold text-right" style={{ color: accentColor || '#10b981' }}>— {block.author}</footer>}
+              <div className="quote-bubble-tail"></div>
             </blockquote>
           )
         case 'video': {
@@ -79,7 +99,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
             ? block.url.split('/').pop() 
             : block.url.split('v=').pop()?.split('&')[0]
           return (
-            <div key={idx} className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black mb-8 group">
+            <div key={idx} className="relative aspect-video rounded-2xl overflow-hidden border border-slate-200 bg-black mb-8 group">
               <iframe
                 className="absolute inset-0 w-full h-full opacity-80 group-hover:opacity-100 transition-opacity"
                 title={block.title}
@@ -100,7 +120,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
           return (
             <div key={idx} className={`grid gap-4 mb-8 ${block.columns === 'three' ? 'grid-cols-3' : block.columns === 'one' ? 'grid-cols-1' : 'grid-cols-2'}`}>
               {block.images.map((img: ChapterImage, i: number) => (
-                <figure key={i} className="group relative rounded-xl overflow-hidden border border-white/10">
+                <figure key={i} className="group relative rounded-xl overflow-hidden border border-slate-200">
                   <img 
                     className="w-full aspect-square object-cover group-hover:scale-110 transition-transform duration-700"
                     src={img.src.startsWith('http') ? img.src : `${skillizeeAssetPrefix}${img.src}`} 

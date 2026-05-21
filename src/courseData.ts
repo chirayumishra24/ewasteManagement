@@ -27,6 +27,7 @@ export type ChapterThemeKey =
   | 'privacy'
   | 'policy'
   | 'digital'
+  | 'toxic'
 
 export type ChapterLayout = 'hub' | 'steps' | 'split' | 'bento' | 'dashboard' | 'atlas'
 
@@ -112,6 +113,11 @@ export type ChapterBlock =
   | { type: 'impactDashboard'; stats: { label: string; value: string; trend: 'up' | 'down'; detail: string }[] }
   | { type: 'dataWipeSim'; device: string; steps: { title: string; action: string; risk: string }[] }
   | { type: 'policyTimeline'; events: { year: string; title: string; impact: string; region: string }[] }
+  | { type: 'villainProfile'; name: string; chemical: string; dangerLevel: string; hideouts: string; weakness: string; bounty: number; emoji: string; description: string }
+  | { type: 'powerUp'; title: string; superpower: string; hpReward: number; icon: string; description: string }
+  | { type: 'comicStrip'; title: string; panels: { illustration: string; caption: string; speechBubble?: string }[] }
+  | { type: 'battleMeter'; title: string; heroLabel: string; villainLabel: string; heroDesc: string; villainDesc: string; initialValue?: number }
+  | { type: 'evidenceBoard'; title: string; clues: { id: string; title: string; icon: string; description: string }[] }
 
 export type DecisionNode = {
   question?: string
@@ -209,6 +215,77 @@ const campaignWizard = (steps: { title: string; prompt: string; options: string[
 const impactDashboard = (stats: { label: string; value: string; trend: 'up' | 'down'; detail: string }[]): ChapterBlock => ({ type: 'impactDashboard', stats })
 const dataWipeSim = (device: string, steps: { title: string; action: string; risk: string }[]): ChapterBlock => ({ type: 'dataWipeSim', device, steps })
 const policyTimeline = (events: { year: string; title: string; impact: string; region: string }[]): ChapterBlock => ({ type: 'policyTimeline', events })
+
+const villainProfile = (
+  name: string,
+  chemical: string,
+  dangerLevel: string,
+  hideouts: string,
+  weakness: string,
+  bounty: number,
+  emoji: string,
+  description: string
+): ChapterBlock => ({
+  type: 'villainProfile',
+  name,
+  chemical,
+  dangerLevel,
+  hideouts,
+  weakness,
+  bounty,
+  emoji,
+  description
+})
+
+const powerUp = (
+  title: string,
+  superpower: string,
+  hpReward: number,
+  icon: string,
+  description: string
+): ChapterBlock => ({
+  type: 'powerUp',
+  title,
+  superpower,
+  hpReward,
+  icon,
+  description
+})
+
+const comicStrip = (
+  title: string,
+  panels: { illustration: string; caption: string; speechBubble?: string }[]
+): ChapterBlock => ({
+  type: 'comicStrip',
+  title,
+  panels
+})
+
+const battleMeter = (
+  title: string,
+  heroLabel: string,
+  villainLabel: string,
+  heroDesc: string,
+  villainDesc: string,
+  initialValue?: number
+): ChapterBlock => ({
+  type: 'battleMeter',
+  title,
+  heroLabel,
+  villainLabel,
+  heroDesc,
+  villainDesc,
+  initialValue
+})
+
+const evidenceBoard = (
+  title: string,
+  clues: { id: string; title: string; icon: string; description: string }[]
+): ChapterBlock => ({
+  type: 'evidenceBoard',
+  title,
+  clues
+})
 
 export const chapters: CourseChapter[] = [
   {
@@ -538,7 +615,7 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           p('International standards vary, but the most useful grouping system sorts electronics by use type and scale. That makes public education, pickup design, and safe storage easier.'),
-          explodedDiagram('exploded_smartphone_1778658636240.png', [
+          explodedDiagram('/images/exploded_smartphone.png', [
             { x: 50, y: 30, label: 'Screen & Glass', detail: 'Contains indium tin oxide and glass-strengthening compounds.' },
             { x: 40, y: 50, label: 'Logic Board', detail: 'The value hub: gold, silver, palladium, and copper.' },
             { x: 60, y: 70, label: 'Battery', detail: 'Lithium, cobalt, and graphite. High fire risk if damaged.' },
@@ -869,6 +946,58 @@ export const chapters: CourseChapter[] = [
             { label: 'Certified Closed-Loop Recycling', correct: 'right' },
           ], 'High Risk ⚠️', 'Lower Risk ✅'),
           callout('Key takeaway', 'The path we choose now determines whether future generations inherit clean soil or a toxic legacy. Every device routed to formal recycling shifts the curve.', 'success', 'Mission Brief'),
+        ],
+      },
+      {
+        id: 'villains',
+        label: 'Villains & Power-Ups',
+        navLabel: 'Quest',
+        title: 'Battle the Chemical Villains',
+        summary: 'Analyze chemical villains and claim your recycling power-ups.',
+        robotNote: 'Warning! Toxic villains are leaking into the ecosystem. Activate power-ups to protect the sector!',
+        heroVariant: 'diagnostic',
+        accentColor: '#ef4444',
+        pulses: [
+          { label: 'Villains', value: 'Lead & Mercury' },
+          { label: 'Power-Ups', value: 'Active' },
+          { label: 'Status', value: 'Engaged' },
+        ],
+        blocks: [
+          villainProfile(
+            'The Lead Menace',
+            'Lead (Pb)',
+            'CRITICAL (5/5)',
+            'CRT Monitors, Circuit Board Solder, Lead-acid batteries',
+            'Safe smelting & closed-loop thermal extraction',
+            150,
+            '💀',
+            'A persistent heavy metal villain who infiltrates groundwater and targets brain development. Weak against certified recycler smelting!'
+          ),
+          villainProfile(
+            'Dr. Mercury',
+            'Mercury (Hg)',
+            'CRITICAL (5/5)',
+            'Older flat-panel displays, fluorescent backlights, switches',
+            'Vacuum-thermal separation & vapor encapsulation',
+            150,
+            '🧪',
+            'A volatile villain who evaporates into toxic vapor at room temperature. Bioaccumulates in aquatic food chains!'
+          ),
+          battleMeter(
+            'Recycling Battle: Hero vs Toxin',
+            'Certified Recycling (Hero)',
+            'Toxic Landfill Leaching (Villain)',
+            'Recovers clean copper and encapsulates chemical residues safely.',
+            'Lead and mercury seep into groundwater, causing soil toxicity.',
+            50
+          ),
+          powerUp(
+            'Tox-Vision Pro Upgrade',
+            'Hazmat Shield',
+            120,
+            '🛡️',
+            'Equip the Hazmat Shield to safely handle circuit boards containing Lead solder and older backlights containing Mercury vapor!'
+          )
         ],
       },
     ],
@@ -1410,6 +1539,45 @@ export const chapters: CourseChapter[] = [
             { label: 'Carbon Saved', value: '1.2t', trend: 'up', detail: 'Equivalent CO2 reduction from circular sourcing.' },
           ]),
           q('A drive becomes culture when the community can see what changed and what happens next.', 'Action lead'),
+        ],
+      },
+      {
+        id: 'comic-quest',
+        label: 'Salvage Comic',
+        navLabel: 'Comic',
+        title: 'Scrapbot Comic Adventure',
+        summary: 'Follow R.U.S.T-01 on a comic strip quest to save the neighborhood!',
+        robotNote: 'My sensors detect local citizens throw away valuable copper and batteries! Time for an awareness campaign!',
+        heroVariant: 'diagnostic',
+        accentColor: '#c17cff',
+        pulses: [
+          { label: 'Issue', value: '#3' },
+          { label: 'Hero', value: 'R.U.S.T-01' },
+          { label: 'Clues', value: 'Evidence Pinned' },
+        ],
+        blocks: [
+          comicStrip('Salvage Mission: Clean Up!', [
+            {
+              illustration: '🤖',
+              caption: 'R.U.S.T-01 boots up in the junk heap. "So many heavy metals here... we must salvage them!"',
+              speechBubble: 'System Online! Let\'s scan for scrap!'
+            },
+            {
+              illustration: '🏢',
+              caption: 'The scrapbot visits the local community center. "The citizens want to recycle, but they lack collection bins!"',
+              speechBubble: 'No bins found! We need a plan.'
+            },
+            {
+              illustration: '♻️',
+              caption: 'With the help of school heroes, R.U.S.T-01 sets up colorful crates. "Success! 450kg diverted!"',
+              speechBubble: 'Power Active! Community saved!'
+            }
+          ]),
+          evidenceBoard('Outreach Campaign Case Files', [
+            { id: 'clue-bins', title: 'Rusty Collection Bin', icon: '🗑️', description: 'This bin was leaking rainwater onto old batteries. A major toxic hazard!' },
+            { id: 'clue-station', title: 'Recycling Station', icon: '🚉', description: 'Certified recovery station equipped with protective ventilation for safe processing.' },
+            { id: 'clue-poster', title: 'Campaign Poster', icon: '📜', description: 'Outreach poster detailing what items are accepted: small gadgets, cables, and cells.' }
+          ])
         ],
       },
     ],

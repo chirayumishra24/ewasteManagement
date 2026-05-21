@@ -10,37 +10,28 @@ interface ImageCardProps {
 
 export function ImageCard({ title, subtitle, heroImage, accentColor, description }: ImageCardProps) {
   return (
-    <div className="image-card bezel-outer" style={{ borderLeft: `4px solid ${accentColor || '#fbbf24'}` }}>
-      <div className="image-card-bg">
-        <img src={heroImage} alt={title} className="card-hero-image" style={{ height: '100%', width: '100%' }} />
+    <div 
+      className="comic-panel-card overflow-hidden p-0 relative min-h-[380px] flex flex-col justify-end" 
+      style={{ 
+        borderLeftColor: accentColor || '#fbbf24',
+        '--accent-color': accentColor || '#fbbf24'
+      } as React.CSSProperties}
+    >
+      <div className="absolute inset-0 z-0">
+        <img src={heroImage} alt={title} className="w-full h-full object-cover" />
       </div>
-      <div className="image-card-overlay" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent z-10" />
       
-      <div className="image-card-content">
-        <div className="card-header-telemetry" style={{ marginBottom: 'auto' }}>
-          <span className="card-type-tag">[ DATA_PACK: VISUAL_REF ]</span>
-        </div>
-        
-        <div className="card-title-group">
-          <span className="card-subtitle" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{subtitle || 'MODULE_01_UNIT'}</span>
-          <h3 className="card-title" style={{ fontSize: '2.2rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{title}</h3>
-          {description && (
-            <p className="card-description" style={{ 
-              color: 'rgba(255, 255, 255, 0.8)', 
-              marginTop: '1rem',
-              maxWidth: '600px',
-              fontSize: '1rem'
-            }}>
-              {description}
-            </p>
-          )}
-        </div>
+      <div className="relative z-20 p-8 flex flex-col gap-2">
+        <span className="comic-badge-flat self-start">{subtitle || 'BIOME VISUAL'}</span>
+        <h3 className="comic-title text-white leading-tight mb-2" style={{ textShadow: '2px 2px 0 var(--ink-dark)' }}>{title}</h3>
+        {description && (
+          <p className="text-slate-100 text-sm leading-relaxed max-w-[600px] mt-2 font-bold" style={{ textShadow: '1px 1px 0 var(--ink-dark)' }}>
+            {description}
+          </p>
+        )}
       </div>
-
-      <div className="bezel-corner top-left" />
-      <div className="bezel-corner top-right" />
-      <div className="bezel-corner bottom-left" />
-      <div className="bezel-corner bottom-right" />
     </div>
   )
 }
+

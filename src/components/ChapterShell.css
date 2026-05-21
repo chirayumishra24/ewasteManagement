@@ -1,0 +1,399 @@
+/* ═══════════════════════════════════════════
+   SALVAGE QUEST — Comic Chapter Shell Styling
+   ═══════════════════════════════════════════ */
+
+.chapter-shell-container {
+  min-height: 100vh;
+  background-color: transparent;
+  color: var(--ink-dark);
+  font-family: var(--font-body);
+  position: relative;
+  overflow-x: hidden;
+  padding-left: var(--sidebar-width);
+  padding-top: 64px;
+}
+
+/* --- Chapter Hero Viewport / Comic Cover Header --- */
+.chapter-hero-viewport.comic-cover-header {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 2rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .chapter-hero-viewport.comic-cover-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.comic-halftone-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--ink-dark) 8%, transparent 9%);
+  background-size: 16px 16px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.hero-content-wrap.comic-title-panel {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-narrow);
+  background: var(--paper-warm);
+  border: 4px solid var(--ink-dark);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-comic);
+}
+
+.hero-kicker-badge.comic-badge {
+  display: inline-block;
+  background: var(--ink-dark);
+  color: var(--paper-warm);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.35rem 0.85rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+  transform: skewX(-6deg);
+}
+
+.hero-chapter-title.comic-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--ink-dark);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.hero-chapter-summary.comic-narrative {
+  font-family: var(--font-comic);
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--ink-dark);
+  margin-bottom: 2.5rem;
+  border-left: 4px solid var(--ink-dark);
+  padding-left: 1rem;
+}
+
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.comic-btn-primary, .comic-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 0.75rem 1.75rem;
+  border: 3px solid var(--ink-dark);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transform: skewX(-8deg);
+  text-decoration: none;
+}
+
+.comic-btn-primary {
+  background: var(--pow-yellow);
+  color: var(--ink-dark);
+  box-shadow: 4px 4px 0 var(--ink-dark);
+}
+
+.comic-btn-primary:hover {
+  transform: scale(1.05) skewX(-8deg);
+  box-shadow: 6px 6px 0 var(--ink-dark);
+}
+
+.comic-btn-secondary {
+  background: var(--paper-warm);
+  color: var(--ink-dark);
+  box-shadow: 3px 3px 0 var(--ink-dark);
+}
+
+.comic-btn-secondary:hover {
+  transform: scale(1.03) skewX(-8deg);
+  box-shadow: 4px 4px 0 var(--ink-dark);
+}
+
+.btn-skew-text {
+  display: inline-block;
+  transform: skewX(8deg); /* Unskew text inside */
+}
+
+/* --- Comic Intel Panel --- */
+.drone-schematic-card.comic-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: var(--paper-warm);
+  border: 4px solid var(--ink-dark);
+  box-shadow: var(--shadow-comic);
+}
+
+.comic-alert-badge {
+  display: inline-block;
+  background: var(--villain-orange);
+  color: var(--paper-warm);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.drone-schematic-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.schematic-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-dark);
+  margin-bottom: 1.5rem;
+}
+
+.schematic-meta-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.comic-badge-flat {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border: 2px solid var(--ink-dark);
+  background: var(--paper-warm);
+  color: var(--ink-dark);
+}
+
+.comic-badge-flat.text-gold {
+  background: var(--pow-yellow);
+}
+
+/* --- Comic Audio player --- */
+.audio-restoration-player.comic-audio-player {
+  position: sticky;
+  top: 5rem;
+  z-index: 100;
+  margin: 0 auto 3rem;
+  max-width: calc(var(--content-max) - 4rem);
+  width: calc(100% - 2rem);
+  padding: 1rem 1.5rem;
+  border: 3px solid var(--ink-dark);
+  background: var(--paper-warm);
+  box-shadow: var(--shadow-comic);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.comic-btn-play {
+  background: var(--hero-blue);
+  color: var(--paper-warm);
+  border: 2px solid var(--ink-dark);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  box-shadow: 2px 2px 0 var(--ink-dark);
+}
+
+.comic-btn-play:hover {
+  transform: scale(1.08);
+  box-shadow: 3px 3px 0 var(--ink-dark);
+}
+
+.audio-scrubber-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.audio-time {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+}
+
+.audio-scrubber {
+  flex-grow: 1;
+  appearance: none;
+  background: var(--ink-dark);
+  height: 6px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid var(--ink-dark);
+}
+
+.audio-scrubber::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--ink-dark);
+  background: var(--pow-yellow);
+  cursor: pointer;
+}
+
+.audio-status-label {
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .audio-status-label {
+    display: flex;
+  }
+}
+
+.audio-status-label .live-badge {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--hero-blue);
+}
+
+.audio-status-label .audio-title {
+  font-family: var(--font-comic);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--ink-dark);
+}
+
+/* --- Split Content Layout --- */
+.chapter-split-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.chapter-content-stage {
+  flex-grow: 1;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* --- Comic End Pager panel --- */
+.chapter-completion-pager.comic-panel-end {
+  padding: 3rem 2rem;
+  background: var(--paper-warm);
+  border: 4px solid var(--ink-dark);
+  box-shadow: var(--shadow-comic);
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.pager-header h3 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.pager-header p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink-dark);
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+}
+
+.pager-links-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .pager-links-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.comic-nav-link, .comic-nav-link-disabled {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.25rem;
+  border: 3px solid var(--ink-dark);
+  background: var(--paper-warm);
+  box-shadow: var(--shadow-comic);
+  text-decoration: none;
+  color: var(--ink-dark);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.comic-nav-link:hover {
+  transform: scale(1.03) rotate(-0.5deg);
+  box-shadow: 6px 6px 0 var(--ink-dark);
+}
+
+.comic-nav-link.complete {
+  background: var(--pow-yellow);
+}
+
+.comic-nav-link-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.nav-link-inner {
+  text-align: center;
+}
+
+.comic-nav-link .label, .comic-nav-link-disabled .label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
+}
+
+.comic-nav-link strong, .comic-nav-link-disabled strong {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 800;
+}

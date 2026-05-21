@@ -1,7 +1,6 @@
 
 import { Canvas } from '@react-three/fiber'
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { sceneConfig } from '../../sceneConfig'
 import { SceneLighting } from './SceneLighting'
 import { useScrollProgress } from './hooks/useScrollProgress'
 import { usePointerParallax } from './hooks/usePointerParallax'
@@ -9,14 +8,11 @@ import type { SceneQuality } from './sceneQuality'
 import type { ChapterThemeKey } from '../../courseData'
 import { SceneErrorBoundary } from '../SceneStability'
 
+import { getBiomeFromTheme } from './SceneLighting'
+
 // Lazy load layers for performance
-const CircuitTerrain = lazy(() => import('./layers/CircuitTerrain').then(m => ({ default: m.CircuitTerrain })))
-const DeviceGraveyard = lazy(() => import('./layers/DeviceGraveyard').then(m => ({ default: m.DeviceGraveyard })))
-const ToxicParticles = lazy(() => import('./layers/ToxicParticles').then(m => ({ default: m.ToxicParticles })))
-const ConveyorBelt = lazy(() => import('./layers/ConveyorBelt').then(m => ({ default: m.ConveyorBelt })))
-const SortingRibbons = lazy(() => import('./layers/SortingRibbons').then(m => ({ default: m.SortingRibbons })))
-const RecyclingVortex = lazy(() => import('./layers/RecyclingVortex').then(m => ({ default: m.RecyclingVortex })))
-const PostProcessingStack = lazy(() => import('./PostProcessingStack').then(m => ({ default: m.PostProcessingStack })))
+const ComicDebris = lazy(() => import('./layers/ComicDebris').then(m => ({ default: m.ComicDebris })))
+const SpeedLines = lazy(() => import('./layers/SpeedLines').then(m => ({ default: m.SpeedLines })))
 
 function getWebGLSupport() {
   try {
@@ -40,9 +36,10 @@ function getSceneQuality(): SceneQuality {
 
 interface EWasteBackgroundProps {
   theme?: ChapterThemeKey
+  biome?: string;
 }
 
-export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
+export function EWasteBackground({ theme = 'hazard', biome }: EWasteBackgroundProps) {
   const scrollProgress = useScrollProgress()
   const [quality, setQuality] = useState<SceneQuality>(() => getSceneQuality())
   const [webGLSupported] = useState(() => {
@@ -76,11 +73,11 @@ export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
     return (
       <div className="ewaste-background ewaste-background-fallback" aria-hidden="true">
         <div className="fallback-grid" />
-        <div className="fallback-conveyor" />
-        <div className="fallback-vortex" />
       </div>
     )
   }
+
+  const biomeKey = biome || getBiomeFromTheme(theme)
 
   return (
     <div 
@@ -90,55 +87,28 @@ export function EWasteBackground({ theme = 'hazard' }: EWasteBackgroundProps) {
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        background: sceneConfig.colors.terrainBase
+        background: 'transparent'
       }}
     >
-      <SceneErrorBoundary fallback={<div className="fixed inset-0 bg-slate-900" style={{ zIndex: 0 }} />}>
+      <SceneErrorBoundary fallback={<div className="fixed inset-0 bg-amber-50/50" style={{ zIndex: 0 }} />}>
         <Canvas
-          shadows={!quality.isMobile && !quality.reducedMotion}
-          dpr={[1, quality.isMobile ? sceneConfig.performance.mobileDpr : sceneConfig.performance.desktopDpr]}
+          shadows={false}
+          dpr={[1, quality.isMobile ? 1.0 : 1.5]}
           camera={{
-            position: sceneConfig.camera.position,
-            fov: sceneConfig.camera.fov
+            position: [0, 0, 8],
+            fov: 50
           }}
-          gl={{ antialias: false, stencil: false, depth: true, powerPreference: quality.isMobile ? 'low-power' : 'high-performance' }}
+          gl={{ antialias: true, stencil: false, depth: true, powerPreference: 'high-performance' }}
         >
           <Suspense fallback={null}>
             <group 
               rotation={[parallax.y, parallax.x, 0]}
               position={[0, 0, 0]}
             >
-              <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} />
-              
-              {/* Logic-focused layouts (Terrain) */}
-              {['diagnostic', 'mapping', 'hub', 'privacy', 'policy', 'digital'].includes(theme) && (
-                <CircuitTerrain scrollProgress={scrollProgress} />
-              )}
-              
-              {/* Process-focused layouts (Recycling) */}
-              {['recycling', 'recovery', 'maintenance', 'upcycle'].includes(theme) && (
-                <>
-                  <ConveyorBelt scrollProgress={scrollProgress} quality={quality} />
-                  <RecyclingVortex scrollProgress={scrollProgress} quality={quality} />
-                </>
-              )}
-              
-              {/* Threat-focused layouts (Hazard) */}
-              {theme === 'hazard' && (
-                <>
-                  <DeviceGraveyard scrollProgress={scrollProgress} quality={quality} />
-                  <ToxicParticles scrollProgress={scrollProgress} quality={quality} />
-                </>
-              )}
-              
-              {/* Dynamic layouts (Action) */}
-              {theme === 'action' && (
-                <SortingRibbons scrollProgress={scrollProgress} quality={quality} />
-              )}
-              
+              <SceneLighting scrollProgress={scrollProgress} quality={quality} theme={theme} biome={biomeKey} />
+              <ComicDebris />
+              <SpeedLines />
             </group>
-
-            {!quality.reducedMotion && <PostProcessingStack scrollProgress={scrollProgress} quality={quality} />}
           </Suspense>
         </Canvas>
       </SceneErrorBoundary>

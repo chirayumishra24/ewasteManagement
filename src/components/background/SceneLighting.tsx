@@ -8,54 +8,72 @@ import type { SceneQuality } from './sceneQuality'
 import type { ChapterThemeKey } from '../../courseData'
 
 
-const themeColors: Record<ChapterThemeKey, string> = {
-  hub: '#A78BFA',
-  hazard: '#FF6B9D',
-  diagnostic: '#60A5FA',
-  recovery: '#4ECDC4',
-  maintenance: '#34D399',
-  upcycle: '#C084FC',
-  recycling: '#F472B6',
-  mapping: '#818CF8',
-  action: '#FB923C',
-  privacy: '#67E8F9',
-  policy: '#FBBF24',
-  digital: '#A78BFA'
+export function getBiomeFromTheme(theme: ChapterThemeKey): string {
+  switch (theme) {
+    case 'hub':
+      return 'urban'
+    case 'hazard':
+    case 'toxic':
+      return 'desert'
+    case 'diagnostic':
+    case 'privacy':
+      return 'arctic'
+    case 'recovery':
+    case 'maintenance':
+      return 'forest'
+    case 'upcycle':
+    case 'digital':
+      return 'urban'
+    case 'recycling':
+      return 'volcanic'
+    case 'mapping':
+      return 'coral'
+    case 'action':
+    case 'policy':
+    default:
+      return 'ocean'
+  }
 }
 
 export function SceneLighting({ 
   scrollProgress, 
   quality, 
-  theme = 'hazard' 
+  theme = 'hazard',
+  biome
 }: { 
   scrollProgress: number; 
   quality: SceneQuality;
   theme?: ChapterThemeKey;
+  biome?: string;
 }) {
   const fogRef = useRef<Fog | null>(null)
   const motionFactor = quality.reducedMotion ? 0.35 : 1
   
-  const accentColor = useMemo(() => new Color(themeColors[theme]), [theme])
+  const biomeKey = useMemo(() => biome || getBiomeFromTheme(theme), [biome, theme])
+  const biomeConf = useMemo(() => {
+    return sceneConfig.biomes[biomeKey as keyof typeof sceneConfig.biomes] || sceneConfig.biomes.ocean
+  }, [biomeKey])
+
+  const accentColor = useMemo(() => new Color(biomeConf.skyTop), [biomeConf])
 
   useFrame(() => {
     if (fogRef.current) {
-      // Shift fog color from theme-tinted dark to clean white
-      const fogColor = new Color(sceneConfig.colors.fogNear)
+      // Shift fog color from biome-tinted dark to horizon color
+      const fogColor = new Color(biomeConf.fogNear)
         .lerp(accentColor, 0.15)
-        .lerp(new Color(sceneConfig.colors.fogFar), scrollProgress)
+        .lerp(new Color(biomeConf.skyTop), scrollProgress)
       fogRef.current.color.copy(fogColor)
     }
   })
 
   return (
     <>
-      <color attach="background" args={[sceneConfig.colors.skyGradientTop]} />
-      <fog ref={fogRef} attach="fog" args={[sceneConfig.colors.fogNear, 5, 35]} />
+      <fog ref={fogRef} attach="fog" args={[biomeConf.fogNear, 5, 45]} />
 
       <hemisphereLight
         intensity={0.56 + scrollProgress * 0.46}
-        color={themeColors[theme]}
-        groundColor={sceneConfig.colors.terrainBase}
+        color={biomeConf.skyTop}
+        groundColor={biomeConf.terrain}
       />
       
       <directionalLight
@@ -71,7 +89,7 @@ export function SceneLighting({
         angle={0.15}
         penumbra={1}
         intensity={quality.isMobile ? 0 : 7 * (1 - scrollProgress + 0.25) * motionFactor}
-        color={themeColors[theme]}
+        color={biomeConf.skyTop}
         castShadow={!quality.isMobile && !quality.reducedMotion}
       />
 
@@ -81,14 +99,14 @@ export function SceneLighting({
           intensity={quality.isMobile ? 1.4 : 3}
           position={[0, 10, -10]}
           scale={[20, 5, 1]}
-          color={themeColors[theme]}
+          color={biomeConf.skyTop}
         />
         <Lightformer
           form="circle"
           intensity={quality.isMobile ? 0.8 : 1.6}
           position={[-10, 5, 5]}
           scale={[10, 10, 1]}
-          color={themeColors[theme]}
+          color={biomeConf.skyTop}
         />
       </Environment>
     </>

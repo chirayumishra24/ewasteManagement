@@ -1,0 +1,451 @@
+.dashboard-container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 6.5rem 2rem 4rem;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  text-transform: uppercase;
+  background: var(--paper-warm);
+  border: 2.5px solid var(--ink-dark);
+  padding: 0.45rem 1rem;
+  box-shadow: 2.5px 2.5px 0 var(--ink-dark);
+  text-decoration: none;
+  transform: skewX(-4deg);
+  transition: all 0.1s ease;
+}
+
+.back-link:hover {
+  transform: translate(-1px, -1px) skewX(-4deg);
+  box-shadow: 4px 4px 0 var(--ink-dark);
+}
+
+.back-link svg {
+  stroke: var(--ink-dark);
+  stroke-width: 3px;
+}
+
+.dashboard-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--ink-dark);
+  letter-spacing: -0.02em;
+  text-shadow: 3px 3px 0 var(--pow-yellow);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.dashboard-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Panel title */
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+  border-bottom: 3.5px solid var(--ink-dark);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.panel-desc {
+  font-size: 0.85rem;
+  color: var(--ink-dark);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+/* Profile Panel */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.obs-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2.5px solid var(--ink-dark);
+  background: var(--pow-yellow);
+  box-shadow: 2px 2px 0 var(--ink-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-dark);
+}
+
+.obs-avatar svg {
+  stroke: var(--ink-dark);
+  stroke-width: 2.5px;
+}
+
+.profile-details h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+  text-transform: uppercase;
+}
+
+.profile-streak {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--hero-blue);
+  text-transform: uppercase;
+}
+
+.profile-level-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #ffffff;
+  padding: 1rem;
+  border: 2.5px solid var(--ink-dark);
+  box-shadow: 2px 2px 0 var(--ink-dark);
+}
+
+.level-xp-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  color: var(--ink-dark);
+}
+
+.profile-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--paper-warm);
+  border: 2px solid var(--ink-dark);
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-progress-fill {
+  height: 100%;
+  background: var(--hero-blue);
+  transition: width 0.5s ease-out;
+}
+
+/* Health Dossier */
+.gauge-display-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.obs-gauge-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obs-svg {
+  transform: rotate(-90deg);
+}
+
+.obs-svg-bg {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 10px;
+  stroke: var(--paper-warm);
+}
+
+.obs-svg-fill {
+  fill: none;
+  stroke: var(--hero-blue);
+  stroke-width: 10px;
+  stroke-linecap: square;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.obs-gauge-center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.obs-health-pct {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 950;
+  color: var(--ink-dark);
+  line-height: 1;
+  text-shadow: 2px 2px 0 var(--pow-yellow);
+}
+
+.obs-health-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--ink-dark);
+  margin-top: 0.25rem;
+}
+
+.health-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.health-stat-box {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 2.5px solid var(--ink-dark);
+  padding: 0.75rem 1rem;
+  box-shadow: 2.5px 2.5px 0 var(--ink-dark);
+}
+
+.stat-box-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--hero-blue);
+  letter-spacing: 0.05em;
+}
+
+.stat-box-val {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+  margin-top: 0.125rem;
+}
+
+/* Robot/Drone Upgrades */
+.robot-assembly-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.assembly-part-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2.5px solid var(--ink-dark);
+  background: #ffffff;
+  box-shadow: 2px 2px 0 var(--ink-dark);
+  transition: all 0.15s ease;
+}
+
+.assembly-part-card.unlocked {
+  background: #e6fffa;
+  box-shadow: 3.5px 3.5px 0 var(--ink-dark);
+}
+
+.assembly-part-card.locked {
+  opacity: 0.65;
+  background: var(--paper-warm);
+}
+
+.part-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--paper-warm);
+  border: 2px solid var(--ink-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--ink-dark);
+}
+
+.unlocked .part-icon {
+  color: var(--ink-dark);
+  background: var(--pow-yellow);
+}
+
+.part-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.part-info strong {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.part-info span {
+  font-size: 0.7rem;
+  color: var(--ink-dark);
+  font-weight: 600;
+  margin-top: 0.125rem;
+}
+
+.unlocked .part-info span {
+  color: #0d9488;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+/* Achievements List */
+.trophies-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 580px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.trophy-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.125rem;
+  border: 2.5px solid var(--ink-dark);
+  background: #ffffff;
+  box-shadow: 3px 3px 0 var(--ink-dark);
+  transition: all 0.15s ease;
+}
+
+.trophy-card.unlocked {
+  background: var(--pow-yellow);
+}
+
+.trophy-card.locked {
+  opacity: 0.6;
+}
+
+.trophy-icon-wrapper {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--ink-dark);
+  background: var(--paper-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-dark);
+  flex-shrink: 0;
+}
+
+.unlocked .trophy-icon-wrapper {
+  background: #ffffff;
+}
+
+.trophy-icon svg {
+  stroke: var(--ink-dark);
+  stroke-width: 2.5px;
+}
+
+.trophy-lock {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  background: var(--paper-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ink-dark);
+  color: var(--ink-dark);
+}
+
+.trophy-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.trophy-info h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--ink-dark);
+  text-transform: uppercase;
+}
+
+.trophy-info p {
+  font-size: 0.78rem;
+  color: var(--ink-dark);
+  margin-top: 0.125rem;
+  line-height: 1.3;
+}
+
+.trophy-xp {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--hero-blue);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+/* Responsiveness */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: 5.5rem 1rem 2rem;
+  }
+
+  .gauge-display-wrapper {
+    flex-direction: column;
+  }
+
+  .robot-assembly-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
