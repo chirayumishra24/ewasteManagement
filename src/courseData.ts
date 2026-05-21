@@ -210,7 +210,7 @@ const ideaGenerator = (combinations: { device: string; purpose: string; steps: s
 const decisionTree = (root: { question: string; yes: DecisionNode; no: DecisionNode }): ChapterBlock => ({ type: 'decisionTree', root })
 const processSimulator = (stages: { title: string; description: string; icon: string; output: string }[]): ChapterBlock => ({ type: 'processSimulator', stages })
 const quiz = (question: string, options: { label: string; correct: boolean; explanation: string }[], reward: string): ChapterBlock => ({ type: 'quiz', question, options, reward })
-const mapLocator = (points: { lat: number; lng: number; label: string; type: string }[]): ChapterBlock => ({ type: 'mapLocator', points })
+export const mapLocator = (points: { lat: number; lng: number; label: string; type: string }[]): ChapterBlock => ({ type: 'mapLocator', points })
 const campaignWizard = (steps: { title: string; prompt: string; options: string[] }[]): ChapterBlock => ({ type: 'campaignWizard', steps })
 const impactDashboard = (stats: { label: string; value: string; trend: 'up' | 'down'; detail: string }[]): ChapterBlock => ({ type: 'impactDashboard', stats })
 const dataWipeSim = (device: string, steps: { title: string; action: string; risk: string }[]): ChapterBlock => ({ type: 'dataWipeSim', device, steps })
