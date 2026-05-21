@@ -729,7 +729,7 @@ export const chapters: CourseChapter[] = [
             { name: 'Silver', perDevice: 0.35, unit: 'g', pricePerUnit: 0.8 },
           ]),
           q('Recovery begins when we stop describing electronics as dead objects and start describing them as stored materials.', 'Salvage brief'),
-          beforeAfter('raw_ore_mine_1778658870536.png', 'urban_mine_recycling_1778658947185.png', 'Raw Ore Mine', 'Urban Mine'),
+          beforeAfter('/images/raw_ore_mine.png', '/images/urban_mine.png', 'Raw Ore Mine', 'Urban Mine'),
           compare(
             {
               title: 'Extraction logic',
@@ -858,7 +858,7 @@ export const chapters: CourseChapter[] = [
           { label: 'Cadmium', value: 'Carcinogenic' },
         ],
         blocks: [
-          explodedDiagram('https://images.unsplash.com/photo-1556656793-062ff98782ea?auto=format&fit=crop&q=80&w=1200', [
+          explodedDiagram('/images/exploded_smartphone.png', [
             { x: 35, y: 30, label: 'LCD Backlight', detail: 'Older models contain Mercury vapor which is highly toxic if the screen breaks.' },
             { x: 65, y: 55, label: 'Logic Board Solder', detail: 'Traditionally uses Lead (Pb), a persistent heavy metal that affects brain development.' },
             { x: 50, y: 80, label: 'Li-ion Battery', detail: 'Contains Cobalt and Lithium. If crushed, it can leak corrosive and toxic electrolytes.' },
@@ -900,8 +900,8 @@ export const chapters: CourseChapter[] = [
           }),
           p('Below is a stark visual comparison of the "Toxic Truth". Notice how formal recycling keeps materials contained and safe.', true),
           beforeAfter(
-            '/s/articles/692814c49dee6d5d1eb46423/images/qqqq.png',
-            '/s/articles/692814c49dee6d5d1eb46423/images/wwwwwww.png',
+            '/images/informal_landfill.png',
+            '/images/certified_recycling.png',
             'Informal Landfill',
             'Certified Recycling',
           ),
@@ -1261,7 +1261,7 @@ export const chapters: CourseChapter[] = [
         title: 'Safe Disposal Methods',
         summary: 'Track the industrial chain that turns mixed electronic scrap into separated material streams.',
         robotNote: 'Formal recycling starts with triage. If hazardous items stay mixed in, the whole chain gets dirtier and more dangerous.',
-        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102449-4.png',
+        heroImage: '/images/ewaste_recycling_flow.png',
         heroVariant: 'signal',
         accentColor: '#f3a44a',
         pulses: [
@@ -1370,7 +1370,7 @@ export const chapters: CourseChapter[] = [
         title: 'Authorized Recyclers',
         summary: 'Use public databases and service directories to find facilities that are actually certified.',
         robotNote: 'The nearest option is not automatically the safest option. Authentication matters.',
-        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507102537-6.png',
+        heroImage: '/images/certified_recycling.png',
         heroVariant: 'atlas',
         accentColor: '#61b8ff',
         pulses: [
@@ -1432,12 +1432,6 @@ export const chapters: CourseChapter[] = [
             'Interactive dashboard for locating certified resellers, dismantlers, and collection points across the state.',
             'Launch Map Explorer'
           ),
-          mapLocator([
-            { lat: 26.9124, lng: 75.7873, label: 'Jaipur Central Hub', type: 'Collection Center' },
-            { lat: 26.2389, lng: 73.0243, label: 'Jodhpur E-Waste Park', type: 'Recycling Plant' },
-            { lat: 24.5854, lng: 73.7125, label: 'Udaipur Smart Collection', type: 'Drop-off Point' },
-            { lat: 28.1487, lng: 75.3871, label: 'Jhunjhunu Recovery Node', type: 'Dismantler' },
-          ]),
           q('Visibility is the enemy of informal dumping. When authorized routes are mapped, they become the default.', 'Network protocol'),
         ],
       },
@@ -1615,7 +1609,7 @@ export const chapters: CourseChapter[] = [
         title: 'Hardening Your Digital Defenses',
         summary: 'Treat basic security settings as part of responsible technology use.',
         robotNote: 'A device that is physically maintained but digitally exposed is still vulnerable.',
-        heroImage: 'https://login.skillizee.io/s/articles/69f4527b41e01b23b9093dae/images/image-20260507104024-2.png',
+        heroImage: '/images/digital_citizenship.png',
         heroVariant: 'diagnostic',
         accentColor: '#2bc1a6',
         pulses: [
@@ -1875,7 +1869,7 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           callout('Featured Idea: E-Waste ATM', 'A smart kiosk where you deposit tech & earn school rewards.', 'success', 'Innovation Lab'),
-          explodedDiagram('https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&q=80&w=800', [
+          explodedDiagram('/images/ewaste_atm.png', [
             { x: 50, y: 30, label: 'Touch Screen', detail: 'Users scan their ID and track their recycling points.' },
             { x: 30, y: 60, label: 'Drop Bin', detail: 'Internal sensors classify the device for safe storage.' },
             { x: 70, y: 70, label: 'Reward Dispenser', detail: 'Prints coupons or syncs with a school credit app.' },

@@ -1445,6 +1445,10 @@ function renderBlock(block: ChapterBlock): ReactNode {
       )
     }
 
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Recovered metals re-enter')) {
+      return <InteractiveRecyclingOutputs />
+    }
+
     if (block.type === 'bulletList' && block.items[0]?.startsWith('IT and communication devices')) {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
@@ -1455,11 +1459,95 @@ function renderBlock(block: ChapterBlock): ReactNode {
       )
     }
 
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Adopt digital minimalism')) {
+      return (
+        <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
+          <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
+            <img src="/images/reduction_steps.png" alt="Three Steps of Reduction Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+          </div>
+        </section>
+      )
+    }
+
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Large household appliances')) {
+      return (
+        <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
+          <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
+            <img src="/images/ewaste_categories_detailed_infographic.png" alt="E-waste Categories Detailed Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+          </div>
+        </section>
+      )
+    }
+
     if (block.type === 'bulletList' && block.items[0]?.startsWith('Lead from older displays')) {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
             <img src="/images/ewaste_toxins_infographic.png" alt="E-waste Dangers Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+          </div>
+        </section>
+      )
+    }
+
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Formal recycling protects workers')) {
+      return (
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform rotate-6 shadow-[2px_2px_0px_#1A1A2E]">
+              01
+            </div>
+            
+            <div className="mb-6 w-14 h-14 bg-emerald-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-3 group-hover:rotate-3 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
+              <svg className="w-8 h-8 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Formal Recycling</h4>
+              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+                Protects workers under strict safety protocols while recovering high-purity saleable metals and materials.
+              </p>
+            </div>
+          </div>
+
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform -rotate-6 shadow-[2px_2px_0px_#1A1A2E]">
+              02
+            </div>
+
+            <div className="mb-6 w-14 h-14 bg-sky-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform rotate-6 group-hover:-rotate-6 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
+              <svg className="w-8 h-8 text-sky-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3L22 4" />
+              </svg>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Circular Design</h4>
+              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+                Lowers dependence on volatile, hazardous, and fragile raw-material supply chains by keeping resources in use.
+              </p>
+            </div>
+          </div>
+
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform rotate-3 shadow-[2px_2px_0px_#1A1A2E]">
+              03
+            </div>
+
+            <div className="mb-6 w-14 h-14 bg-amber-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-6 group-hover:rotate-6 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
+              <svg className="w-8 h-8 text-amber-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Upstream Decisions</h4>
+              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+                Repairability and disassembly decisions made at the design stage directly dictate how much resource value can be salvaged.
+              </p>
+            </div>
           </div>
         </section>
       )
@@ -1526,11 +1614,10 @@ function renderBlock(block: ChapterBlock): ReactNode {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg>
           </button>
         </div>
-        <div className="activity-iframe-container" style={block.url.includes('1-1-global-flow') ? { height: '700px', minHeight: '700px' } : undefined}>
+        <div className="activity-iframe-container">
           <iframe 
             src={block.url} 
             className="activity-iframe"
-            style={block.url.includes('1-1-global-flow') ? { height: '700px' } : undefined}
             title={block.title}
           />
         </div>
@@ -1701,6 +1788,398 @@ function renderBlock(block: ChapterBlock): ReactNode {
   )
 }
 
+function InteractiveRecyclingFlow() {
+  const [activeStep, setActiveStep] = useState(0)
+
+  const steps = [
+    {
+      title: "1. CONSUMPTION",
+      short: "Devices in Use",
+      icon: "📱",
+      details: "Laptops, smartphones, and appliances are used by consumers and businesses daily. This is where demand starts, driving the need for raw materials.",
+      accent: "#facc15",
+      badge: "CONSUME!",
+      fun: "POW! Modern lives depend on tech!",
+    },
+    {
+      title: "2. COLLECTION & TRIAGE",
+      short: "Safe Sorting",
+      icon: "🔋",
+      details: "Discarded devices are sent to collection and sorted. Hazardous parts (like lithium-ion batteries) are removed first to prevent explosions and fires in shredders.",
+      accent: "#2bc1a6",
+      badge: "COLLECT!",
+      fun: "BAM! Depolluting the waste stream first!",
+    },
+    {
+      title: "3. PROCESSING",
+      short: "Separation",
+      icon: "⚙️",
+      details: "Clean e-waste is shredded. Strong magnetic separators pull out steel, eddy currents isolate copper/aluminum, and sensors sort glass/plastic.",
+      accent: "#61b8ff",
+      badge: "PROCESS!",
+      fun: "CLANG! Industrial machines sorting materials!",
+    },
+    {
+      title: "4. RE-MANUFACTURING",
+      short: "Circular Cycle",
+      icon: "🏭",
+      details: "Purified raw metals and high-quality sorted plastics are sent back to manufacturers to build new electronic products, reducing virgin mining.",
+      accent: "#ff5e5e",
+      badge: "RE-MAKE!",
+      fun: "SHAZAM! Clean materials reborn as brand new tech!",
+    }
+  ]
+
+  const active = steps[activeStep]
+
+  return (
+    <div className="comic-recycling-flow">
+      <div className="comic-recycling-header">
+        LIFECYCLE DETECTOR — CLICK A STEP TO TRACK MATERIALS
+      </div>
+
+      <div className="comic-recycling-grid">
+        {steps.map((step, idx) => (
+          <div
+            key={idx}
+            className={`comic-recycling-card ${idx === activeStep ? 'active' : ''}`}
+            onClick={() => setActiveStep(idx)}
+            style={{
+              '--step-accent': step.accent,
+              '--step-bg': `${step.accent}12`
+            } as CSSProperties}
+          >
+            <span className="comic-recycling-badge" style={{ borderColor: step.accent }}>
+              {step.badge}
+            </span>
+            <span className="comic-recycling-icon">{step.icon}</span>
+            <h4 className="comic-recycling-card-title">{step.title}</h4>
+            <p className="comic-recycling-card-subtitle">{step.short}</p>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="comic-recycling-bubble"
+        style={{
+          '--pointer-left': `${activeStep === 0 ? 12.5 : activeStep === 1 ? 37.5 : activeStep === 2 ? 62.5 : 87.5}%`,
+          '--step-accent': active.accent
+        } as CSSProperties}
+      >
+        <h4 className="comic-recycling-bubble-title" style={{ color: active.accent }}>
+          <span>{active.icon}</span>
+          <span>{active.title} — {active.fun}</span>
+        </h4>
+        <p className="comic-recycling-bubble-text">{active.details}</p>
+      </div>
+    </div>
+  );
+}
+
+function InteractiveDigitalCitizenship() {
+  const [layers, setLayers] = useState({
+    auth: false,
+    crypto: false,
+    tracker: false,
+    wipe: false
+  });
+
+  const toggleLayer = (key: keyof typeof layers) => {
+    setLayers(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const activeCount = Object.values(layers).filter(Boolean).length;
+  const strength = activeCount * 25;
+
+  return (
+    <div className="comic-privacy-shield">
+      <div className="comic-privacy-header flex justify-between items-center text-slate-900">
+        <span className="font-extrabold">DATA DEFENSE SYSTEM</span>
+        <span className="text-[10px] bg-[#1A1A2E] text-white px-2 py-0.5 border border-white/20 font-mono">CORE: ONLINE</span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+        {/* Visualizer Panel */}
+        <div className="flex flex-col items-center justify-center p-4 bg-[#FFFDF7] border-4 border-[#1A1A2E] shadow-[4px_4px_0px_#1A1A2E] relative min-h-[250px]">
+          {/* Animated Holographic Shield */}
+          <div className="relative w-36 h-36 flex items-center justify-center">
+            {/* Base Rotating Grid */}
+            <div className="absolute inset-0 border border-slate-200 rounded-full animate-[spin_20s_linear_infinite]" style={{ borderStyle: 'dashed' }}></div>
+            
+            {/* Outer Rings corresponding to defenses */}
+            <div className={`absolute w-32 h-32 rounded-full border-3 transition-all duration-500 ${layers.wipe ? 'border-emerald-500 scale-100 shadow-[0_0_12px_rgba(16,185,129,0.3)]' : 'border-dashed border-slate-300 scale-95'}`}></div>
+            <div className={`absolute w-28 h-28 rounded-full border-3 transition-all duration-500 ${layers.tracker ? 'border-sky-500 rotate-45 shadow-[0_0_12px_rgba(14,165,233,0.3)]' : 'border-dashed border-slate-300'}`}></div>
+            <div className={`absolute w-24 h-24 rounded-full border-3 transition-all duration-500 ${layers.crypto ? 'border-amber-500 -rotate-45 shadow-[0_0_12px_rgba(245,158,11,0.3)]' : 'border-dashed border-slate-300 scale-105'}`}></div>
+            <div className={`absolute w-20 h-20 rounded-full border-3 transition-all duration-500 ${layers.auth ? 'border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.3)]' : 'border-dashed border-slate-300'}`}></div>
+
+            {/* Central Shield Core */}
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center border-3 border-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] transition-all duration-500 ${strength === 100 ? 'bg-emerald-400' : strength > 0 ? 'bg-amber-400 animate-pulse' : 'bg-rose-400'}`}>
+              <span className="text-xl">{strength === 100 ? '🛡️' : '🔓'}</span>
+            </div>
+
+            {/* Floating visual indicators */}
+            {layers.auth && <span className="absolute top-2 left-2 text-[9px] bg-rose-100 border border-[#1A1A2E] font-bold px-1 rounded">2FA</span>}
+            {layers.crypto && <span className="absolute top-2 right-2 text-[9px] bg-amber-100 border border-[#1A1A2E] font-bold px-1 rounded">AES</span>}
+            {layers.tracker && <span className="absolute bottom-2 left-2 text-[9px] bg-sky-100 border border-[#1A1A2E] font-bold px-1 rounded">DNT</span>}
+            {layers.wipe && <span className="absolute bottom-2 right-2 text-[9px] bg-emerald-100 border border-[#1A1A2E] font-bold px-1 rounded">WIPED</span>}
+          </div>
+
+          {/* Strength Bar */}
+          <div className="w-full mt-4">
+            <div className="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span>SHIELD INTEGRITY</span>
+              <span className={strength === 100 ? 'text-emerald-600' : strength > 0 ? 'text-amber-600' : 'text-rose-600'}>{strength}%</span>
+            </div>
+            <div className="h-4 bg-slate-100 border-2 border-[#1A1A2E] rounded-none overflow-hidden p-0.5 w-full">
+              <div 
+                className={`h-full transition-all duration-500 ${strength === 100 ? 'bg-emerald-400' : strength > 50 ? 'bg-amber-400' : 'bg-rose-400'}`}
+                style={{ width: `${strength}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls Panel */}
+        <div className="flex flex-col gap-3 justify-center">
+          <div 
+            onClick={() => toggleLayer('auth')}
+            className={`flex items-center gap-3 p-3 border-3 border-[#1A1A2E] shadow-[3px_3px_0px_#1A1A2E] cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 ${layers.auth ? 'bg-rose-50' : 'bg-white hover:bg-slate-50'}`}
+          >
+            <div className="text-xl">🔑</div>
+            <div className="flex-1 text-left">
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase">2FA Authentication</h4>
+              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Dual credentials lock down access.</p>
+            </div>
+            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.auth ? 'bg-rose-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+              {layers.auth ? 'SECURED' : 'ENABLE'}
+            </div>
+          </div>
+
+          <div 
+            onClick={() => toggleLayer('crypto')}
+            className={`flex items-center gap-3 p-3 border-3 border-[#1A1A2E] shadow-[3px_3px_0px_#1A1A2E] cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 ${layers.crypto ? 'bg-amber-50' : 'bg-white hover:bg-slate-50'}`}
+          >
+            <div className="text-xl">💾</div>
+            <div className="flex-1 text-left">
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Storage Encryption</h4>
+              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Scrambles local data files.</p>
+            </div>
+            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.crypto ? 'bg-amber-400 text-slate-900' : 'bg-slate-100 text-slate-600'}`}>
+              {layers.crypto ? 'ENCRYPTED' : 'EXPOSED'}
+            </div>
+          </div>
+
+          <div 
+            onClick={() => toggleLayer('tracker')}
+            className={`flex items-center gap-3 p-3 border-3 border-[#1A1A2E] shadow-[3px_3px_0px_#1A1A2E] cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 ${layers.tracker ? 'bg-sky-50' : 'bg-white hover:bg-slate-50'}`}
+          >
+            <div className="text-xl">🌐</div>
+            <div className="flex-1 text-left">
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Ad-Tracker Block</h4>
+              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Stops behavioral ad cookies.</p>
+            </div>
+            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.tracker ? 'bg-sky-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+              {layers.tracker ? 'BLOCKED' : 'ALLOW'}
+            </div>
+          </div>
+
+          <div 
+            onClick={() => toggleLayer('wipe')}
+            className={`flex items-center gap-3 p-3 border-3 border-[#1A1A2E] shadow-[3px_3px_0px_#1A1A2E] cursor-pointer transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 ${layers.wipe ? 'bg-emerald-50' : 'bg-white hover:bg-slate-50'}`}
+          >
+            <div className="text-xl">🧹</div>
+            <div className="flex-1 text-left">
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Old Account Purge</h4>
+              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Deletes unused tech profiles.</p>
+            </div>
+            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.wipe ? 'bg-emerald-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+              {layers.wipe ? 'WIPED' : 'CLUTTERED'}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {strength === 100 && (
+        <div className="comic-privacy-victory mt-3 text-center border-t-3 border-[#1A1A2E] pt-3 pb-1 bg-emerald-50 text-emerald-800">
+          <p className="text-xs font-extrabold uppercase tracking-wider">
+            🎉 SHIELD FULLY CHARGED! DIGITAL CITIZENSHIP LEVEL MAXED!
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InteractiveRecyclingOutputs() {
+  const [states, setStates] = useState<{
+    [key: number]: {
+      status: 'idle' | 'running' | 'done'
+      progress: number
+      result: string
+    }
+  }>({
+    0: { status: 'idle', progress: 0, result: '' },
+    1: { status: 'idle', progress: 0, result: '' },
+    2: { status: 'idle', progress: 0, result: '' },
+  })
+
+  const cards = [
+    {
+      id: 0,
+      title: "Recovered Metals",
+      badge: "metals",
+      accent: "#facc15",
+      btnText: "Purity Check",
+      runningText: "Refining...",
+      description: "Recovered metals re-enter manufacturing when purity standards and collection economics align.",
+      icon: (
+        <svg className="w-10 h-10 text-[#facc15]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      results: [
+        "🏆 GOLD & COPPER EXTRACTED! Purity levels exceed 99.8%! Ready for circuit boards.",
+        "⚡ RE-MANUFACTURING BOUND! Reclaimed copper wire successfully sent to local grid supplier.",
+        "✨ PRECIOUS METALS SALVAGED! High-grade silver ingot cast. Zero virgin mining needed!"
+      ]
+    },
+    {
+      id: 1,
+      title: "Cleaned Plastics",
+      badge: "polymers",
+      accent: "#2bc1a6",
+      btnText: "Pelletize",
+      runningText: "Extruding...",
+      description: "Cleaned plastics can be pelletized and reused in selected applications.",
+      icon: (
+        <svg className="w-10 h-10 text-[#2bc1a6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3L22 4" />
+        </svg>
+      ),
+      results: [
+        "🧪 PELLETIZED! Sorted ABS and polycarbonate plastics shredded and extruded into clean resin beads.",
+        "🔄 LOOP CLOSED! Sorted high-density plastic sent to build new server frames.",
+        "♻️ REUSE APPROVED! Shredded polymers successfully quality-checked for industrial housing."
+      ]
+    },
+    {
+      id: 2,
+      title: "Toxic Residues",
+      badge: "hazards",
+      accent: "#ff5e5e",
+      btnText: "Contain Hazard",
+      runningText: "Sealing...",
+      description: "Toxic residues must be contained so that recycling does not simply become another form of pollution transfer.",
+      icon: (
+        <svg className="w-10 h-10 text-[#ff5e5e]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      ),
+      results: [
+        "🛡️ SHIELD ACTIVE! Hazardous leaded glass and cadmium dust safely sealed in secure concrete blocks.",
+        "🔒 LEAK PROOF! Mercury vapor captured in sulfur-impregnated carbon filters. 0% atmospheric emission.",
+        "🛑 SAFE CONTAINMENT! Acid sludge neutralized and deposited in double-lined hazardous waste cells."
+      ]
+    }
+  ]
+
+  const runProcessor = (id: number) => {
+    setStates(prev => ({
+      ...prev,
+      [id]: { status: 'running', progress: 0, result: '' }
+    }))
+
+    let currentProgress = 0
+    const interval = setInterval(() => {
+      currentProgress += 10
+      if (currentProgress >= 100) {
+        clearInterval(interval)
+        const card = cards.find(c => c.id === id)!
+        const randomResult = card.results[Math.floor(Math.random() * card.results.length)]
+        setStates(prev => ({
+          ...prev,
+          [id]: { status: 'done', progress: 100, result: randomResult }
+        }))
+      } else {
+        setStates(prev => ({
+          ...prev,
+          [id]: { ...prev[id], progress: currentProgress }
+        }))
+      }
+    }, 100)
+  }
+
+  return (
+    <div className="comic-outputs-container">
+      <div className="comic-outputs-header">
+        RECYCLING OUTPUT STREAMS — ACTIVATE CONTROLS TO PROCESS
+      </div>
+      
+      <div className="comic-outputs-grid">
+        {cards.map((card) => {
+          const state = states[card.id]
+          return (
+            <div 
+              key={card.id} 
+              className="comic-output-card"
+              style={{
+                '--btn-color': card.accent,
+                '--progress-color': card.accent
+              } as CSSProperties}
+            >
+              <div 
+                className="comic-output-badge"
+                style={{
+                  background: card.accent,
+                  color: card.id === 0 ? '#1A1A2E' : '#FFFFFF'
+                }}
+              >
+                {card.badge}
+              </div>
+              
+              <div>
+                <div className="comic-output-icon-wrapper">
+                  {card.icon}
+                </div>
+                <h4 className="comic-output-title">{card.title}</h4>
+                <p className="comic-output-desc">{card.description}</p>
+              </div>
+
+              <div>
+                <button 
+                  onClick={() => runProcessor(card.id)}
+                  disabled={state.status === 'running'}
+                  className="comic-output-action-btn"
+                >
+                  {state.status === 'idle' && card.btnText}
+                  {state.status === 'running' && card.runningText}
+                  {state.status === 'done' && "Run Again 🔄"}
+                </button>
+
+                {state.status === 'running' && (
+                  <div className="comic-progress-container">
+                    <div 
+                      className="comic-progress-bar" 
+                      style={{ width: `${state.progress}%` }}
+                    />
+                    <div className="comic-progress-text">{state.progress}%</div>
+                  </div>
+                )}
+
+                {state.status === 'done' && state.result && (
+                  <div className="comic-output-result">
+                    {state.result}
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout }) {
   return (
     <article
@@ -1726,7 +2205,13 @@ function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout })
 
       {tab.heroImage && (
         <div className="topic-banner">
-          <img src={toSkillizeeImageUrl(tab.heroImage)} alt={tab.title} />
+          {tab.heroImage === '/images/ewaste_recycling_flow.png' ? (
+            <InteractiveRecyclingFlow />
+          ) : tab.heroImage === '/images/digital_citizenship.png' ? (
+            <InteractiveDigitalCitizenship />
+          ) : (
+            <img src={toSkillizeeImageUrl(tab.heroImage)} alt={tab.title} />
+          )}
         </div>
       )}
 

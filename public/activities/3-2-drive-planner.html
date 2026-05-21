@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Architect | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Site Logistics Planner | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
@@ -16,35 +16,35 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; margin: 0; overflow: hidden; }
-        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%); }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; margin: 0; overflow: hidden; }
+        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #0b1329 0%, #020617 100%); }
         
         .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
         .ui-panel {
             pointer-events: auto;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            background: rgba(8, 14, 28, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
-        .header-panel { top: 24px; left: 24px; padding: 24px; max-width: 380px; }
-        .assets-panel { top: 24px; right: 24px; width: 320px; padding: 20px; }
+        .header-panel { top: 24px; left: 24px; padding: 24px; max-width: 380px; position: absolute; }
+        .assets-panel { top: 24px; right: 24px; width: 320px; padding: 20px; position: absolute; }
 
         .asset-btn {
-            width: 100%; background: white; border: 1px solid #e2e8f0;
-            border-radius: 12px; padding: 12px; margin-bottom: 12px;
+            width: 100%; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+            color: white; border-radius: 12px; padding: 12px; margin-bottom: 10px;
             display: flex; align-items: center; gap: 12px;
-            cursor: pointer; transition: 0.2s;
+            cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .asset-btn:hover { border-color: #3b82f6; transform: translateX(-4px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1); }
-        .asset-btn.active { border-color: #3b82f6; background: #eff6ff; }
+        .asset-btn:hover { border-color: rgba(59, 130, 246, 0.5); transform: translateX(-4px); background: rgba(59, 130, 246, 0.05); }
+        .asset-btn.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); box-shadow: 0 0 15px rgba(59, 130, 246, 0.25); }
 
         .purpose-box {
             position: absolute; bottom: 24px; left: 24px; max-width: 380px;
-            padding: 16px; font-size: 11px; color: #64748b;
-            background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(0,0,0,0.05);
+            padding: 16px; font-size: 11px; color: #94a3b8;
+            background: rgba(8, 14, 28, 0.7); border: 1px solid rgba(59, 130, 246, 0.1);
         }
 
         .safety-meter {
@@ -52,82 +52,210 @@
         }
 
         .instruction-tag {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;
-            pointer-events: none; opacity: 0.6;
+            position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+            font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 3px;
+            pointer-events: none; opacity: 0.8; background: rgba(15, 23, 42, 0.6); padding: 6px 16px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(4px);
         }
+
+        /* Glassmorphic Modal */
+        .modal-overlay {
+            position: absolute; inset: 0; z-index: 50; background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;
+        }
+        .modal-card {
+            background: rgba(10, 18, 36, 0.95); border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px; max-width: 600px; width: 90%; padding: 40px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(59, 130, 246, 0.1);
+        }
+
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
-    <div class="instruction-tag">Click on Grid to Place • Drag to Arrange</div>
+    <div id="label-overlay" class="absolute inset-0 pointer-events-none z-20"></div>
+    
+    <div class="instruction-tag font-display">Click components to place • Drag to reposition</div>
+
+    <!-- Onboarding Briefing Modal -->
+    <div id="onboarding-modal" class="modal-overlay">
+        <div class="modal-card text-center">
+            <div class="text-[11px] font-bold text-blue-400 uppercase tracking-widest mb-2 font-display">Module 3.2 • Logistics Mission</div>
+            <h2 class="text-3xl font-bold mb-4 font-display text-white">Site Layout Architect</h2>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                Welcome, Logistics Engineer! E-waste collection drives receive toxic, hazardous parts (like batteries or mercury lamps) alongside public citizen traffic and heavy freight trucks. 
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left">
+                <div class="p-3 bg-blue-500/5 rounded-xl border border-blue-500/10">
+                    <span class="text-lg block mb-1">🛡️</span>
+                    <h4 class="text-xs font-bold text-white mb-1">1. Contain Hazards</h4>
+                    <p class="text-[10px] text-slate-400 leading-tight">Keep battery acid and toxic gas emissions far away from public lines.</p>
+                </div>
+                <div class="p-3 bg-amber-500/5 rounded-xl border border-amber-500/10">
+                    <span class="text-lg block mb-1">🚚</span>
+                    <h4 class="text-xs font-bold text-white mb-1">2. Traffic Safety</h4>
+                    <p class="text-[10px] text-slate-400 leading-tight">Separate reversing cargo trucks from citizen foot traffic and family cars.</p>
+                </div>
+                <div class="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10">
+                    <span class="text-lg block mb-1">🔄</span>
+                    <h4 class="text-xs font-bold text-white mb-1">3. Linear Stream</h4>
+                    <p class="text-[10px] text-slate-400 leading-tight">Align intake, sorting, and loading in one direction to prevent traffic jams.</p>
+                </div>
+            </div>
+            <button class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-sm transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] cursor-pointer" onclick="closeOnboarding()">
+                Start Site Design
+            </button>
+        </div>
+    </div>
+
+    <!-- Victory Completion Report -->
+    <div id="victory-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 animate-pulse">🏆</div>
+                <h2 class="text-2xl font-bold font-display text-emerald-400">Layout Safety Certified!</h2>
+                <p class="text-xs text-slate-400 mt-1">Site Logistics Layout Score: 100%</p>
+            </div>
+            <div class="space-y-4 p-4 bg-slate-900/60 rounded-2xl border border-white/5 mb-6 text-sm">
+                <div>
+                    <h4 class="text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        Chemical Hazard Containment [SECURE]
+                    </h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed pl-3">
+                        The Hazardous storage zone is isolated from public drop-off points, protecting citizens from lead dust, battery outgassing, and chemical vapors.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        Pedestrian Traffic Segregation [SECURE]
+                    </h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed pl-3">
+                        Reversing semi-trucks at the loading bay are kept clear of civilian arrival lanes, eliminating collision risks.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        Workflow Throughput [OPTIMIZED]
+                    </h4>
+                    <p class="text-[11px] text-slate-400 leading-relaxed pl-3">
+                        Unidirectional workflow flow (Intake &rarr; Sorting &rarr; Loading Bay) prevents material backtracking and eliminates sorting bottlenecks.
+                    </p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition duration-200 cursor-pointer text-center" onclick="completeActivity()">
+                    Lock In Layout & Claim XP
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2">Module 3.2 • Logistics</div>
-            <h1 class="text-2xl font-bold mb-2">Site Workflow Architect</h1>
-            <p class="text-sm text-slate-500">Design a safe and efficient e-waste collection drive. Proper zoning prevents accidents and speeds up processing.</p>
+            <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5 font-display">Module 3.2 • Logistics</div>
+            <h1 class="text-2xl font-bold mb-2 font-display">Site Workflow Architect</h1>
+            <p class="text-xs text-slate-400 leading-relaxed">Arrange your temporary collection drive layout on the grid below. Keep public citizens safe from industrial machinery and hazardous components.</p>
             
-            <div class="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                <p class="text-xs font-bold text-blue-600 uppercase mb-2">Instructions</p>
-                <ul class="text-[10px] space-y-1 text-slate-500">
-                    <li>• Select an asset from the right panel.</li>
-                    <li>• Click anywhere on the grid to place it.</li>
-                    <li>• Ensure "Hazardous Storage" is away from the "Public Intake".</li>
-                </ul>
+            <div class="mt-4 p-4 bg-slate-900/60 rounded-xl border border-white/5">
+                <p class="text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-wide font-display">Logistics Engineering Checklist</p>
+                <div class="space-y-2 text-[10px]" id="checklist">
+                    <div class="flex items-start gap-2.5" id="chk-all-placed">
+                        <span class="chk-status mt-0.5">❌</span>
+                        <div>
+                            <span class="text-slate-300 font-medium block">All Zones Operational</span>
+                            <span class="text-[9px] text-slate-500 block">Place Intake, Sorting, Hazard, and Loading Bay on the layout.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2.5" id="chk-hazard-dist">
+                        <span class="chk-status mt-0.5">❌</span>
+                        <div>
+                            <span class="text-slate-300 font-medium block">Public-Hazard Isolation (&gt; 7m)</span>
+                            <span class="text-[9px] text-slate-500 block">Isolate damaged lead-acid batteries and CRT glass from civilian queues.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2.5" id="chk-flow-linear">
+                        <span class="chk-status mt-0.5">❌</span>
+                        <div>
+                            <span class="text-slate-300 font-medium block">Unidirectional Workflow Flow</span>
+                            <span class="text-[9px] text-slate-500 block">Arrange Intake &rarr; Sorting &rarr; Loading Bay in a clean forward sequence.</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2.5" id="chk-truck-dist">
+                        <span class="chk-status mt-0.5">❌</span>
+                        <div>
+                            <span class="text-slate-300 font-medium block">Heavy Logistics Buffer (&gt; 6m)</span>
+                            <span class="text-[9px] text-slate-500 block">Keep reversing cargo trailers away from public drop-off lanes.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="ui-panel assets-panel">
-            <h3 class="text-xs font-bold text-slate-400 uppercase mb-4 tracking-widest">Zone Components</h3>
+            <h3 class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest font-display">Zone Palette</h3>
             
             <button class="asset-btn" onclick="setMode('intake', this)">
-                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">📥</div>
+                <div class="w-10 h-10 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center text-lg shadow-inner">📥</div>
                 <div class="text-left">
-                    <h4 class="text-xs font-bold">Public Intake</h4>
-                    <p class="text-[9px] text-slate-400">Citizen drop-off point</p>
+                    <h4 class="text-xs font-bold text-white">Public Intake</h4>
+                    <p class="text-[9px] text-slate-400">Citizen drop-off point & queue</p>
                 </div>
             </button>
 
             <button class="asset-btn" onclick="setMode('sorting', this)">
-                <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">🔍</div>
+                <div class="w-10 h-10 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center text-lg shadow-inner">🔍</div>
                 <div class="text-left">
-                    <h4 class="text-xs font-bold">Sorting Tables</h4>
-                    <p class="text-[9px] text-slate-400">Categorize e-waste</p>
+                    <h4 class="text-xs font-bold text-white">Sorting Tables</h4>
+                    <p class="text-[9px] text-slate-400">Categorize elements into fractions</p>
                 </div>
             </button>
 
             <button class="asset-btn" onclick="setMode('hazard', this)">
-                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center">⚠️</div>
+                <div class="w-10 h-10 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg flex items-center justify-center text-lg shadow-inner">⚠️</div>
                 <div class="text-left">
-                    <h4 class="text-xs font-bold">Hazardous Zone</h4>
-                    <p class="text-[9px] text-slate-400">Batteries / CRT storage</p>
+                    <h4 class="text-xs font-bold text-white">Hazardous Zone</h4>
+                    <p class="text-[9px] text-slate-400">Secure lead/mercury storage</p>
                 </div>
             </button>
 
             <button class="asset-btn" onclick="setMode('truck', this)">
-                <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center">🚚</div>
+                <div class="w-10 h-10 bg-slate-500/10 border border-slate-500/20 text-slate-400 rounded-lg flex items-center justify-center text-lg shadow-inner">🚚</div>
                 <div class="text-left">
-                    <h4 class="text-xs font-bold">Loading Bay</h4>
-                    <p class="text-[9px] text-slate-400">Heavy load pickup</p>
+                    <h4 class="text-xs font-bold text-white">Loading Bay</h4>
+                    <p class="text-[9px] text-slate-400">Heavy vehicle cargo pickup</p>
                 </div>
+            </button>
+
+            <div id="selection-panel" class="hidden mt-4 pt-4 border-t border-white/5">
+                <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Selected Zone</p>
+                <p class="text-xs font-bold mb-2 text-blue-400" id="selected-name">None</p>
+                <button class="w-full py-2 bg-red-650/80 hover:bg-red-650 text-white rounded-lg text-xs font-bold transition hover:shadow-lg hover:shadow-red-950/20 border border-red-500/10 cursor-pointer" onclick="deleteSelected()">
+                    Remove Component
+                </button>
+            </div>
+
+            <button class="mt-4 w-full py-2 border border-slate-800 hover:border-slate-700 text-slate-500 hover:text-slate-400 rounded-lg text-xs font-bold transition cursor-pointer" onclick="clearAll()">
+                Reset Grid Layout
             </button>
         </div>
 
         <div class="ui-panel safety-meter">
             <div class="flex justify-between items-end mb-2">
-                <p class="text-xs font-bold text-slate-400 uppercase">Site Safety Rating</p>
-                <p class="text-xl font-bold text-blue-600" id="safety-score">0%</p>
+                <p class="text-xs font-bold text-slate-400 uppercase font-display">Site Safety Rating</p>
+                <p class="text-xl font-bold text-red-500" id="safety-score">0%</p>
             </div>
-            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div id="safety-bar" class="h-full bg-blue-500 w-0 transition-all duration-500"></div>
+            <div class="h-2 bg-slate-900 rounded-full overflow-hidden border border-white/5 p-0.5">
+                <div id="safety-bar" class="h-full bg-red-500 w-0 transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
             </div>
-            <p class="text-[9px] text-slate-400 mt-3 italic text-center">Place at least one of each zone to calculate rating.</p>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-blue-600 uppercase text-[9px] block mb-1">Learning Purpose</span>
-            To practice logistics planning. Effective site layout ensures that hazardous materials (like leaking batteries) are isolated from people, while keeping the main "workflow" from intake to shipping as linear as possible.
+            <span class="font-bold text-blue-400 uppercase text-[9px] block mb-1 font-display">Learning Purpose</span>
+            To practice logistics safety planning. Safe site designs contain environmental chemical risks and manage heavy vehicle traffic buffer zones, while ensuring smooth linear material flow from intake to transport.
         </div>
     </div>
 
@@ -138,12 +266,86 @@
         let scene, camera, renderer, controls, raycaster, mouse;
         let currentMode = null;
         const placedAssets = [];
+        let isDragging = false;
+        let selectedGroup = null;
+        const dragPlaneIntersect = new THREE.Vector3();
+
+        // 3D holographic indicators
+        let hazardRing, hazardDisc;
+        let truckRing, truckDisc;
+        let flowLine;
+
+        // Sound context
+        let audioCtx = null;
 
         const assetTypes = {
-            intake: { color: 0x3b82f6, h: 2, w: 3, name: 'Intake Tent' },
-            sorting: { color: 0xf59e0b, h: 1, w: 4, name: 'Sorting Array' },
-            hazard: { color: 0xef4444, h: 1.5, w: 2, name: 'Hazmat Containment' },
-            truck: { color: 0x475569, h: 2.5, w: 2, name: 'Loading Bay' }
+            intake: { color: 0x3b82f6, h: 2, w: 3, name: 'Public Intake' },
+            sorting: { color: 0xf59e0b, h: 1, w: 4, name: 'Sorting Tables' },
+            hazard: { color: 0xef4444, h: 1.5, w: 2, name: 'Hazardous Zone' },
+            truck: { color: 0x64748b, h: 2.5, w: 2.5, name: 'Loading Bay' }
+        };
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                const now = audioCtx.currentTime;
+                if (type === 'place') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.start(now);
+                    osc.stop(now + 0.1);
+                } else if (type === 'warning') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(100, now);
+                    osc.frequency.setValueAtTime(90, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'success') {
+                    const notes = [261.63, 329.63, 392.00, 523.25];
+                    notes.forEach((freq, idx) => {
+                        const noteOsc = audioCtx.createOscillator();
+                        const noteGain = audioCtx.createGain();
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(audioCtx.destination);
+                        noteOsc.type = 'sine';
+                        noteOsc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        noteGain.gain.setValueAtTime(0.1, now + idx * 0.08);
+                        noteGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+                        noteOsc.start(now + idx * 0.08);
+                        noteOsc.stop(now + idx * 0.08 + 0.35);
+                    });
+                }
+            } catch(e) {
+                console.warn('Web Audio error:', e);
+            }
+        }
+
+        window.closeOnboarding = () => {
+            initAudio();
+            gsap.to("#onboarding-modal", {
+                opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.inOut", onComplete: () => {
+                    document.getElementById("onboarding-modal").classList.add("hidden");
+                }
+            });
         };
 
         function init() {
@@ -151,131 +353,699 @@
             
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(15, 15, 15);
+            camera.position.set(18, 18, 18);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             container.appendChild(renderer.domElement);
 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.maxPolarAngle = Math.PI / 2.2;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2.15;
+            controls.minDistance = 10;
+            controls.maxDistance = 50;
 
             // Lights
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-            const sun = new THREE.DirectionalLight(0xffffff, 1);
-            sun.position.set(10, 20, 10);
-            sun.castShadow = true;
-            scene.add(sun);
+            scene.add(new THREE.AmbientLight(0x0f172a, 0.8));
+            
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+            dirLight1.position.set(15, 25, 15);
+            dirLight1.castShadow = true;
+            dirLight1.shadow.mapSize.width = 2048;
+            dirLight1.shadow.mapSize.height = 2048;
+            dirLight1.shadow.bias = -0.0005;
+            scene.add(dirLight1);
 
-            // Ground & Grid
-            const grid = new THREE.GridHelper(30, 30, 0xcbd5e1, 0xf1f5f9);
+            const dirLight2 = new THREE.DirectionalLight(0x61b8ff, 0.6);
+            dirLight2.position.set(-15, 20, -15);
+            scene.add(dirLight2);
+
+            // Glowing scan grid
+            const grid = new THREE.GridHelper(30, 30, 0x1e3a8a, 0x0f172a);
+            grid.position.y = 0.005;
             scene.add(grid);
 
+            // Dark reflective ground
             const groundGeo = new THREE.PlaneGeometry(30, 30);
-            const groundMat = new THREE.ShadowMaterial({ opacity: 0.05 });
+            const groundMat = new THREE.MeshStandardMaterial({ 
+                color: 0x030712, 
+                roughness: 0.4, 
+                metalness: 0.8 
+            });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             scene.add(ground);
 
+            // Construct visual indicators
+            const createRangeCircle = (radius, colorHex) => {
+                const ringGeo = new THREE.RingGeometry(radius - 0.05, radius + 0.05, 64);
+                ringGeo.rotateX(-Math.PI / 2);
+                const ringMat = new THREE.MeshBasicMaterial({ color: colorHex, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                
+                const discGeo = new THREE.CircleGeometry(radius, 64);
+                discGeo.rotateX(-Math.PI / 2);
+                const discMat = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.06, side: THREE.DoubleSide });
+                const disc = new THREE.Mesh(discGeo, discMat);
+                
+                ring.position.y = 0.02;
+                disc.position.y = 0.015;
+                
+                scene.add(ring);
+                scene.add(disc);
+                return [ring, disc];
+            };
+
+            [hazardRing, hazardDisc] = createRangeCircle(7, 0xef4444);
+            [truckRing, truckDisc] = createRangeCircle(6, 0x3b82f6);
+
+            hazardRing.visible = false; hazardDisc.visible = false;
+            truckRing.visible = false; truckDisc.visible = false;
+
+            // Flow connector line
+            const flowLineMat = new THREE.LineDashedMaterial({
+                color: 0x10b981,
+                dashSize: 0.6,
+                gapSize: 0.4,
+                transparent: true,
+                opacity: 0.9
+            });
+            const flowLineGeo = new THREE.BufferGeometry();
+            flowLine = new THREE.Line(flowLineGeo, flowLineMat);
+            flowLine.visible = false;
+            scene.add(flowLine);
+
             raycaster = new THREE.Raycaster();
             mouse = new THREE.Vector2();
 
-            window.addEventListener('pointerdown', onGridClick);
+            window.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
             window.addEventListener('resize', onWindowResize);
             
             animate();
+            calculateSafety();
         }
 
         window.setMode = (mode, btn) => {
+            initAudio();
             currentMode = mode;
+            deselectAll();
             document.querySelectorAll('.asset-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if (btn) btn.classList.add('active');
         };
 
-        function onGridClick(e) {
-            if (!currentMode) return;
-            if (e.target.closest('.ui-panel')) return;
+        function onPointerDown(e) {
+            if (e.target.closest('.ui-panel') || e.target.closest('.modal-overlay')) return;
 
             mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(mouse, camera);
 
-            // Plane for raycasting grid
-            const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-            const intersectPoint = new THREE.Vector3();
-            raycaster.ray.intersectPlane(plane, intersectPoint);
+            // Check if user clicked an existing asset
+            const meshes = placedAssets.map(a => a.mesh);
+            const intersects = raycaster.intersectObjects(meshes, true);
 
-            if (intersectPoint) {
-                placeAsset(currentMode, intersectPoint);
+            if (intersects.length > 0) {
+                let clickedObj = intersects[0].object;
+                let foundRoot = null;
+                while (clickedObj) {
+                    if (clickedObj.userData && clickedObj.userData.isAssetRoot) {
+                        foundRoot = clickedObj;
+                        break;
+                    }
+                    clickedObj = clickedObj.parent;
+                }
+                if (foundRoot) {
+                    selectedGroup = foundRoot;
+                    isDragging = true;
+                    controls.enabled = false;
+                    highlightAsset(selectedGroup);
+                    return;
+                }
+            }
+
+            // Clicked empty ground: place if mode is selected
+            if (currentMode) {
+                const intersectPoint = new THREE.Vector3();
+                const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+                if (raycaster.ray.intersectPlane(plane, intersectPoint)) {
+                    placeAsset(currentMode, intersectPoint);
+                }
+            } else {
+                deselectAll();
+            }
+        }
+
+        function onPointerMove(e) {
+            if (!isDragging || !selectedGroup) return;
+
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+
+            const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+            if (raycaster.ray.intersectPlane(plane, dragPlaneIntersect)) {
+                const snapX = Math.round(dragPlaneIntersect.x);
+                const snapZ = Math.round(dragPlaneIntersect.z);
+                const boundedX = Math.max(-14, Math.min(14, snapX));
+                const boundedZ = Math.max(-14, Math.min(14, snapZ));
+
+                selectedGroup.position.set(boundedX, 0, boundedZ);
+                
+                // Real-time updates during drag
+                updateIndicators();
+                calculateSafety();
+                updateFloatingLabels();
+            }
+        }
+
+        function onPointerUp() {
+            if (isDragging) {
+                isDragging = false;
+                controls.enabled = true;
+                playSound('place');
+                calculateSafety();
             }
         }
 
         function placeAsset(type, pos) {
             const config = assetTypes[type];
             const group = new THREE.Group();
-            
-            // Stylized Low Poly Model
-            const geo = new THREE.BoxGeometry(config.w, config.h, config.w);
-            const mat = new THREE.MeshStandardMaterial({ color: config.color, roughness: 0.3 });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.y = config.h / 2;
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            group.add(mesh);
+            group.userData = { isAssetRoot: true, type: type };
 
-            // Roof / Detail
-            const roofGeo = new THREE.BoxGeometry(config.w + 0.2, 0.1, config.w + 0.2);
-            const roofMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-            const roof = new THREE.Mesh(roofGeo, roofMat);
-            roof.position.y = config.h;
-            group.add(roof);
+            const color = config.color;
 
-            group.position.set(Math.round(pos.x), 0, Math.round(pos.z));
+            if (type === 'intake') {
+                // 4 Corner poles
+                const poleGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.8, 8);
+                const poleMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8 });
+                const offset = config.w / 2 - 0.1;
+                const corners = [
+                    [-offset, -offset],
+                    [-offset, offset],
+                    [offset, -offset],
+                    [offset, offset]
+                ];
+                corners.forEach(([cx, cz]) => {
+                    const pole = new THREE.Mesh(poleGeo, poleMat);
+                    pole.position.set(cx, 0.9, cz);
+                    pole.castShadow = true;
+                    group.add(pole);
+                });
+
+                // Peaked fabric roof
+                const roofGeo = new THREE.ConeGeometry(config.w * 0.75, 1.0, 4);
+                roofGeo.rotateY(Math.PI / 4);
+                const roofMat = new THREE.MeshStandardMaterial({
+                    color: color,
+                    roughness: 0.6,
+                    metalness: 0.1,
+                    emissive: color,
+                    emissiveIntensity: 0.25
+                });
+                const roof = new THREE.Mesh(roofGeo, roofMat);
+                roof.position.set(0, 2.3, 0);
+                roof.castShadow = true;
+                group.add(roof);
+
+                // Desk inside
+                const deskGeo = new THREE.BoxGeometry(1.4, 0.7, 0.7);
+                const deskMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
+                const desk = new THREE.Mesh(deskGeo, deskMat);
+                desk.position.set(0, 0.35, 0);
+                desk.castShadow = true;
+                group.add(desk);
+
+            } else if (type === 'sorting') {
+                // 2 parallel long tables
+                const tableMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
+                const tableGeo = new THREE.BoxGeometry(config.w * 0.8, 0.65, 0.8);
+                
+                [-0.6, 0.6].forEach(zOffset => {
+                    const table = new THREE.Mesh(tableGeo, tableMat);
+                    table.position.set(0, 0.325, zOffset);
+                    table.castShadow = true;
+                    group.add(table);
+
+                    // Tiny colorful storage bins on top
+                    const binGeo = new THREE.BoxGeometry(0.5, 0.35, 0.5);
+                    const colors = [0x3b82f6, 0xf59e0b, 0xef4444];
+                    [-1.0, 0, 1.0].forEach((xOffset, idx) => {
+                        const binMat = new THREE.MeshStandardMaterial({
+                            color: colors[idx],
+                            roughness: 0.3,
+                            emissive: colors[idx],
+                            emissiveIntensity: 0.25
+                         });
+                         const bin = new THREE.Mesh(binGeo, binMat);
+                         bin.position.set(xOffset, 0.825, zOffset);
+                         bin.castShadow = true;
+                         group.add(bin);
+                     });
+                 });
+
+            } else if (type === 'hazard') {
+                // Solid platform base
+                const platGeo = new THREE.BoxGeometry(config.w, 0.15, config.w);
+                const platMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
+                const plat = new THREE.Mesh(platGeo, platMat);
+                plat.position.y = 0.075;
+                plat.receiveShadow = true;
+                group.add(plat);
+
+                // 2 high-contrast toxic barrels
+                const barrelGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.95, 12);
+                const barrelMat = new THREE.MeshStandardMaterial({
+                    color: color,
+                    roughness: 0.3,
+                    metalness: 0.5,
+                    emissive: color,
+                    emissiveIntensity: 0.2
+                });
+                const bPositions = [[-0.4, -0.4], [0.4, 0.4]];
+                bPositions.forEach(([bx, bz]) => {
+                    const barrel = new THREE.Mesh(barrelGeo, barrelMat);
+                    barrel.position.set(bx, 0.625, bz);
+                    barrel.castShadow = true;
+                    group.add(barrel);
+                    
+                    // Black warning bands
+                    const bandGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.1, 12);
+                    const bandMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                    const band1 = new THREE.Mesh(bandGeo, bandMat);
+                    band1.position.set(bx, 0.8, bz);
+                    const band2 = new THREE.Mesh(bandGeo, bandMat);
+                    band2.position.set(bx, 0.45, bz);
+                    group.add(band1);
+                    group.add(band2);
+                });
+
+                // Warning beacon on a pole
+                const poleGeo = new THREE.CylinderGeometry(0.02, 0.02, 1.4, 8);
+                const poleMat = new THREE.MeshStandardMaterial({ color: 0x64748b });
+                const pole = new THREE.Mesh(poleGeo, poleMat);
+                pole.position.set(-0.5, 0.7, 0.5);
+                group.add(pole);
+
+                const beaconGeo = new THREE.SphereGeometry(0.09, 12, 12);
+                const beaconMat = new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: 1.0 });
+                const beacon = new THREE.Mesh(beaconGeo, beaconMat);
+                beacon.position.set(-0.5, 1.4, 0.5);
+                group.add(beacon);
+                
+                group.userData.beacon = beacon;
+
+            } else if (type === 'truck') {
+                // Loading platform dock
+                const dockGeo = new THREE.BoxGeometry(config.w, 0.3, config.w * 1.5);
+                const dockMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.6 });
+                const dock = new THREE.Mesh(dockGeo, dockMat);
+                dock.position.y = 0.15;
+                dock.receiveShadow = true;
+                group.add(dock);
+
+                // Cute low-poly transport truck
+                const truckGroup = new THREE.Group();
+                truckGroup.position.set(0.6, 0.15, 0);
+
+                // Chassis
+                const chGeo = new THREE.BoxGeometry(0.7, 0.15, 1.8);
+                const chMat = new THREE.MeshStandardMaterial({ color: 0x1e293b });
+                const chassis = new THREE.Mesh(chGeo, chMat);
+                chassis.position.y = 0.075;
+                chassis.castShadow = true;
+                truckGroup.add(chassis);
+
+                // Cabin
+                const cabGeo = new THREE.BoxGeometry(0.6, 0.55, 0.55);
+                const cabMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3 });
+                const cabin = new THREE.Mesh(cabGeo, cabMat);
+                cabin.position.set(0, 0.425, 0.55);
+                cabin.castShadow = true;
+                truckGroup.add(cabin);
+
+                // Cargo container
+                const carGeo = new THREE.BoxGeometry(0.65, 0.75, 1.25);
+                const carMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.4, roughness: 0.4 });
+                const cargo = new THREE.Mesh(carGeo, carMat);
+                cargo.position.set(0, 0.525, -0.325);
+                cargo.castShadow = true;
+                truckGroup.add(cargo);
+
+                // Wheels
+                const whGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.15, 8);
+                whGeo.rotateZ(Math.PI / 2);
+                const whMat = new THREE.MeshStandardMaterial({ color: 0x080c14, roughness: 0.8 });
+                const whPositions = [
+                    [-0.35, 0.12, 0.55],
+                    [0.35, 0.12, 0.55],
+                    [-0.35, 0.12, -0.4],
+                    [0.35, 0.12, -0.4]
+                ];
+                whPositions.forEach(([wx, wy, wz]) => {
+                    const wheel = new THREE.Mesh(whGeo, whMat);
+                    wheel.position.set(wx, wy, wz);
+                    wheel.castShadow = true;
+                    truckGroup.add(wheel);
+                });
+
+                group.add(truckGroup);
+            }
+
+            const snapX = Math.round(pos.x);
+            const snapZ = Math.round(pos.z);
+            const boundedX = Math.max(-14, Math.min(14, snapX));
+            const boundedZ = Math.max(-14, Math.min(14, snapZ));
+
+            group.position.set(boundedX, 0, boundedZ);
             scene.add(group);
             placedAssets.push({ type, mesh: group });
 
+            playSound('place');
             gsap.from(group.scale, { x: 0, y: 0, z: 0, duration: 0.5, ease: "back.out" });
+            
+            highlightAsset(group);
+            
+            currentMode = null;
+            document.querySelectorAll('.asset-btn').forEach(b => b.classList.remove('active'));
+
+            updateIndicators();
             calculateSafety();
+            updateFloatingLabels();
         }
+
+        function highlightAsset(group) {
+            deselectAll();
+            selectedGroup = group;
+            
+            gsap.to(group.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.2 });
+            
+            const type = group.userData.type;
+            const config = assetTypes[type];
+            document.getElementById('selection-panel').classList.remove('hidden');
+            document.getElementById('selected-name').textContent = config.name;
+        }
+
+        function deselectAll() {
+            if (selectedGroup) {
+                gsap.to(selectedGroup.scale, { x: 1, y: 1, z: 1, duration: 0.2 });
+            }
+            selectedGroup = null;
+            document.getElementById('selection-panel').classList.add('hidden');
+        }
+
+        window.deleteSelected = () => {
+            if (!selectedGroup) return;
+            scene.remove(selectedGroup);
+            const idx = placedAssets.findIndex(a => a.mesh === selectedGroup);
+            if (idx !== -1) {
+                placedAssets.splice(idx, 1);
+            }
+            deselectAll();
+            updateIndicators();
+            calculateSafety();
+            updateFloatingLabels();
+            playSound('warning');
+        };
+
+        window.clearAll = () => {
+            placedAssets.forEach(a => scene.remove(a.mesh));
+            placedAssets.length = 0;
+            deselectAll();
+            updateIndicators();
+            calculateSafety();
+            updateFloatingLabels();
+            playSound('warning');
+        };
+
+        function updateIndicators() {
+            const intake = placedAssets.find(a => a.type === 'intake');
+            const sorting = placedAssets.find(a => a.type === 'sorting');
+            const hazard = placedAssets.find(a => a.type === 'hazard');
+            const truck = placedAssets.find(a => a.type === 'truck');
+
+            // Hazard Proximity Indicators
+            if (hazard) {
+                hazardRing.position.copy(hazard.mesh.position);
+                hazardDisc.position.copy(hazard.mesh.position);
+                hazardRing.visible = true;
+                hazardDisc.visible = true;
+
+                if (intake) {
+                    const d = intake.mesh.position.distanceTo(hazard.mesh.position);
+                    const color = d >= 7 ? 0x10b981 : 0xef4444; // Green vs Red
+                    hazardRing.material.color.setHex(color);
+                    hazardDisc.material.color.setHex(color);
+                } else {
+                    hazardRing.material.color.setHex(0xef4444);
+                    hazardDisc.material.color.setHex(0xef4444);
+                }
+            } else {
+                hazardRing.visible = false;
+                hazardDisc.visible = false;
+            }
+
+            // Truck Proximity Indicators
+            if (truck) {
+                truckRing.position.copy(truck.mesh.position);
+                truckDisc.position.copy(truck.mesh.position);
+                truckRing.visible = true;
+                truckDisc.visible = true;
+
+                if (intake) {
+                    const d = intake.mesh.position.distanceTo(truck.mesh.position);
+                    const color = d >= 6 ? 0x06b6d4 : 0xef4444; // Cyan vs Red
+                    truckRing.material.color.setHex(color);
+                    truckDisc.material.color.setHex(color);
+                } else {
+                    truckRing.material.color.setHex(0x3b82f6);
+                    truckDisc.material.color.setHex(0x3b82f6);
+                }
+            } else {
+                truckRing.visible = false;
+                truckDisc.visible = false;
+            }
+
+            // Flow Connector Path Line
+            const points = [];
+            if (intake) points.push(intake.mesh.position.clone().add(new THREE.Vector3(0, 0.1, 0)));
+            if (sorting) points.push(sorting.mesh.position.clone().add(new THREE.Vector3(0, 0.1, 0)));
+            if (truck) points.push(truck.mesh.position.clone().add(new THREE.Vector3(0, 0.1, 0)));
+
+            if (points.length >= 2) {
+                flowLine.geometry.setFromPoints(points);
+                flowLine.computeLineDistances();
+                flowLine.visible = true;
+                
+                // Determine path color based on flow check
+                const flowOk = checkLinearFlow(intake, sorting, truck);
+                flowLine.material.color.setHex(flowOk ? 0x10b981 : 0xf59e0b);
+            } else {
+                flowLine.visible = false;
+            }
+        }
+
+        function checkLinearFlow(intake, sorting, truck) {
+            if (!intake || !sorting || !truck) return false;
+            const intX = intake.mesh.position.x;
+            const srtX = sorting.mesh.position.x;
+            const trkX = truck.mesh.position.x;
+            
+            const intZ = intake.mesh.position.z;
+            const srtZ = sorting.mesh.position.z;
+            const trkZ = truck.mesh.position.z;
+
+            const isLinearX = (intX < srtX && srtX < trkX) || (intX > srtX && srtX > trkX);
+            const isLinearZ = (intZ < srtZ && srtZ < trkZ) || (intZ > srtZ && srtZ > trkZ);
+            
+            return isLinearX || isLinearZ;
+        }
+
+        function checkItemSafety(type) {
+            const intake = placedAssets.find(a => a.type === 'intake');
+            const sorting = placedAssets.find(a => a.type === 'sorting');
+            const hazard = placedAssets.find(a => a.type === 'hazard');
+            const truck = placedAssets.find(a => a.type === 'truck');
+
+            if (type === 'hazard') {
+                if (!hazard) return false;
+                if (!intake) return false;
+                return intake.mesh.position.distanceTo(hazard.mesh.position) >= 7;
+            }
+            if (type === 'truck') {
+                if (!truck) return false;
+                if (!intake) return false;
+                return intake.mesh.position.distanceTo(truck.mesh.position) >= 6;
+            }
+            if (type === 'sorting') {
+                return checkLinearFlow(intake, sorting, truck);
+            }
+            return true;
+        }
+
+        let lastSafetyScore = 0;
 
         function calculateSafety() {
             const types = new Set(placedAssets.map(a => a.type));
-            let score = 0;
             
-            if (types.size >= 1) score += 20;
-            if (types.size >= 2) score += 40;
-            if (types.size >= 3) score += 60;
-            if (types.size >= 4) score += 80;
+            let allPlaced = types.size >= 4;
+            let hazardDistOk = checkItemSafety('hazard');
+            let linearFlowOk = checkItemSafety('sorting');
+            let truckDistOk = checkItemSafety('truck');
 
-            // Proximity Check
-            const intake = placedAssets.find(a => a.type === 'intake');
-            const hazard = placedAssets.find(a => a.type === 'hazard');
+            updateChecklistItem('chk-all-placed', allPlaced);
+            updateChecklistItem('chk-hazard-dist', hazardDistOk);
+            updateChecklistItem('chk-flow-linear', linearFlowOk);
+            updateChecklistItem('chk-truck-dist', truckDistOk);
+
+            let score = 0;
+            if (allPlaced) score += 30;
+            else score += types.size * 5; 
             
-            if (intake && hazard) {
-                const dist = intake.mesh.position.distanceTo(hazard.mesh.position);
-                if (dist > 8) score += 20;
-                else score -= 20;
-            }
+            if (hazardDistOk) score += 25;
+            if (linearFlowOk) score += 25;
+            if (truckDistOk) score += 20;
 
             score = Math.max(0, Math.min(100, score));
-            document.getElementById('safety-score').textContent = score + '%';
-            document.getElementById('safety-bar').style.width = score + '%';
+            
+            const scoreEl = document.getElementById('safety-score');
+            scoreEl.textContent = score + '%';
+            
+            const bar = document.getElementById('safety-bar');
+            bar.style.width = score + '%';
+            
+            if (score < 40) {
+                scoreEl.className = 'text-xl font-bold text-red-500 font-display';
+                bar.className = 'h-full bg-red-500 transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]';
+            } else if (score < 85) {
+                scoreEl.className = 'text-xl font-bold text-amber-500 font-display';
+                bar.className = 'h-full bg-amber-500 transition-all duration-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.5)]';
+            } else {
+                scoreEl.className = 'text-xl font-bold text-emerald-500 font-display animate-pulse';
+                bar.className = 'h-full bg-emerald-500 transition-all duration-500 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.6)]';
+            }
+
+            // Open Victory report when max safety is hit
+            if (score === 100 && lastSafetyScore < 100) {
+                playSound('success');
+                setTimeout(() => {
+                    document.getElementById('victory-modal').classList.remove('hidden');
+                    gsap.from("#victory-modal .modal-card", {
+                        scale: 0.9, opacity: 0, duration: 0.5, ease: "back.out"
+                    });
+                }, 800);
+            }
+            lastSafetyScore = score;
         }
+
+        function updateChecklistItem(id, passed) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const icon = el.querySelector('.chk-status');
+            const titleSpan = el.querySelector('span:not(.chk-status)');
+            if (passed) {
+                icon.textContent = '✅';
+                titleSpan.className = 'text-emerald-400 font-bold block';
+            } else {
+                icon.textContent = '❌';
+                titleSpan.className = 'text-slate-400 font-medium block';
+            }
+        }
+
+        function updateFloatingLabels() {
+            const overlay = document.getElementById('label-overlay');
+            overlay.innerHTML = '';
+            
+            placedAssets.forEach(asset => {
+                const config = assetTypes[asset.type];
+                const pos = asset.mesh.position.clone();
+                pos.y += config.h + 0.4;
+                
+                pos.project(camera);
+                
+                const x = (pos.x * .5 + .5) * window.innerWidth;
+                const y = (pos.y * -.5 + .5) * window.innerHeight;
+                
+                if (pos.z <= 1) {
+                    const label = document.createElement('div');
+                    label.className = 'absolute pointer-events-none transform -translate-x-1/2 -translate-y-full px-2 py-0.5 bg-slate-950/95 border border-slate-800/80 text-[9px] font-bold rounded-md shadow-2xl flex items-center gap-1.5 transition-all duration-100';
+                    
+                    let statusText = 'SAFE';
+                    let statusColor = 'text-emerald-400 border-emerald-500/25 bg-emerald-500/5';
+                    
+                    if (asset.type === 'hazard') {
+                        const isSafe = checkItemSafety('hazard');
+                        statusText = isSafe ? 'SAFE' : 'EXPOSED';
+                        statusColor = isSafe ? 'text-emerald-400 border-emerald-500/25 bg-emerald-500/5' : 'text-rose-400 border-rose-500/30 bg-rose-500/10 animate-pulse';
+                    } else if (asset.type === 'truck') {
+                        const isSafe = checkItemSafety('truck');
+                        statusText = isSafe ? 'SAFE' : 'COLLISION RISK';
+                        statusColor = isSafe ? 'text-cyan-400 border-cyan-500/25 bg-cyan-500/5' : 'text-rose-400 border-rose-500/30 bg-rose-500/10 animate-pulse';
+                    } else if (asset.type === 'sorting') {
+                        const isSafe = checkItemSafety('sorting');
+                        statusText = isSafe ? 'ACTIVE' : 'FLOW BLOCKED';
+                        statusColor = isSafe ? 'text-amber-400 border-amber-500/25 bg-amber-500/5' : 'text-amber-500/50 border-amber-500/20';
+                    }
+                    
+                    label.style.left = `${x}px`;
+                    label.style.top = `${y}px`;
+                    label.innerHTML = `
+                        <span class="w-1.5 h-1.5 rounded-full ${statusText === 'SAFE' || statusText === 'ACTIVE' ? 'bg-emerald-500' : statusText === 'FLOW BLOCKED' ? 'bg-amber-500' : 'bg-rose-500'}"></span>
+                        <span class="text-slate-200">${config.name}</span>
+                        <span class="text-[7.5px] font-mono px-1 py-0.25 border rounded ${statusColor}">${statusText}</span>
+                    `;
+                    overlay.appendChild(label);
+                }
+            });
+        }
+
+        window.completeActivity = () => {
+            // Signal task completion to parent window
+            window.parent.postMessage({ type: 'ACTIVITY_COMPLETE', activityId: '3-2-drive-planner', score: 100, xp: 250 }, '*');
+            
+            // Auto visual close for demo fallback
+            gsap.to("#victory-modal", {
+                opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.inOut", onComplete: () => {
+                    document.getElementById("victory-modal").classList.add("hidden");
+                }
+            });
+        };
 
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+            updateFloatingLabels();
         }
 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
+
+            const time = Date.now() * 0.001;
+
+            // Animate warning beacons on hazard platform
+            placedAssets.forEach(a => {
+                if (a.mesh.userData && a.mesh.userData.beacon) {
+                    const blinkVal = Math.sin(time * 8);
+                    a.mesh.userData.beacon.material.opacity = blinkVal > 0 ? 1.0 : 0.2;
+                    a.mesh.userData.beacon.material.transparent = true;
+                }
+            });
+
+            // Animate moving flow dashes on connector path
+            if (flowLine && flowLine.visible) {
+                flowLine.material.dashOffset -= 0.015;
+            }
+
             renderer.render(scene, camera);
+            updateFloatingLabels(); // keep projected HTML tags aligned during drag & orbit
         }
 
         init();
