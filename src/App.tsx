@@ -1788,28 +1788,45 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
   }
 
   return (
-    <section className="content-card idea-card">
-      <div className={`idea-content ${isSpinning ? 'spinning' : ''}`}>
-        <div className="idea-topline">
-          <span className={`difficulty-pill ${idea.difficulty}`}>{idea.difficulty.toUpperCase()}</span>
-          <span className="idea-counter">Idea {index + 1} of {block.combinations.length}</span>
+    <section className="content-card idea-card bg-transparent border-0 p-0 shadow-none my-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between min-h-[350px]">
+          <div className={`idea-content ${isSpinning ? 'spinning' : ''} flex-1 flex flex-col justify-between`}>
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <span className={`difficulty-pill ${idea.difficulty} px-2 py-0.5 rounded text-[10px] font-black text-white uppercase`}>
+                  {idea.difficulty}
+                </span>
+                <span className="text-xs font-black text-slate-400">Idea {index + 1} of {block.combinations.length}</span>
+              </div>
+              <div className="idea-route mb-4">
+                <span className="idea-device text-lg font-black text-[#1A1A2E]">{idea.device}</span>
+                <span className="idea-arrow mx-2 text-slate-400 font-extrabold" aria-hidden="true">→</span>
+                <span className="idea-purpose text-lg font-black text-[#1D4ED8]">{idea.purpose}</span>
+              </div>
+              <p className="text-xs text-slate-500 font-bold mb-4 leading-relaxed">
+                Repurpose the device with a simple transformation path instead of sending it straight to storage or scrap.
+              </p>
+              <div className="bg-white border-2 border-[#1A1A2E] rounded-xl p-4 shadow-[2px_2px_0px_#1A1A2E]">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">Build sequence</span>
+                <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#1A1A2E] font-bold">
+                  {idea.steps.map((s, i) => <li key={i}>{s}</li>)}
+                </ol>
+              </div>
+            </div>
+            <button 
+              className="w-full mt-6 bg-amber-400 hover:bg-amber-300 text-[#1A1A2E] border-3 border-[#1A1A2E] p-3 rounded-xl font-black text-sm transition-all hover:translate-y-[-2px] active:translate-y-[0px] shadow-[3px_3px_0px_#1A1A2E] disabled:opacity-55 cursor-pointer"
+              onClick={spin} 
+              disabled={isSpinning}
+            >
+              {isSpinning ? 'Mixing...' : 'Inspire Me! 🎨'}
+            </button>
+          </div>
         </div>
-        <div className="idea-route">
-          <span className="idea-device">{idea.device}</span>
-          <span className="idea-arrow" aria-hidden="true">→</span>
-          <span className="idea-purpose">{idea.purpose}</span>
-        </div>
-        <p className="idea-note">Repurpose the device with a simple transformation path instead of sending it straight to storage or scrap.</p>
-        <div className="idea-steps-card">
-          <span className="idea-steps-label">Build sequence</span>
-          <ol>
-            {idea.steps.map((s, i) => <li key={i}>{s}</li>)}
-          </ol>
+        <div className="flex items-stretch justify-stretch">
+          <IdeaIllustration device={idea.device} purpose={idea.purpose} />
         </div>
       </div>
-      <button className="spin-btn" onClick={spin} disabled={isSpinning}>
-        {isSpinning ? 'Mixing...' : 'Inspire Me! 🎨'}
-      </button>
     </section>
   )
 }
@@ -2128,19 +2145,203 @@ function DataWipeSimCard({ block }: { block: Extract<ChapterBlock, { type: 'data
 }
 
 function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'policyTimeline' }> }) {
+  const [selectedIdx, setSelectedIdx] = useState(0)
+  const currentEvent = block.events[selectedIdx] || block.events[0]
+
+  const detailsMap: Record<string, {
+    focus: string;
+    enforcement: string;
+    compliance: string;
+    metrics: { label: string; value: string }[];
+    status: 'Phased Out' | 'Active' | 'Updated' | 'Enforced';
+    statusColor: string;
+  }> = {
+    '2011': {
+      focus: 'First-ever formal framing of Electronic Waste rules under MoEF.',
+      enforcement: 'State Pollution Control Boards (SPCBs) initiated registration/licensing systems for formal recyclers.',
+      compliance: 'Low initial compliance. High friction due to lack of collection channels and poor industry awareness.',
+      metrics: [
+        { label: 'Registered Recyclers', value: '23' },
+        { label: 'Initial Collection Rate', value: '< 2%' },
+        { label: 'Covered Categories', value: 'IT & Telecom only' }
+      ],
+      status: 'Phased Out',
+      statusColor: 'bg-slate-500/20 text-slate-400 border-slate-500/40'
+    },
+    '2016': {
+      focus: 'Introduction of Extended Producer Responsibility (EPR) targets and liability.',
+      enforcement: 'Producers required to meet target percentages of past sales volume. Target schedules started at 30%.',
+      compliance: 'Moderate compliance. Prompted growth in formal Producer Responsibility Organizations (PROs).',
+      metrics: [
+        { label: 'EPR Starting Target', value: '30%' },
+        { label: 'PROs Established', value: '15+' },
+        { label: 'Categories Added', value: 'Consumer Electronics' }
+      ],
+      status: 'Updated',
+      statusColor: 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+    },
+    '2022': {
+      focus: 'Complete digitization of the EPR portal with strict audits and trading.',
+      enforcement: 'Centralized portal checks producer targets against recycler certificates. Non-compliance incurs heavy environmental compensation charges.',
+      compliance: 'Highly monitored. High regulatory pressure with real-time audit trails and certificate validation.',
+      metrics: [
+        { label: 'Portal Recyclers', value: '120+' },
+        { label: 'Target Verification', value: '100% Digital' },
+        { label: 'Violator Fine Cap', value: 'No Limit' }
+      ],
+      status: 'Active',
+      statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+    },
+    '2025': {
+      focus: 'Shifting model towards circular business cycles, eco-design, and informal integration.',
+      enforcement: 'Integration of local informal workers (kabadiwalas) into formal eco-parks. Standardized recycling credits trading.',
+      compliance: 'Developing. High operational friction but long-term structural viability for city recycling capacity.',
+      metrics: [
+        { label: 'Eco-Park Targets', value: '20+ Hubs' },
+        { label: 'Informal Integration', value: 'Goal 50,000+' },
+        { label: 'Circular Material Rate', value: 'Target 25%' }
+      ],
+      status: 'Enforced',
+      statusColor: 'bg-blue-500/20 text-blue-400 border-blue-500/40'
+    }
+  }
+
+  const activeDetails = detailsMap[currentEvent.year] || {
+    focus: 'Regulatory frameworks establishing e-waste handling standard operating procedures.',
+    enforcement: 'Local agency audits and compliance verification.',
+    compliance: 'Standard industry adaptation requirements.',
+    metrics: [
+      { label: 'Focus Area', value: currentEvent.region },
+      { label: 'Milestone Status', value: 'Active' },
+      { label: 'Friction Level', value: 'Medium' }
+    ],
+    status: 'Active',
+    statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+  }
+
+  const getIconForYear = (year: string) => {
+    switch (year) {
+      case '2011':
+        return (
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        )
+      case '2016':
+        return (
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3L22 4" />
+          </svg>
+        )
+      case '2022':
+        return (
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+        )
+      case '2025':
+        return (
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        )
+      default:
+        return (
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        )
+    }
+  }
+
   return (
-    <section className="content-card policy-timeline">
-      <div className="timeline-stack">
-        {block.events.map((e, i) => (
-          <div key={i} className="timeline-entry">
-            <div className="year-mark">{e.year}</div>
-            <div className="entry-card">
-              <span className="region-pill">{e.region}</span>
-              <h4>{e.title}</h4>
-              <p>{e.impact}</p>
+    <section className="content-card policy-timeline bg-transparent border-0 p-0 shadow-none my-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="lg:col-span-5 border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute top-0 bottom-0 left-[34px] w-1 bg-[#1A1A2E]/10 pointer-events-none" />
+          <div className="absolute top-0 bottom-0 left-[34px] w-1 bg-gradient-to-b from-amber-400 via-emerald-400 to-blue-500 pointer-events-none" style={{ height: `${((selectedIdx + 1) / block.events.length) * 100}%` }} />
+          
+          <div className="space-y-6 relative z-10">
+            <div className="mb-4">
+              <span className="bg-[#1A1A2E] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">Regulatory Roadmap</span>
+              <h4 className="font-black text-[#1A1A2E] text-xl mt-1.5">Indian E-Waste Policies</h4>
+            </div>
+
+            {block.events.map((e, i) => {
+              const isSelected = selectedIdx === i
+              return (
+                <div 
+                  key={i}
+                  className="flex items-start gap-4 cursor-pointer group transition-all"
+                  onClick={() => setSelectedIdx(i)}
+                >
+                  <div className={`w-8 h-8 rounded-full border-3 border-[#1A1A2E] flex items-center justify-center font-bold text-xs flex-shrink-0 transition-all ${
+                    isSelected 
+                      ? 'bg-amber-400 text-[#1A1A2E] scale-110 shadow-[2px_2px_0px_#1A1A2E]' 
+                      : 'bg-white text-slate-400 group-hover:text-[#1A1A2E] group-hover:bg-slate-50'
+                  }`}>
+                    {e.year}
+                  </div>
+                  <div className={`flex-1 border-3 border-[#1A1A2E] rounded-xl p-3 bg-white transition-all ${
+                    isSelected 
+                      ? 'bg-amber-50/30 translate-x-1 shadow-[3px_3px_0px_#1A1A2E]' 
+                      : 'hover:bg-slate-50 hover:translate-x-0.5 shadow-[1px_1px_0px_#1A1A2E]'
+                  }`}>
+                    <div className="flex justify-between items-start">
+                      <span className="text-[9px] font-black bg-[#1A1A2E] text-white px-1.5 py-0.2 rounded uppercase">{e.region}</span>
+                    </div>
+                    <strong className={`block text-xs font-black mt-1 leading-tight ${isSelected ? 'text-[#1D4ED8]' : 'text-[#1A1A2E]'}`}>
+                      {e.title}
+                    </strong>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="lg:col-span-7 border-4 border-[#1A1A2E] rounded-2xl bg-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(26,26,46,0.15)] min-h-[400px]">
+          <div className="bg-[#242445] px-4 py-3 border-b-2 border-[#1A1A2E] flex justify-between items-center text-xs font-mono">
+            <span className="flex items-center gap-2 text-amber-400 font-extrabold">
+              {getIconForYear(currentEvent.year)}
+              ANALYSIS PROTOCOL: {currentEvent.year} REGULATION
+            </span>
+            <span className={`px-2 py-0.5 border rounded text-[9px] font-extrabold uppercase ${activeDetails.statusColor}`}>
+              {activeDetails.status}
+            </span>
+          </div>
+
+          <div className="flex-1 p-6 space-y-5 bg-[#0D0D1F]">
+            <div>
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Impact Summary</span>
+              <p className="text-sm font-bold text-slate-200 leading-relaxed">{currentEvent.impact}</p>
+            </div>
+
+            <div className="border-t border-slate-800 pt-4">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Primary Regulatory Focus</span>
+              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.focus}</p>
+            </div>
+
+            <div className="border-t border-slate-800 pt-4">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Enforcement & Auditing Actions</span>
+              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.enforcement}</p>
+            </div>
+
+            <div className="border-t border-slate-800 pt-4">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Compliance & Operation Friction</span>
+              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.compliance}</p>
             </div>
           </div>
-        ))}
+
+          <div className="bg-[#1A1A2E] p-4 grid grid-cols-3 gap-2 border-t-2 border-slate-800">
+            {activeDetails.metrics.map((m, idx) => (
+              <div key={idx} className="bg-[#242445]/50 border border-slate-800 rounded-lg p-2 text-center">
+                <span className="block text-[8px] font-mono text-slate-400 uppercase">{m.label}</span>
+                <strong className="block text-xs font-mono text-amber-400 mt-1">{m.value}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -2178,6 +2379,10 @@ function renderBlock(block: ChapterBlock): ReactNode {
 
   if (block.type === 'bulletList' || block.type === 'numberedList') {
     const ListTag = block.type === 'numberedList' ? 'ol' : 'ul'
+
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Approach unexpected links')) {
+      return <InteractiveMindfulnessInfographic />
+    }
 
     if (block.type === 'bulletList' && block.items.length > 5) {
       return (
