@@ -1522,7 +1522,7 @@ function IdeaIllustration({ device, purpose }: { device: string; purpose: string
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4 relative bg-[#0D0D1F]">
           <img 
-            src="/images/ewaste_atm.png" 
+            src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_atm.png" 
             alt="E-waste Kiosk System"
             className="w-40 h-40 object-contain"
             onError={(e) => {
@@ -1542,7 +1542,7 @@ function IdeaIllustration({ device, purpose }: { device: string; purpose: string
             </svg>
           </div>
           <div className="absolute bottom-2 left-2 text-[8px] font-mono text-slate-500">
-            Source: /images/ewaste_atm.png
+            Source: https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_atm.png
           </div>
         </div>
         <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
@@ -2642,7 +2642,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
-            <img src="/images/ewaste_infographic.png" alt="E-waste Categories Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+            <img src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_infographic.png" alt="E-waste Categories Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
           </div>
         </section>
       )
@@ -2652,7 +2652,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
-            <img src="/images/reduction_steps.png" alt="Three Steps of Reduction Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+            <img src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/reduction_steps.png" alt="Three Steps of Reduction Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
           </div>
         </section>
       )
@@ -2662,7 +2662,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
-            <img src="/images/ewaste_categories_detailed_infographic.png" alt="E-waste Categories Detailed Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+            <img src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_categories_detailed_infographic.png" alt="E-waste Categories Detailed Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
           </div>
         </section>
       )
@@ -2672,7 +2672,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
-            <img src="/images/ewaste_toxins_infographic.png" alt="E-waste Dangers Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+            <img src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_toxins_infographic.png" alt="E-waste Dangers Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
           </div>
         </section>
       )
@@ -3394,9 +3394,9 @@ function TopicPanel({ tab, layout }: { tab: ChapterTab; layout: ChapterLayout })
 
       {tab.heroImage && (
         <div className="topic-banner">
-          {tab.heroImage === '/images/ewaste_recycling_flow.png' ? (
+          {tab.heroImage === 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_recycling_flow.png' || tab.heroImage === '/images/ewaste_recycling_flow.png' ? (
             <InteractiveRecyclingFlow />
-          ) : tab.heroImage === '/images/digital_citizenship.png' ? (
+          ) : tab.heroImage === 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/digital_citizenship.png' || tab.heroImage === '/images/digital_citizenship.png' ? (
             <InteractiveDigitalCitizenship />
           ) : (
             <img src={toSkillizeeImageUrl(tab.heroImage)} alt={tab.title} />

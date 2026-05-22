@@ -452,7 +452,7 @@ export const chapters: CourseChapter[] = [
         title: 'The Waste Stream Has a Name',
         summary: 'Define e-waste precisely and establish why disposal choices matter before recovery begins.',
         robotNote: 'A cracked phone is never only junk. It is a casing full of chemistry, labor, and value.',
-        heroImage: '/images/ewaste_overview_hero.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_overview_hero.png',
         heroVariant: 'spotlight',
         readingTime: 3,
         accentColor: '#ff8b4d',
@@ -480,7 +480,7 @@ export const chapters: CourseChapter[] = [
         title: 'From Pocket Gadget to Waste Pile',
         summary: 'Map the devices that most often enter the stream and the upgrade habits that keep the stream growing.',
         robotNote: 'The dump begins in ordinary rooms: desks, kitchens, classrooms, repair drawers, and forgotten shelves.',
-        heroImage: '/images/ewaste_examples_hero.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_examples_hero.png',
         heroVariant: 'signal',
         accentColor: '#2bc1a6',
         pulses: [
@@ -523,7 +523,7 @@ export const chapters: CourseChapter[] = [
         title: 'Toxic Legacy',
         summary: 'Follow the environmental and health consequences of dumping, dismantling, and open burning.',
         robotNote: 'Once the casing fails, heavy metals do not stay in the pile. They travel.',
-        heroImage: '/images/ewaste_impact_hero.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_impact_hero.png',
         heroVariant: 'signal',
         readingTime: 4,
         accentColor: '#ff5e5e',
@@ -605,7 +605,7 @@ export const chapters: CourseChapter[] = [
         title: 'The 10 Classes of Electronic Waste',
         summary: 'Use device classing to support safer collection design and clearer public communication.',
         robotNote: 'Classification is not academic. It determines what can be stacked, stored, repaired, or dismantled together.',
-        heroImage: '/images/ewaste_categories_hero.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_categories_hero.png',
         heroVariant: 'diagnostic',
         accentColor: '#61b8ff',
         pulses: [
@@ -615,7 +615,7 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           p('International standards vary, but the most useful grouping system sorts electronics by use type and scale. That makes public education, pickup design, and safe storage easier.'),
-          explodedDiagram('/images/exploded_smartphone.png', [
+          explodedDiagram('https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/exploded_smartphone.png', [
             { x: 50, y: 30, label: 'Screen & Glass', detail: 'Contains indium tin oxide and glass-strengthening compounds.' },
             { x: 40, y: 50, label: 'Logic Board', detail: 'The value hub: gold, silver, palladium, and copper.' },
             { x: 60, y: 70, label: 'Battery', detail: 'Lithium, cobalt, and graphite. High fire risk if damaged.' },
@@ -729,7 +729,7 @@ export const chapters: CourseChapter[] = [
             { name: 'Silver', perDevice: 0.35, unit: 'g', pricePerUnit: 0.8 },
           ]),
           q('Recovery begins when we stop describing electronics as dead objects and start describing them as stored materials.', 'Salvage brief'),
-          beforeAfter('/images/raw_ore_mine.png', '/images/urban_mine.png', 'Raw Ore Mine', 'Urban Mine'),
+          beforeAfter('https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/raw_ore_mine.png', 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/urban_mine.png', 'Raw Ore Mine', 'Urban Mine'),
           compare(
             {
               title: 'Extraction logic',
@@ -858,7 +858,7 @@ export const chapters: CourseChapter[] = [
           { label: 'Cadmium', value: 'Carcinogenic' },
         ],
         blocks: [
-          explodedDiagram('/images/exploded_smartphone.png', [
+          explodedDiagram('https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/exploded_smartphone.png', [
             { x: 35, y: 30, label: 'LCD Backlight', detail: 'Older models contain Mercury vapor which is highly toxic if the screen breaks.' },
             { x: 65, y: 55, label: 'Logic Board Solder', detail: 'Traditionally uses Lead (Pb), a persistent heavy metal that affects brain development.' },
             { x: 50, y: 80, label: 'Li-ion Battery', detail: 'Contains Cobalt and Lithium. If crushed, it can leak corrosive and toxic electrolytes.' },
@@ -900,8 +900,8 @@ export const chapters: CourseChapter[] = [
           }),
           p('Below is a stark visual comparison of the "Toxic Truth". Notice how formal recycling keeps materials contained and safe.', true),
           beforeAfter(
-            '/images/informal_landfill.png',
-            '/images/certified_recycling.png',
+            'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/informal_landfill.png',
+            'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/certified_recycling.png',
             'Informal Landfill',
             'Certified Recycling',
           ),
@@ -1261,7 +1261,7 @@ export const chapters: CourseChapter[] = [
         title: 'Safe Disposal Methods',
         summary: 'Track the industrial chain that turns mixed electronic scrap into separated material streams.',
         robotNote: 'Formal recycling starts with triage. If hazardous items stay mixed in, the whole chain gets dirtier and more dangerous.',
-        heroImage: '/images/ewaste_recycling_flow.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_recycling_flow.png',
         heroVariant: 'signal',
         accentColor: '#f3a44a',
         pulses: [
@@ -1370,7 +1370,7 @@ export const chapters: CourseChapter[] = [
         title: 'Authorized Recyclers',
         summary: 'Use public databases and service directories to find facilities that are actually certified.',
         robotNote: 'The nearest option is not automatically the safest option. Authentication matters.',
-        heroImage: '/images/certified_recycling.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/certified_recycling.png',
         heroVariant: 'atlas',
         accentColor: '#61b8ff',
         pulses: [
@@ -1609,7 +1609,7 @@ export const chapters: CourseChapter[] = [
         title: 'Hardening Your Digital Defenses',
         summary: 'Treat basic security settings as part of responsible technology use.',
         robotNote: 'A device that is physically maintained but digitally exposed is still vulnerable.',
-        heroImage: '/images/digital_citizenship.png',
+        heroImage: 'https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/digital_citizenship.png',
         heroVariant: 'diagnostic',
         accentColor: '#2bc1a6',
         pulses: [
@@ -1869,7 +1869,7 @@ export const chapters: CourseChapter[] = [
         ],
         blocks: [
           callout('Featured Idea: E-Waste ATM', 'A smart kiosk where you deposit tech & earn school rewards.', 'success', 'Innovation Lab'),
-          explodedDiagram('/images/ewaste_atm.png', [
+          explodedDiagram('https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_atm.png', [
             { x: 50, y: 30, label: 'Touch Screen', detail: 'Users scan their ID and track their recycling points.' },
             { x: 30, y: 60, label: 'Drop Bin', detail: 'Internal sensors classify the device for safe storage.' },
             { x: 70, y: 70, label: 'Reward Dispenser', detail: 'Prints coupons or syncs with a school credit app.' },
@@ -2066,10 +2066,15 @@ export const chapters: CourseChapter[] = [
 
 export function toSkillizeeImageUrl(path: string) {
   const skillizeeAssetPrefix = 'https://login.skillizee.io'
-  const skillizeeArticleImagePrefix = `${skillizeeAssetPrefix}/s/articles/69f4527b41e01b23b9093dae/images/`
+  const skillizeeArticleImagePrefix = `${skillizeeAssetPrefix}/s/articles/6a1030afe7aac6873aee2b88/images/`
 
-  if (path.startsWith('http') || path.startsWith('/images/') || path.startsWith('/local/')) {
+  if (path.startsWith('http') || path.startsWith('/local/')) {
     return path
+  }
+
+  if (path.startsWith('/images/')) {
+    const filename = path.substring('/images/'.length)
+    return `${skillizeeArticleImagePrefix}${filename}`
   }
 
   if (path.startsWith('/')) {
