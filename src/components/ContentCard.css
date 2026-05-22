@@ -669,3 +669,94 @@
   color: var(--xp-gold);
   text-transform: uppercase;
 }
+
+/* Image Grid and Card Styling */
+.image-grid {
+  display: grid;
+  gap: 2rem;
+  margin: 2rem 0;
+  width: 100%;
+}
+
+.image-grid.one {
+  grid-template-columns: 1fr;
+}
+
+.image-grid.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.image-grid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.image-card {
+  padding: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper-warm);
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: contain;
+  border: 4px solid var(--ink-dark);
+  box-shadow: 4px 4px 0 var(--ink-dark);
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.image-card figcaption {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink-dark);
+  margin-top: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--pow-yellow);
+  border: 2px solid var(--ink-dark);
+  padding: 4px 10px;
+  transform: skewX(-6deg);
+  box-shadow: 2px 2px 0 var(--ink-dark);
+}
+
+@media (max-width: 768px) {
+  .image-grid.two,
+  .image-grid.three {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Redesigned Story Carousel Styles */
+.story-carousel-card {
+  position: relative;
+  overflow: visible !important;
+}
+
+.story-carousel-title {
+  text-shadow: 2px 2px 0 var(--pow-yellow);
+}
+
+.comic-dialog-bubble {
+  border-radius: 16px;
+  position: relative;
+}
+
+/* Hover effects for carousel controls */
+.carousel-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--ink-dark);
+}
+.carousel-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--ink-dark);
+}
+
+

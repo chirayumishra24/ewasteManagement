@@ -1232,119 +1232,96 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
   const isWebTracker = title.toLowerCase().includes('website')
   
   if (isWebTracker) {
+    const sections = [
+      { key: 0, tag: 'HERO_SECTION', title: 'IMPACT STATS', info: 'Compiled 3.8 MMT/year active statistics' },
+      { key: 1, tag: 'DEFINITIONS', title: 'CATEGORIES', info: 'Scope IT/telecom & consumer equipment' },
+      { key: 2, tag: 'HAZARDS_REGISTRY', title: 'HEATMAP', info: 'Lead, Cadmium, BFR chemical indicators active' },
+      { key: 3, tag: 'URBAN_MINING', title: 'METRICS', info: 'Gold and Copper value extraction ratio valid' },
+      { key: 4, tag: '3Rs_PROTOCOL', title: 'WORKFLOWS', info: 'Reduce/Repair/Recycle pipelines ready' },
+      { key: 5, tag: 'DISPOSAL_LOCATOR', title: 'GEO_ROUTING', info: 'Authorized locator mapping coordinates locked' }
+    ]
+
     return (
-      <div className="w-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white overflow-hidden flex flex-col min-h-[350px] shadow-[4px_4px_0px_rgba(26,26,46,0.15)] relative">
-        <div className="bg-[#242445] px-3 py-2 flex items-center justify-between border-b-2 border-[#1A1A2E]">
-          <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+      <div className="w-full bg-slate-950 rounded-2xl border-4 border-[#1A1A2E] text-white overflow-hidden flex flex-col min-h-[380px] shadow-[6px_6px_0px_#1A1A2E] relative font-mono">
+        <style>{`
+          @keyframes scanline-sweep {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(380px); }
+          }
+          @keyframes crt-flicker {
+            0% { opacity: 0.98; }
+            50% { opacity: 1; }
+            100% { opacity: 0.99; }
+          }
+          .animate-scanline {
+            animation: scanline-sweep 8s linear infinite;
+          }
+          .animate-crt-flicker {
+            animation: crt-flicker 0.15s infinite;
+          }
+        `}</style>
+        
+        {/* CRT Scanline & Screen Effects */}
+        <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.15)_50%)] bg-[size:100%_4px] z-10 opacity-70 animate-crt-flicker" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.4)_100%)] z-10" />
+        <div className="absolute top-0 left-0 w-full h-[4px] bg-[#34D399]/20 blur-[1.5px] animate-scanline z-10" />
+
+        {/* Console Header */}
+        <div className="bg-slate-900 px-4 py-3 flex items-center justify-between border-b-4 border-[#1A1A2E]">
+          <div className="flex gap-2">
+            <span className="w-3.5 h-3.5 rounded-full bg-rose-500 border-2 border-slate-950" />
+            <span className="w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-slate-950" />
+            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950" />
           </div>
-          <div className="bg-[#1A1A2E] text-[10px] font-mono font-bold px-4 py-0.5 rounded text-slate-400 w-1/2 text-center truncate">
+          <div className="bg-slate-950 border-2 border-slate-800 text-[10px] font-bold px-4 py-1 rounded-md text-slate-400 text-center tracking-tight truncate max-w-[200px]">
             https://ewaste-tracker.local
           </div>
-          <div className="text-[10px] text-amber-400 font-extrabold animate-pulse">
-            LIVE PREVIEW
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span className="text-[10px] text-emerald-400 font-black tracking-widest">LIVE</span>
           </div>
         </div>
 
-        <div className="p-3 flex-1 flex flex-col gap-2 bg-slate-900 font-mono text-[10px] overflow-y-auto">
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(0) 
-              ? 'border-amber-400 bg-amber-500/10 text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[HERO SECTION]</span>
-              <span className="text-[8px] opacity-70">{checked.has(0) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(0) ? '⚡ LANDING: Impact stats showing 3.8 MMT generated annually in India.' : 'Waiting for Community Audit stats...'}
-            </p>
-          </div>
-
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(1) 
-              ? 'border-emerald-400 bg-emerald-500/10 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[DEFINITIONS PORTAL]</span>
-              <span className="text-[8px] opacity-70">{checked.has(1) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(1) ? '📖 CATALOG: Categories spanning IT, Telecommunications & consumer items.' : 'Waiting for category scope definitions...'}
-            </p>
-          </div>
-
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(2) 
-              ? 'border-red-400 bg-red-500/10 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[HAZARDS REGISTRY]</span>
-              <span className="text-[8px] opacity-70">{checked.has(2) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(2) ? '☠ HEATMAP: Active chemical indicators showing Lead, Cadmium, and BFR hazards.' : 'Waiting for toxic chemical mapping data...'}
-            </p>
-          </div>
-
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(3) 
-              ? 'border-sky-400 bg-sky-500/10 text-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[URBAN MINING INDEX]</span>
-              <span className="text-[8px] opacity-70">{checked.has(3) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(3) ? '💎 METRICS: Value comparison metrics showing recovery ratios of Gold and Copper.' : 'Waiting for urban mining recovery ratios...'}
-            </p>
-          </div>
-
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(4) 
-              ? 'border-purple-400 bg-purple-500/10 text-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[3Rs PROTOCOL]</span>
-              <span className="text-[8px] opacity-70">{checked.has(4) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(4) ? '♻ ACTION MODULE: Steps detailing Reduce, Repair, and Recycle workflows.' : 'Waiting for action guide implementation...'}
-            </p>
-          </div>
-
-          <div className={`border-2 rounded p-2 transition-all duration-300 ${
-            checked.has(5) 
-              ? 'border-indigo-400 bg-indigo-500/10 text-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.15)]' 
-              : 'border-dashed border-slate-700 text-slate-600 bg-slate-950/20'
-          }`}>
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-extrabold">[DISPOSAL LOCATOR]</span>
-              <span className="text-[8px] opacity-70">{checked.has(5) ? '✔ COMPILED' : '◦ PENDING'}</span>
-            </div>
-            <p className="text-[8px] leading-tight">
-              {checked.has(5) ? '📍 GEO-ROUTING: Authorized collection center locator and directions.' : 'Waiting for mapping module parameters...'}
-            </p>
-          </div>
+        {/* Console logs */}
+        <div className="p-4 flex-1 flex flex-col gap-2.5 bg-slate-950 overflow-y-auto text-[10px] select-none">
+          {sections.slice(0, total).map((s, idx) => {
+            const isCompleted = checked.has(idx)
+            return (
+              <div 
+                key={idx} 
+                className={`border-2 rounded-xl p-3 transition-all duration-300 ${
+                  isCompleted 
+                    ? 'border-[#34d399]/50 bg-[#34d399]/5 text-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.05)]' 
+                    : 'border-slate-800 text-slate-600 bg-slate-900/20 border-dashed'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-1.5 font-bold">
+                  <span className={`tracking-wide ${isCompleted ? 'text-emerald-300' : 'text-slate-500'}`}>[{s.tag}]</span>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${isCompleted ? 'bg-emerald-950/60 border border-emerald-500/30 text-emerald-400' : 'bg-slate-900 border border-slate-800 text-slate-500'}`}>
+                    {isCompleted ? '✓ COMPILED' : '◦ PENDING'}
+                  </span>
+                </div>
+                <p className="text-[9.5px] leading-relaxed font-semibold">
+                  {isCompleted ? `⚡ ${s.title}: ${s.info}` : `Awaiting module trigger [${s.tag}]...`}
+                </p>
+              </div>
+            )
+          })}
         </div>
 
         {checked.size === total && (
-          <div className="absolute inset-0 bg-[#1A1A2E]/95 flex flex-col items-center justify-center p-6 text-center animate-fade-in z-20">
-            <span className="text-emerald-400 text-3xl mb-2 animate-bounce">⚡</span>
-            <h4 className="text-xl font-black text-white uppercase tracking-wider">Compile Success</h4>
-            <div className="bg-emerald-500/20 text-emerald-400 text-[10px] font-mono px-3 py-1.5 border-2 border-emerald-400 rounded-lg max-w-[250px] my-3 leading-relaxed">
-              BUILD: ewaste-tracker v1.0.0<br/>
-              COMPLIANCE AUDIT: PASSED<br/>
-              DEPLOY STATUS: ACTIVE ✅
+          <div className="absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-6 text-center z-20 border-4 border-[#1A1A2E] animate-fade-in shadow-[inset_0_0_60px_rgba(52,211,153,0.15)]">
+            <div className="w-16 h-16 rounded-full border-4 border-emerald-400 flex items-center justify-center text-emerald-400 text-3xl font-black mb-4 animate-bounce shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+              ✓
             </div>
-            <p className="text-xs text-slate-300 font-bold max-w-xs">
-              All website sections have compiled successfully. Ready for public deployment.
+            <h4 className="text-xl font-black text-white uppercase tracking-wider font-mono">Build Success</h4>
+            <div className="bg-emerald-950/30 text-emerald-400 text-[10px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(52,211,153,0.05)]">
+              BUILD ID: ewaste-compiler-v1.0<br/>
+              COMPLIANCE AUDIT: VERIFIED ✅<br/>
+              DEPLOY STATUS: COMPLETED 🚀
+            </div>
+            <p className="text-xs text-slate-300 font-bold max-w-xs leading-relaxed">
+              All system variables calibrated and compiled successfully. Ready for public release!
             </p>
           </div>
         )}
@@ -1352,42 +1329,176 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
     )
   }
 
+  const progress = total > 0 ? Math.round((checked.size / total) * 100) : 0
+
+  // Telemetry logs based on synced nodes
+  const syncLogs = []
+  if (checked.size === 0) {
+    syncLogs.push("System active. Awaiting client handshake...")
+  } else {
+    checked.forEach(idx => {
+      syncLogs.push(`Node N-0${idx + 1} synchronized. Telemetry OK.`)
+    })
+    if (checked.size < total) {
+      syncLogs.push("Awaiting remaining check nodes...")
+    } else {
+      syncLogs.push("Sync sequence established. Core process active.")
+    }
+  }
+
   return (
-    <div className="w-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white p-5 overflow-hidden flex flex-col min-h-[350px] justify-between relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)]">
-      <div>
-        <div className="flex justify-between items-center border-b-2 border-slate-700 pb-2.5 mb-4">
-          <span className="text-xs font-black text-amber-400 uppercase tracking-wider">Console Blueprint</span>
-          <span className="font-mono text-[10px] text-slate-400">SYS: ACTIVE</span>
+    <div className="w-full rounded-2xl text-white overflow-hidden flex flex-col min-h-[380px] justify-between border-4 border-[#1A1A2E] relative shadow-[6px_6px_0px_#1A1A2E] bg-slate-950">
+      <style>{`
+        @keyframes radar-sweep {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes scanline-sweep {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(380px); }
+        }
+        @keyframes crt-flicker {
+          0% { opacity: 0.98; }
+          50% { opacity: 1; }
+          100% { opacity: 0.99; }
+        }
+        @keyframes wave-move {
+          from { stroke-dashoffset: 100; }
+          to { stroke-dashoffset: 0; }
+        }
+        .animate-radar-sweep {
+          animation: radar-sweep 5s linear infinite;
+        }
+        .animate-scanline {
+          animation: scanline-sweep 8s linear infinite;
+        }
+        .animate-crt-flicker {
+          animation: crt-flicker 0.15s infinite;
+        }
+        .animate-wave {
+          stroke-dasharray: 20 5;
+          animation: wave-move 2.5s linear infinite;
+        }
+      `}</style>
+      
+      {/* Animated scanline & CRT screen effects */}
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.15)_50%)] bg-[size:100%_4px] z-10 opacity-70 animate-crt-flicker" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.4)_100%)] z-10" />
+      <div className="absolute top-0 left-0 w-full h-[4px] bg-[#fbbf24]/10 blur-[1.5px] animate-scanline z-10" />
+
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
+
+      <div className="relative z-10 p-5 flex-1 flex flex-col justify-between">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4 border-b-2 border-slate-900 pb-3">
+          <div className="flex items-center gap-2">
+            <div className={`w-2.5 h-2.5 rounded-full ${progress === 100 ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'} animate-pulse`} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono text-slate-300">System Diagnostics</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[9px] text-slate-500 tracking-wider uppercase font-black">{checked.size}/{total} NODES SYNCED</span>
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {Array.from({ length: total }).map((_, i) => {
-            const isCompleted = checked.has(i)
-            return (
-              <div 
-                key={i} 
-                className={`border-3 p-3 rounded-lg flex flex-col justify-between min-h-[80px] transition-all duration-300 ${
-                  isCompleted 
-                    ? 'border-[#1A1A2E] bg-amber-400 text-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E]' 
-                    : 'border-dashed border-slate-700 text-slate-500 bg-slate-900/40'
-                }`}
-              >
-                <span className="font-mono text-xs font-black">NODE {i + 1}</span>
-                <span className="text-[10px] font-bold leading-normal truncate">
-                  {isCompleted ? '✔ CALIBRATED' : '◦ PENDING'}
-                </span>
-              </div>
-            )
-          })}
+
+        {/* Central Dial + Nodes Grid */}
+        <div className="flex items-center gap-6 my-2">
+          {/* Glowing Radar Circle */}
+          <div className="relative flex-shrink-0 w-[110px] h-[110px] rounded-full border-4 border-slate-900 bg-slate-950 flex flex-col items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(251,191,36,0.05)]">
+            {/* Radar Grid circles */}
+            <div className="absolute w-[80px] h-[80px] rounded-full border border-slate-800/40" />
+            <div className="absolute w-[50px] h-[50px] rounded-full border border-slate-800/40" />
+            <div className="absolute w-full h-[1px] bg-slate-900/60" />
+            <div className="absolute h-full w-[1px] bg-slate-900/60" />
+            
+            {/* Radar Scanning Line */}
+            <div className="absolute inset-0 rounded-full animate-radar-sweep pointer-events-none" style={{ background: 'conic-gradient(from 0deg, rgba(251,191,36,0.15) 0deg, transparent 90deg)' }} />
+
+            {/* Content inside the dial */}
+            <div className="relative z-10 flex flex-col items-center justify-center">
+              {progress === 100 ? (
+                <span className="text-3xl animate-bounce">⚡</span>
+              ) : (
+                <svg className="w-12 h-6 text-amber-500/70" viewBox="0 0 100 40">
+                  <path
+                    d="M0 20 Q 25 5, 50 20 T 100 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    className="animate-wave"
+                  />
+                </svg>
+              )}
+              <span className={`text-xl font-black font-mono leading-none ${progress === 100 ? 'text-emerald-400' : 'text-amber-400'}`}>{progress}%</span>
+              <span className="text-[7px] font-bold text-slate-500 uppercase tracking-widest mt-1">SYNC STATUS</span>
+            </div>
+          </div>
+
+          {/* Grid of Nodes */}
+          <div className="flex-1 grid grid-cols-2 gap-2.5">
+            {Array.from({ length: total }).map((_, i) => {
+              const isCompleted = checked.has(i)
+              return (
+                <div
+                  key={i}
+                  className={`relative rounded-xl p-3 border-2 transition-all duration-300 ${
+                    isCompleted 
+                      ? 'bg-slate-900/80 border-slate-700 shadow-[0_0_15px_rgba(251,191,36,0.05)]' 
+                      : 'bg-slate-950 border-slate-900'
+                  }`}
+                >
+                  <div className="flex justify-between items-start mb-1.5">
+                    <span className="font-mono text-[9px] font-black leading-none text-slate-400">N-0{i+1}</span>
+                    <span className={`text-[7px] font-bold px-1.5 py-0.5 rounded font-mono ${
+                      isCompleted ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/20' : 'bg-slate-900 text-slate-600 border border-slate-800'
+                    }`}>
+                      {isCompleted ? 'PASS' : 'STBY'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-1">
+                    {isCompleted ? (
+                      <svg className="w-10 h-3 text-emerald-400" viewBox="0 0 40 10">
+                        <path d="M0 5 Q 10 0, 20 5 T 40 5" fill="none" stroke="currentColor" strokeWidth="2" className="animate-wave" />
+                      </svg>
+                    ) : (
+                      <svg className="w-10 h-3 text-slate-800" viewBox="0 0 40 10">
+                        <line x1="0" y1="5" x2="40" y2="5" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Real-time Diagnostics Terminal Feed */}
+        <div className="mt-3 bg-slate-950 border-2 border-slate-900 rounded-xl p-2.5 font-mono text-[8px] text-slate-400 min-h-[50px] max-h-[50px] overflow-hidden flex flex-col justify-end gap-0.5 border-dashed">
+          {syncLogs.slice(-3).map((log, idx) => (
+            <div key={idx} className="flex gap-1.5 items-center leading-none">
+              <span className="text-emerald-500">{'>'}</span>
+              <span className="truncate">{log}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {checked.size === total ? (
-        <div className="mt-4 bg-emerald-500/10 border-2 border-emerald-500/40 text-emerald-400 text-xs font-black p-3 rounded-lg text-center">
-          🎉 SYSTEM INTEGRATED: 100% Ready
-        </div>
-      ) : (
-        <div className="mt-4 bg-slate-900 border-2 border-dashed border-slate-700 text-slate-400 text-[10px] font-bold p-3 rounded-lg text-center leading-normal">
-          Awaiting validation on {total - checked.size} remaining nodes...
+      {/* Success Calibrated Modal Cover */}
+      {checked.size === total && (
+        <div className="absolute inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-6 text-center z-20 border-4 border-[#1A1A2E] animate-fade-in shadow-[inset_0_0_60px_rgba(16,185,129,0.15)]">
+          <div className="w-16 h-16 rounded-full border-4 border-emerald-400 flex items-center justify-center text-emerald-400 text-3xl font-black mb-4 animate-bounce shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+            ✓
+          </div>
+          <h4 className="text-xl font-black text-white uppercase tracking-wider font-mono">DIAGNOSTICS SECURE</h4>
+          <div className="bg-emerald-950/30 text-emerald-400 text-[10px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+            DEVICES VERIFIED: {total}/{total}<br/>
+            SIGNAL INTEGRITY: 100%<br/>
+            DEVICES HANDSHAKE: SUCCESSFUL ✅
+          </div>
+          <p className="text-xs text-slate-300 font-bold max-w-xs leading-relaxed">
+            All nodes verified. Compliance pipeline active and synchronized.
+          </p>
         </div>
       )}
     </div>
@@ -1641,42 +1752,59 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
   }
 
   const progress = Math.round((checked.size / block.items.length) * 100)
+  const totalSegments = 10
+  const activeSegments = Math.round((progress / 100) * totalSegments)
 
   return (
     <section className="content-card checklist-card bg-transparent border-0 p-0 shadow-none my-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-        <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between">
+        <div className="border-4 border-[#1A1A2E] p-6 rounded-3xl bg-[#FFFDF7] shadow-[8px_8px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1a1a2e 2px, transparent 2px)', backgroundSize: '12px 12px' }} />
           <div>
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex justify-between items-start mb-6 relative z-10">
               <div>
-                <span className="bg-[#1A1A2E] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">
+                <span className="inline-block bg-[#FF5A5F] text-white text-[11px] font-black px-3 py-1 border-2 border-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] uppercase -rotate-1 transform origin-left tracking-wide">
                   {block.scoreLabel || 'Blueprint'}
                 </span>
-                <h4 className="font-black text-[#1A1A2E] text-xl mt-1.5">{block.title}</h4>
+                <h4 className="font-black text-[#1A1A2E] text-2xl mt-3 tracking-tight">{block.title}</h4>
+              </div>
+              <div className="bg-white border-2 border-[#1A1A2E] px-2.5 py-1 text-xs font-mono font-black text-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] rounded-md rotate-2">
+                {checked.size}/{block.items.length} DONE
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5 relative z-10">
               {block.items.map((item, i) => {
                 const isChecked = checked.has(i)
                 return (
                   <div 
                     key={i} 
-                    className={`border-3 rounded-xl p-3 flex items-center gap-3 cursor-pointer transition-all ${
+                    className={`border-4 rounded-xl p-4 flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${
                       isChecked 
-                        ? 'border-[#1A1A2E] bg-emerald-50 shadow-[2px_2px_0px_#1A1A2E]' 
-                        : 'border-[#1A1A2E] bg-white hover:bg-slate-50 shadow-[2px_2px_0px_#1A1A2E] hover:translate-y-[-1px]'
+                        ? 'border-[#1A1A2E] bg-[#E6F4EA] shadow-[3px_3px_0px_#1A1A2E] translate-x-[1px] translate-y-[1px]' 
+                        : 'border-[#1A1A2E] bg-white hover:bg-[#FFFDF7] shadow-[5px_5px_0px_#1A1A2E] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:-rotate-[0.5deg]'
                     }`}
                     onClick={() => toggle(i)}
                   >
-                    <div className={`w-6 h-6 rounded border-2 border-[#1A1A2E] flex items-center justify-center font-black text-sm flex-shrink-0 transition-colors ${
-                      isChecked ? 'bg-amber-400' : 'bg-white'
-                    }`}>
-                      {isChecked && '✓'}
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className={`w-7 h-7 rounded-lg border-3 border-[#1A1A2E] flex items-center justify-center font-black text-base flex-shrink-0 transition-all duration-200 ${
+                        isChecked 
+                          ? 'bg-[#34D399] text-[#1A1A2E] scale-100 rotate-[3deg] shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]' 
+                          : 'bg-slate-50 hover:bg-slate-100 text-transparent scale-95'
+                      }`}>
+                        ✓
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <strong className="text-sm text-[#1A1A2E] font-black tracking-tight">{item.label}</strong>
+                        <span className="text-xs text-slate-500 font-bold leading-normal mt-0.5">{item.impact}</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <strong className="text-sm text-[#1A1A2E] font-extrabold">{item.label}</strong>
-                      <span className="text-xs text-slate-500 font-bold">{item.impact}</span>
+                    <div className="flex-shrink-0">
+                      <span className={`text-[9px] font-black font-mono border-2 border-[#1A1A2E] px-2 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E] transition-colors ${
+                        isChecked ? 'bg-[#A7F3D0] text-[#065F46]' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        +{Math.round(100 / block.items.length)}%
+                      </span>
                     </div>
                   </div>
                 )
@@ -1684,16 +1812,36 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
             </div>
           </div>
 
-          <div className="mt-8 border-t-2 border-slate-200 pt-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-xs font-black text-slate-400 uppercase">Progress</span>
-              <span className="text-xs font-black text-[#1A1A2E]">{progress}%</span>
+          <div className="mt-8 border-t-2 border-slate-200 pt-5 relative z-10">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-xs font-black text-slate-400 uppercase tracking-widest">CALIBRATION LEVEL</span>
+              <span className="text-sm font-black text-[#1A1A2E] font-mono bg-amber-300 border-2 border-[#1A1A2E] px-2.5 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E]">{progress}% SYNCED</span>
             </div>
-            <div className="w-full bg-slate-200 h-3.5 rounded-full border-2 border-[#1A1A2E] overflow-hidden">
-              <div 
-                className="h-full bg-amber-400 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+            <div className="flex gap-1.5 justify-between">
+              {Array.from({ length: totalSegments }).map((_, idx) => {
+                const isLit = idx < activeSegments
+                let litColor = 'bg-amber-400'
+                if (progress === 100) {
+                  litColor = 'bg-emerald-400'
+                } else if (idx >= 7) {
+                  litColor = 'bg-emerald-400'
+                } else if (idx >= 4) {
+                  litColor = 'bg-amber-400'
+                } else {
+                  litColor = 'bg-rose-400'
+                }
+
+                return (
+                  <div
+                    key={idx}
+                    className={`flex-1 h-5 border-2 border-[#1A1A2E] rounded-md transition-all duration-300 ${
+                      isLit 
+                        ? `${litColor} shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]` 
+                        : 'bg-slate-100 opacity-30 border-dashed'
+                    }`}
+                  />
+                )
+              })}
             </div>
           </div>
         </div>
@@ -1833,22 +1981,104 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
 
 function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'storyCarousel' }> }) {
   const [index, setIndex] = useState(0)
+  const [transitioning, setTransitioning] = useState(false)
   const story = block.stories[index]
+
+  const handlePrev = () => {
+    setTransitioning(true)
+    setTimeout(() => {
+      setIndex(i => (i - 1 + block.stories.length) % block.stories.length)
+      setTransitioning(false)
+    }, 150)
+  }
+
+  const handleNext = () => {
+    setTransitioning(true)
+    setTimeout(() => {
+      setIndex(i => (i + 1) % block.stories.length)
+      setTransitioning(false)
+    }, 150)
+  }
+
   return (
-    <section className="content-card story-carousel">
-      <div className="carousel-nav">
-        <button onClick={() => setIndex(i => (i - 1 + block.stories.length) % block.stories.length)}>←</button>
-        <span>{index + 1} / {block.stories.length}</span>
-        <button onClick={() => setIndex(i => (i + 1) % block.stories.length)}>→</button>
-      </div>
-      <div className="story-frame">
-        <div className="story-media">
-          <img src={toSkillizeeImageUrl(story.image)} alt={story.title} />
-          <div className="ba-badge">{story.before} vs {story.after}</div>
+    <section className="content-card story-carousel-card p-6 md:p-8 flex flex-col gap-6">
+      {/* Header and Controls */}
+      <div className="flex justify-between items-center border-b-3 border-[#1A1A2E] pb-4">
+        <span className="rail-label bg-[#1E40AF] text-white font-extrabold uppercase text-xs tracking-wider px-3 py-1 rounded">
+          Impact Case Study
+        </span>
+        <div className="carousel-controller flex items-center gap-2">
+          <button 
+            onClick={handlePrev}
+            className="carousel-btn prev-btn bg-[#FB923C] hover:bg-[#F97316] text-[#1A1A2E] border-2 border-[#1A1A2E] w-10 h-10 flex items-center justify-center font-black rounded-lg transition-transform hover:scale-105 active:scale-95 shadow-[2px_2px_0px_#1A1A2E] cursor-pointer"
+          >
+            ←
+          </button>
+          
+          <div className="carousel-indicator bg-white border-2 border-[#1A1A2E] px-4 py-1.5 rounded-lg shadow-[2px_2px_0px_#1A1A2E] flex gap-1.5 items-center">
+            {block.stories.map((_, i) => (
+              <span 
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full border border-[#1A1A2E] transition-all ${i === index ? 'bg-[#FACC15] scale-125' : 'bg-slate-200'}`}
+              />
+            ))}
+            <span className="text-[10px] font-black text-slate-500 ml-2 tracking-wider">
+              {index + 1}/{block.stories.length}
+            </span>
+          </div>
+
+          <button 
+            onClick={handleNext}
+            className="carousel-btn next-btn bg-[#FB923C] hover:bg-[#F97316] text-[#1A1A2E] border-2 border-[#1A1A2E] w-10 h-10 flex items-center justify-center font-black rounded-lg transition-transform hover:scale-105 active:scale-95 shadow-[2px_2px_0px_#1A1A2E] cursor-pointer"
+          >
+            →
+          </button>
         </div>
-        <div className="story-copy">
-          <h4>{story.title}</h4>
-          <blockquote>"{story.quote}"</blockquote>
+      </div>
+
+      {/* Main Grid */}
+      <div className={`story-carousel-grid grid grid-cols-1 md:grid-cols-2 gap-8 items-center transition-all duration-150 ${transitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+        {/* Image wrapper */}
+        <div className="story-carousel-image-wrapper relative flex flex-col items-center">
+          <div className="story-image-container relative border-4 border-[#1A1A2E] rounded-xl overflow-hidden shadow-[6px_6px_0px_#1A1A2E] bg-white transform -rotate-1 hover:rotate-0 transition-transform duration-300 w-full aspect-[4/3] max-w-md">
+            <img 
+              src={toSkillizeeImageUrl(story.image)} 
+              alt={story.title}
+              className="w-full h-full object-cover"
+            />
+            {/* Ribbon comparison badge */}
+            <div className="absolute top-3 left-3 bg-[#B91C1C] text-white border-2 border-[#1A1A2E] font-black text-[11px] tracking-wider px-3 py-1 rounded shadow-[2px_2px_0px_#1A1A2E] transform -skew-x-6">
+              {story.before} VS {story.after}
+            </div>
+          </div>
+          <div className="absolute -bottom-2 -right-2 -z-10 w-full h-full border-4 border-dashed border-[#1A1A2E] opacity-20 rounded-xl" />
+        </div>
+
+        {/* Copy/details panel */}
+        <div className="story-carousel-copy flex flex-col gap-4">
+          <h4 className="story-carousel-title font-black text-2xl uppercase text-[#1A1A2E] tracking-tight leading-none drop-shadow-sm select-none">
+            {story.title}
+          </h4>
+          
+          {/* Dialog Bubble Quote */}
+          <div className="comic-dialog-bubble relative bg-[#FFFDF7] border-4 border-[#1A1A2E] p-5 rounded-2xl shadow-[4px_4px_0px_#1A1A2E] flex flex-col gap-2">
+            <div className="quote-icon text-3xl font-black text-[#FB923C] leading-none select-none">“</div>
+            <blockquote className="quote-text font-black text-sm md:text-base text-[#1A1A2E] italic leading-relaxed pl-2 pr-2">
+              {story.quote}
+            </blockquote>
+            
+            {/* Pointer arrows */}
+            <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[10px] border-t-transparent border-r-[16px] border-r-[#1A1A2E] border-b-[10px] border-b-transparent hidden md:block" />
+            <div className="absolute -left-[10px] top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-r-[12px] border-r-[#FFFDF7] border-b-[8px] border-b-transparent hidden md:block" />
+            
+            <div className="absolute top-[-16px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-b-[16px] border-b-[#1A1A2E] border-r-[10px] border-r-transparent md:hidden" />
+            <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-b-[12px] border-b-[#FFFDF7] border-r-[8px] border-r-transparent md:hidden" />
+          </div>
+          
+          <div className="flex items-center gap-2 self-end text-[10px] font-black text-[#1E40AF] bg-[#3B82F6]/10 px-3 py-1 rounded-full border border-[#3B82F6]/20 uppercase tracking-widest animate-pulse">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
+            Verified Recovery
+          </div>
         </div>
       </div>
     </section>
