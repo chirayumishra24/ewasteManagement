@@ -565,3 +565,84 @@
   border-left: 3px dashed var(--ink-dark);
   transform: rotate(45deg);
 }
+
+@media (max-width: 480px) {
+  .topic-panel {
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-width: 3px;
+  }
+  .topic-intro {
+    margin-bottom: 2rem;
+  }
+  .topic-summary {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .robot-note {
+    padding: 1rem;
+    border-width: 2.5px;
+  }
+  .pulse-strip {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .pulse-card {
+    padding: 1rem;
+    border-width: 2.5px;
+  }
+  .topic-banner {
+    margin-bottom: 2rem;
+    border-width: 3px;
+    box-shadow: 4px 4px 0 var(--ink-dark);
+  }
+  .comic-recycling-flow, .comic-privacy-shield, .comic-outputs-container {
+    padding: 1rem;
+    border-width: 3px;
+    box-shadow: 4px 4px 0 var(--ink-dark);
+    margin: 1rem 0;
+  }
+  .comic-recycling-header, .comic-privacy-header, .comic-outputs-header {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.6rem;
+    margin-bottom: 1rem;
+    border-width: 2.5px;
+  }
+  .comic-recycling-card {
+    padding: 0.75rem;
+    border-width: 2.5px;
+  }
+  .comic-recycling-icon {
+    font-size: 1.8rem;
+  }
+  .comic-recycling-card-title {
+    font-size: 0.8rem;
+  }
+  .comic-recycling-bubble {
+    padding: 1rem;
+    border-width: 3px;
+  }
+  .comic-recycling-bubble-title {
+    font-size: 1rem;
+    flex-wrap: wrap;
+  }
+  .comic-recycling-bubble-text {
+    font-size: 0.85rem;
+  }
+  .comic-output-card {
+    padding: 1rem;
+    border-width: 3px;
+  }
+  .comic-output-title {
+    font-size: 1.2rem;
+  }
+  .comic-output-desc {
+    font-size: 0.8rem;
+  }
+  .comic-output-action-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-width: 2.5px;
+  }
+}

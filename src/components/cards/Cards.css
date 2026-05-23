@@ -2844,3 +2844,73 @@
   text-overflow: ellipsis !important;
   margin-top: 0.15rem !important;
 }
+
+@media (max-width: 480px) {
+  .exploded-card {
+    padding: 1.25rem !important;
+    gap: 1rem !important;
+    border-width: 3px !important;
+  }
+  .exploded-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    padding-bottom: 1rem !important;
+    border-bottom-width: 3px !important;
+  }
+  .exploded-stat {
+    align-self: flex-start !important;
+    transform: none !important;
+    min-width: 80px !important;
+    border-width: 2.5px !important;
+  }
+  .exploded-copy h4 {
+    font-size: 1.75rem !important;
+  }
+  .exploded-copy p {
+    font-size: 0.95rem !important;
+  }
+  .diagram-stage {
+    border-width: 3px !important;
+    padding: 1rem !important;
+  }
+  .spotlight-panel {
+    border-width: 3px !important;
+    padding: 1rem !important;
+  }
+  .spotlight-panel h4 {
+    font-size: 1.35rem !important;
+  }
+  .spotlight-panel p {
+    font-size: 0.85rem !important;
+  }
+  .hotspot-list-item {
+    border-width: 2.5px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .hotspot-list-copy strong {
+    font-size: 0.85rem !important;
+  }
+  .hotspot-list-copy small {
+    font-size: 0.75rem !important;
+  }
+  .flip-card-container {
+    min-height: 400px !important;
+    height: 400px !important;
+  }
+  .flip-facts li {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border-width: 2px !important;
+  }
+  .flip-card-front, .flip-card-back {
+    padding: 1rem !important;
+    border-width: 3px !important;
+  }
+  .flip-visual {
+    height: 140px !important;
+  }
+  .flip-emoji {
+    font-size: 3.5rem !important;
+  }
+}

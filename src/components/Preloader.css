@@ -211,3 +211,32 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 480px) {
+  .preloader-overlay {
+    border-width: 4px;
+  }
+  .preloader-content {
+    max-width: calc(100% - 1.5rem);
+    padding: 2rem 1.25rem;
+    gap: 1.5rem;
+    box-shadow: 4px 4px 0 var(--ink-dark);
+  }
+  .preloader-main-title {
+    font-size: clamp(1.8rem, 9vw, 2.5rem);
+    -webkit-text-stroke: 2px var(--ink-dark);
+    text-shadow: 3px 3px 0 var(--ink-dark);
+  }
+  .preloader-visual {
+    width: 90px;
+    height: 90px;
+  }
+  .preloader-planet-sphere {
+    width: 45px;
+    height: 45px;
+  }
+  .preloader-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}

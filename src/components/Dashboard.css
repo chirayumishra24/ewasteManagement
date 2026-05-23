@@ -448,4 +448,30 @@
     align-items: flex-start;
     gap: 0.5rem;
   }
+
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0 var(--pow-yellow);
+  }
+  .obs-health-pct {
+    font-size: 2rem;
+  }
+  .health-stats {
+    width: 100%;
+  }
+  .health-stat-box {
+    padding: 0.5rem 0.75rem;
+  }
+  .assembly-part-card {
+    padding: 0.5rem 0.75rem;
+  }
+  .trophy-card {
+    padding: 0.6rem 0.8rem;
+  }
 }

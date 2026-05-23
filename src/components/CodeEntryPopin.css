@@ -206,3 +206,34 @@
   25% { transform: translateX(-6px); }
   75% { transform: translateX(6px); }
 }
+
+@media (max-width: 480px) {
+  .code-popin-card {
+    padding: 1.5rem 1.25rem;
+    border-width: 3px;
+    box-shadow: 4px 4px 0 var(--ink-dark);
+  }
+  .code-popin-title {
+    font-size: 1.35rem;
+  }
+  .code-popin-desc {
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+  .code-popin-input {
+    font-size: 1.15rem;
+    padding: 0.8rem;
+    border-width: 2.5px;
+  }
+  .code-popin-submit-btn {
+    font-size: 0.95rem;
+    padding: 0.8rem;
+    border-width: 2.5px;
+  }
+  .code-popin-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+    margin-bottom: 1rem;
+    border-width: 2px;
+  }
+}

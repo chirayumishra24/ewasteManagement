@@ -334,3 +334,62 @@
     font-size: 2.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .orbital-map-container.comic-grid-layout {
+    padding: 2rem 1rem;
+  }
+  .comic-page-header {
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  .comic-logo-title {
+    font-size: 2rem;
+  }
+  .comic-logo-burst {
+    padding: 0.8rem 1.5rem;
+    border-width: 3px;
+  }
+  .comic-speech-bubble {
+    padding: 0.75rem 1rem;
+    border-width: 2.5px;
+    border-radius: 12px;
+  }
+  .bubble-text {
+    font-size: 0.95rem;
+  }
+  .comic-grid {
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .comic-panel-card {
+    border-width: 3px;
+  }
+  .comic-panel-inner {
+    border-width: 1.5px;
+  }
+  .comic-cover-art {
+    height: 140px;
+    border-bottom-width: 2.5px;
+  }
+  .cover-emoji-burst {
+    font-size: 3.5rem;
+  }
+  .comic-page-footer {
+    padding-top: 1.5rem;
+    border-top-width: 3px;
+  }
+  .progress-dossier {
+    border-width: 2.5px;
+    padding: 0.5rem 1rem;
+  }
+  .dossier-bar-wrap {
+    height: 20px;
+    border-width: 1.5px;
+  }
+  .comic-btn-observatory {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-width: 2.5px;
+  }
+}
