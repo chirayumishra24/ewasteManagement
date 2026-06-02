@@ -2662,7 +2662,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
       return (
         <section className="content-card border-4 border-[#1A1A2E] p-4 rounded-xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
           <div className="border-3 border-[#1A1A2E] rounded-lg overflow-hidden bg-white">
-            <img src="https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_categories_detailed_infographic.png" alt="E-waste Categories Detailed Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
+            <img src={toSkillizeeImageUrl('/local/ewaste_categories_detailed_comic.png')} alt="E-waste Categories Detailed Infographic" className="w-full h-auto block max-h-[600px] object-contain mx-auto" />
           </div>
         </section>
       )
