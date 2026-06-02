@@ -2624,14 +2624,11 @@ function PathwayFlipCards() {
             </div>
 
             <div>
-              <div className="inline-block bg-[#059669] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
-                SAFE RECOVERY
-              </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase font-['Poppins']">Formal Recycling</h4>
-              <p className="text-[#334155] text-sm leading-relaxed font-bold">
+              <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Formal Recycling</h4>
+              <p className="text-[#334155] text-base leading-relaxed font-bold">
                 Protects workers under strict safety protocols while recovering high-purity saleable metals and materials.
               </p>
-              <div className="flip-hint mt-4 text-[10px] text-[#059669] font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xs text-[#059669] font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2642,27 +2639,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#059669] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#059669] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 IMPACT ANALYSIS
               </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Reduces toxic heavy metal contamination in landfills.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Ensures safe disposal of mercury, cadmium, and lead.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Supports green jobs under verified labor regulations.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-[10px] text-[#059669] font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xs text-[#059669] font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
@@ -2694,14 +2691,11 @@ function PathwayFlipCards() {
             </div>
 
             <div>
-              <div className="inline-block bg-[#0284C7] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
-                RESOURCE LOOP
-              </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase font-['Poppins']">Circular Design</h4>
-              <p className="text-[#334155] text-sm leading-relaxed font-bold">
+              <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Circular Design</h4>
+              <p className="text-[#334155] text-base leading-relaxed font-bold">
                 Lowers dependence on volatile, hazardous, and fragile raw-material supply chains by keeping resources in use.
               </p>
-              <div className="flip-hint mt-4 text-[10px] text-[#0284C7] font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xs text-[#0284C7] font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2712,27 +2706,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#0284C7] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#0284C7] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 DESIGN STRATEGY
               </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Eliminates permanent adhesives in favor of modular design.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Reduces the demand for newly mined critical raw materials.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Simplifies manual teardown, saving sorting time and costs.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-[10px] text-[#0284C7] font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xs text-[#0284C7] font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
@@ -2765,14 +2759,11 @@ function PathwayFlipCards() {
             </div>
 
             <div>
-              <div className="inline-block bg-[#C2410C] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
-                UPSTREAM FOCUS
-              </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase font-['Poppins']">Upstream Decisions</h4>
-              <p className="text-[#334155] text-sm leading-relaxed font-bold">
+              <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Upstream Decisions</h4>
+              <p className="text-[#334155] text-base leading-relaxed font-bold">
                 Repairability and disassembly decisions made at the design stage directly dictate how much resource value can be salvaged.
               </p>
-              <div className="flip-hint mt-4 text-[10px] text-orange-800 font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xs text-orange-800 font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2783,27 +2774,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#C2410C] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#C2410C] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 UPSTREAM FOCUS
               </div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Over 80% of a product's environmental footprint is determined at design.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Standardized parts make future repair and upgrades vastly cheaper.
                 </li>
-                <li className="flex items-start gap-2.5 text-xs text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Upstream choices directly determine downstream recovery efficiency.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-[10px] text-orange-800 font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xs text-orange-800 font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
