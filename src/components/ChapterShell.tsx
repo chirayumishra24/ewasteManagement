@@ -33,7 +33,7 @@ export default function ChapterShell({
   const hasAudio = chapter.id !== '1-1';
 
   const getAssemblyPartImage = (chapterId: string) => {
-    return `/images/robot_part_${chapterId.replace('-', '_')}.png`;
+    return `https://login.skillizee.io/s/articles/6a1eb6edbb3c5fc28037e32e/images/robot_part_${chapterId.replace('-', '_')}.png`;
   };
 
   const togglePlay = () => {

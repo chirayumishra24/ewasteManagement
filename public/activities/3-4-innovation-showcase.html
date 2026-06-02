@@ -9,6 +9,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="importmap">
         {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Holodeck | Skilizee E-Waste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="importmap">
+        {
             "imports": {
                 "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
                 "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
@@ -16,21 +27,79 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #020617; color: white; margin: 0; overflow: hidden; }
-        #canvas-container { position: absolute; inset: 0; background: radial-gradient(circle at center, #0d9488 0%, #020617 100%); }
-        
-        .ui-layer { position: absolute; z-index: 10; pointer-events: none; width: 100%; height: 100%; }
-        .ui-panel {
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #020617;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .sidebar-container {
+            width: 440px;
+            min-width: 440px;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            border-right: 1px solid rgba(20, 184, 166, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 24px;
+            overflow-y: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
+        }
+
+        #canvas-container {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, #0d9488 0%, #020617 100%);
+            z-index: 1;
+        }
+
+        .right-hud-container {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            bottom: 30px;
+            width: 340px;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .right-hud-container > * {
             pointer-events: auto;
+            flex-shrink: 0;
+        }
+
+        .ui-panel {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(20, 184, 166, 0.2);
             border-radius: 24px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            padding: 24px;
+            width: 100%;
         }
 
-        .header-panel { top: 30px; left: 30px; padding: 24px; max-width: 380px; }
-        .tech-menu { bottom: 30px; left: 30px; width: 380px; padding: 24px; }
+        .header-panel {
+            width: 100%;
+        }
+
+        .tech-menu {
+            width: 100%;
+        }
 
         .tech-btn {
             width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
@@ -42,18 +111,57 @@
         .tech-btn.active { background: rgba(20, 184, 166, 0.3); border-color: #14b8a6; }
 
         .purpose-box {
-            position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 24px; font-size: 20px; color: rgba(153, 246, 228, 0.6);
+            font-size: 20px; color: rgba(153, 246, 228, 0.6);
             background: rgba(13, 148, 136, 0.1); border: 1px solid rgba(20, 184, 166, 0.1);
+            border-radius: 24px;
         }
 
         .tech-dossier {
-            position: absolute; top: 30px; right: 30px; width: 320px; padding: 24px;
             background: rgba(0, 0, 0, 0.4); border-radius: 20px;
         }
 
         .hologram-pulse { animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+        @media (max-width: 860px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .sidebar-container {
+                width: 100%;
+                min-width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid rgba(20, 184, 166, 0.2);
+                overflow-y: visible;
+                padding: 16px;
+            }
+
+            #canvas-container {
+                height: 500px;
+                width: 100%;
+                flex: none;
+                position: relative;
+            }
+
+            .right-hud-container {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .tech-dossier, .purpose-box {
+                position: static;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
     </style>
 
     <style>
@@ -67,9 +175,7 @@
     </style>
     </head>
 <body>
-    <div id="canvas-container"></div>
-
-    <div class="ui-layer">
+    <div class="sidebar-container">
         <div class="ui-panel header-panel">
             <div class="text-[20px] font-bold text-teal-400 uppercase tracking-widest mb-2">Module 3.4 • Future Frontier</div>
             <h1 class="text-2xl font-bold mb-2">Innovation Holodeck</h1>
@@ -103,7 +209,11 @@
                 </div>
             </button>
         </div>
+    </div>
 
+    <div id="canvas-container"></div>
+
+    <div class="right-hud-container">
         <div class="tech-dossier ui-panel">
             <h4 id="tech-title" class="font-bold text-teal-400 mb-2 tracking-tight">System Idle</h4>
             <p id="tech-description" class="text-xl text-slate-400 leading-relaxed italic">Select a prototype to begin the holographic projection.</p>
@@ -140,13 +250,12 @@
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0x020617, 0.05);
 
-            const aspect = (window.innerWidth && window.innerHeight) ? (window.innerWidth / window.innerHeight) : 1;
-            camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+            const width = container.clientWidth || 400;
+            const height = container.clientHeight || 300;
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
             camera.position.set(0, 5, 10);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            const width = window.innerWidth || 1;
-            const height = window.innerHeight || 1;
             renderer.setSize(width, height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
@@ -238,11 +347,14 @@
         }
 
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            const width = window.innerWidth || 1;
-            const height = window.innerHeight || 1;
-            renderer.setSize(width, height);
+            const container = document.getElementById('canvas-container');
+            if (container) {
+                const width = container.clientWidth || 400;
+                const height = container.clientHeight || 300;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
         });
 
         init();
