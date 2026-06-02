@@ -959,102 +959,156 @@ function InteractiveMindfulnessInfographic() {
 
       <div className="p-6">
         {activeTab === 'phishing' && (
-          <div>
-            <div className="mb-4">
-              <h4 className="font-black text-[#1A1A2E] text-xl">Tactic 01: Suspicion Protocol</h4>
-              <p className="text-slate-600 text-xl font-bold">Unexpected message detected. Click on the suspicious elements (Sender, Link, Attachment) to inspect them.</p>
+          <div className="space-y-6">
+            {/* Actionable Instructions */}
+            <div className="bg-blue-50 border-3 border-blue-500 rounded-xl p-5 shadow-[4px_4px_0px_#3B82F6]">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-blue-500 text-white font-black text-xl px-2.5 py-0.5 rounded border-2 border-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] uppercase">
+                  INSTRUCTIONS
+                </span>
+                <span className="text-xl font-extrabold text-blue-900">How to Audit the Email:</span>
+              </div>
+              <ul className="list-disc pl-6 space-y-2 text-xl font-bold text-blue-950">
+                <li>Click on the <span className="underline decoration-red-500 text-red-700">Sender's Address</span> at the top of the email header to analyze the source domain.</li>
+                <li>Click on the <span className="underline decoration-blue-500 text-blue-700">Web Link URL</span> in the email body to check the destination path.</li>
+                <li>Click the <span className="bg-[#1A1A2E] text-white px-2 py-0.5 rounded">Inspect Attachment</span> button at the bottom of the email block to test the file suffix.</li>
+              </ul>
             </div>
-            <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-4 shadow-[4px_4px_0px_#1A1A2E] max-w-xl mx-auto">
-              <div className="border-b-2 border-slate-200 pb-3 mb-3 text-xl">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-extrabold text-slate-500">From:</span>
-                  <button 
-                    onClick={() => handlePhishClick('sender')}
-                    className={`font-mono text-xl px-2 py-0.5 rounded border transition-colors ${
-                      phishingFlags.sender ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-slate-100 border-slate-300 hover:bg-slate-200 text-slate-800'
-                    }`}
-                  >
-                    security-update@paypal-verify-alert.com
-                  </button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-slate-500">Subject:</span>
-                  <span className="font-bold text-red-600">URGENT: Your account will be suspended in 2 hours</span>
-                </div>
-              </div>
-              <div className="text-slate-700 text-xl leading-relaxed mb-4 space-y-2">
-                <p>Dear Customer,</p>
-                <p>Our automated systems detected unusual hardware access from your IP. To prevent total lock, click the authorization node immediately to verify identity:</p>
-                <div className="my-3 text-center">
-                  <button 
-                    onClick={() => handlePhishClick('link')}
-                    className={`font-mono text-xl px-3 py-1.5 rounded border transition-all ${
-                      phishingFlags.link ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-blue-50 border-blue-300 hover:bg-blue-100 text-blue-700 underline'
-                    }`}
-                  >
-                    http://sec-paypaI.com/verify-identity
-                  </button>
-                </div>
-                <p>Alternatively, review the incident log attached below and load the secure executable utility:</p>
-              </div>
-              <div className="bg-slate-50 border-2 border-dashed border-slate-300 p-3 rounded-lg flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">📄</span>
-                  <div>
-                    <div className="text-xl font-bold text-slate-800">security_patch_v4.2.exe</div>
-                    <div className="text-[20px] text-slate-400">Executable application (1.8 MB)</div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Simulated Email Console (Left Side) */}
+              <div className="lg:col-span-7 border-4 border-[#1A1A2E] rounded-xl bg-white shadow-[6px_6px_0px_#1A1A2E] overflow-hidden">
+                <div className="bg-[#242445] px-4 py-2.5 border-b-4 border-[#1A1A2E] flex items-center justify-between text-white font-mono text-xl">
+                  <span>📬 INBOX: SECURE_COMMUNICATION_PORTAL</span>
+                  <div className="flex gap-1.5">
+                    <span className="w-3.5 h-3.5 rounded-full bg-red-500 border border-white/20"></span>
+                    <span className="w-3.5 h-3.5 rounded-full bg-yellow-500 border border-white/20"></span>
+                    <span className="w-3.5 h-3.5 rounded-full bg-green-500 border border-white/20"></span>
                   </div>
                 </div>
-                <button 
-                  onClick={() => handlePhishClick('attachment')}
-                  className={`text-xl px-3 py-1 rounded border-2 transition-all font-extrabold ${
-                    phishingFlags.attachment ? 'bg-red-100 border-red-500 text-red-700' : 'bg-[#1A1A2E] text-white border-[#1A1A2E] hover:bg-slate-800'
-                  }`}
-                >
-                  {phishingFlags.attachment ? 'Inspected' : 'Inspect Attachment'}
-                </button>
+
+                <div className="p-6">
+                  <div className="border-b-3 border-slate-200 pb-4 mb-4 text-xl">
+                    <div className="flex items-center gap-3 mb-2 flex-wrap">
+                      <span className="font-extrabold text-slate-500">From:</span>
+                      <button 
+                        onClick={() => handlePhishClick('sender')}
+                        className={`font-mono text-xl px-3 py-1 rounded-lg border-2 transition-all ${
+                          phishingFlags.sender 
+                            ? 'bg-red-100 border-red-500 text-red-700 font-bold shadow-[2px_2px_0px_#EF4444]' 
+                            : 'bg-slate-100 border-slate-300 hover:bg-slate-200 text-slate-800 hover:-translate-y-0.5'
+                        }`}
+                      >
+                        security-update@paypal-verify-alert.com
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-extrabold text-slate-500">Subject:</span>
+                      <span className="font-bold text-red-600">URGENT: Your account will be suspended in 2 hours</span>
+                    </div>
+                  </div>
+
+                  <div className="text-slate-700 text-xl leading-relaxed mb-6 space-y-4 font-medium">
+                    <p>Dear Customer,</p>
+                    <p>Our automated systems detected unusual hardware access from your IP. To prevent total lock, click the authorization node immediately to verify identity:</p>
+                    <div className="my-4 text-center">
+                      <button 
+                        onClick={() => handlePhishClick('link')}
+                        className={`font-mono text-xl px-4 py-2.5 rounded-lg border-3 transition-all ${
+                          phishingFlags.link 
+                            ? 'bg-red-100 border-red-500 text-red-700 font-bold shadow-[3px_3px_0px_#EF4444]' 
+                            : 'bg-blue-50 border-blue-400 hover:bg-blue-100 text-blue-700 underline hover:-translate-y-0.5 shadow-[3px_3px_0px_#3B82F6]'
+                        }`}
+                      >
+                        http://sec-paypaI.com/verify-identity
+                      </button>
+                    </div>
+                    <p>Alternatively, review the incident log attached below and load the secure executable utility:</p>
+                  </div>
+
+                  <div className="bg-slate-50 border-3 border-dashed border-slate-350 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">📄</span>
+                      <div>
+                        <div className="text-xl font-bold text-slate-850">security_patch_v4.2.exe</div>
+                        <div className="text-xl text-slate-500 font-medium">Executable application (1.8 MB)</div>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => handlePhishClick('attachment')}
+                      className={`text-xl px-4 py-2 rounded-xl border-3 transition-all font-extrabold shadow-[3px_3px_0px_#1A1A2E] hover:-translate-y-0.5 ${
+                        phishingFlags.attachment 
+                          ? 'bg-red-100 border-red-500 text-red-700 shadow-[3px_3px_0px_#EF4444]' 
+                          : 'bg-[#1A1A2E] text-white border-[#1A1A2E] hover:bg-slate-800'
+                      }`}
+                    >
+                      {phishingFlags.attachment ? 'Inspected' : 'Inspect Attachment'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vertical Audit Panel (Right Side) */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="bg-[#1A1A2E] text-white p-4 rounded-xl border-3 border-[#1A1A2E] shadow-[4px_4px_0px_rgba(26,26,46,0.15)]">
+                  <h4 className="font-black text-xl uppercase tracking-wider">Audit Report Summary</h4>
+                </div>
+
+                <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.sender ? 'border-red-500 bg-red-50/50 shadow-[4px_4px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{phishingFlags.sender ? '❌' : '🔎'}</span>
+                      <h5 className="font-extrabold text-xl text-[#1A1A2E]">01. Sender Audit</h5>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-sm font-black border-2 ${phishingFlags.sender ? 'bg-red-100 border-red-500 text-red-700' : 'bg-slate-100 border-slate-400 text-slate-600'}`}>
+                      {phishingFlags.sender ? 'DETECTION' : 'PENDING'}
+                    </span>
+                  </div>
+                  <p className="text-xl text-slate-700 font-bold leading-relaxed">
+                    {phishingFlags.sender 
+                      ? "Domain Spoofing! The domain 'paypal-verify-alert.com' is not official. Spoofers set up official-looking domains to bypass basic mail security filters." 
+                      : "Inspect the 'From' address. Phishers use domain variants resembling trusted services to deceive busy eyes."}
+                  </p>
+                </div>
+
+                <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.link ? 'border-red-500 bg-red-50/50 shadow-[4px_4px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{phishingFlags.link ? '❌' : '🔎'}</span>
+                      <h5 className="font-extrabold text-xl text-[#1A1A2E]">02. Link Audit</h5>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-sm font-black border-2 ${phishingFlags.link ? 'bg-red-100 border-red-500 text-red-700' : 'bg-slate-100 border-slate-400 text-slate-600'}`}>
+                      {phishingFlags.link ? 'DETECTION' : 'PENDING'}
+                    </span>
+                  </div>
+                  <p className="text-xl text-slate-700 font-bold leading-relaxed">
+                    {phishingFlags.link 
+                      ? "Typosquatting alert! The URL uses a capital 'I' instead of lower 'l' (sec-paypaI.com instead of paypal.com). Clicking this routes logins directly to hacker databases." 
+                      : "Inspect the URL node. Phishers buy typo-squatted domains containing homoglyphs or clever visual substitutions."}
+                  </p>
+                </div>
+
+                <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.attachment ? 'border-red-500 bg-red-50/50 shadow-[4px_4px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{phishingFlags.attachment ? '❌' : '🔎'}</span>
+                      <h5 className="font-extrabold text-xl text-[#1A1A2E]">03. Attachment Audit</h5>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-sm font-black border-2 ${phishingFlags.attachment ? 'bg-red-100 border-red-500 text-red-700' : 'bg-slate-100 border-slate-400 text-slate-600'}`}>
+                      {phishingFlags.attachment ? 'DETECTION' : 'PENDING'}
+                    </span>
+                  </div>
+                  <p className="text-xl text-slate-700 font-bold leading-relaxed">
+                    {phishingFlags.attachment 
+                      ? "Malicious Extension! Patches are never distributed as unprompted '.exe' emails. Executing this registers a trojan directly in the operating system." 
+                      : "Inspect the file suffix. Official channels distribute alerts inside secure application dashboards, never loose scripts or executables."}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.sender ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xl">{phishingFlags.sender ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Sender Audit</h5>
-                </div>
-                <p className="text-xl text-slate-600 font-bold leading-normal">
-                  {phishingFlags.sender 
-                    ? "Domain Spoofing! The domain 'paypal-verify-alert.com' is not official. Spoofers set up official-looking domains to bypass basic mail security filters." 
-                    : "Inspect the 'From' address. Phishers use domain variants resembling trusted services to deceive busy eyes."}
-                </p>
-              </div>
-
-              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.link ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xl">{phishingFlags.link ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Link Audit</h5>
-                </div>
-                <p className="text-xl text-slate-600 font-bold leading-normal">
-                  {phishingFlags.link 
-                    ? "Typosquatting alert! The URL uses a capital 'I' instead of lower 'l' (sec-paypaI.com instead of paypal.com). Clicking this routes logins directly to hacker databases." 
-                    : "Inspect the URL node. Phishers buy typo-squatted domains containing homoglyphs or clever visual substitutions."}
-                </p>
-              </div>
-
-              <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.attachment ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-xl">{phishingFlags.attachment ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Attachment Audit</h5>
-                </div>
-                <p className="text-xl text-slate-600 font-bold leading-normal">
-                  {phishingFlags.attachment 
-                    ? "Malicious Extension! Patches are never distributed as unprompted '.exe' emails. Executing this registers a trojan directly in the operating system." 
-                    : "Inspect the file suffix. Official channels distribute alerts inside secure application dashboards, never loose scripts or executables."}
-                </p>
-              </div>
-            </div>
             {phishingFlags.sender && phishingFlags.link && phishingFlags.attachment && (
-              <div className="mt-4 text-center text-xl font-black text-emerald-600 border-2 border-dashed border-emerald-400 p-2 rounded-lg bg-emerald-50">
+              <div className="text-center text-xl font-black text-emerald-700 border-4 border-emerald-500 p-4 rounded-xl bg-emerald-50 shadow-[4px_4px_0px_#10B981] animate-bounce">
                 🎉 Phishing Protocol Completed! All indicators cataloged. +50 XP
               </div>
             )}

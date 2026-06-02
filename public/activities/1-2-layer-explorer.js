@@ -664,10 +664,10 @@ function showInfo(id) {
     document.getElementById('part-desc').textContent = data.desc;
     
     const valList = document.getElementById('valuable-list');
-    valList.innerHTML = data.valuable.map(v => `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[9px] font-bold">${v}</span>`).join('');
+    valList.innerHTML = data.valuable.map(v => `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[20px] font-bold">${v}</span>`).join('');
     
     const hazList = document.getElementById('hazard-list');
-    hazList.innerHTML = data.hazardous.map(h => `<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[9px] font-bold">${h}</span>`).join('');
+    hazList.innerHTML = data.hazardous.map(h => `<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-[20px] font-bold">${h}</span>`).join('');
     
     panel.classList.add('active');
 }

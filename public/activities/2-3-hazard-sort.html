@@ -74,7 +74,7 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-size: 14px;
+            font-size: 20px;
         }
 
         .bin-toxic {
@@ -100,7 +100,7 @@
             backdrop-filter: blur(8px);
             padding: 10px 20px;
             border-radius: 30px;
-            font-size: 13px;
+            font-size: 20px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -147,13 +147,23 @@
             text-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
         .item-info-panel p {
-            font-size: 14px;
+            font-size: 20px;
             color: rgba(255,255,255,0.6);
             font-weight: 500;
         }
 
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
@@ -163,19 +173,19 @@
         </button>
 
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-2">Module 2.3 • Hazard Control</div>
+            <div class="text-[20px] font-bold text-red-400 uppercase tracking-widest mb-2">Module 2.3 • Hazard Control</div>
             <h1 class="text-2xl font-bold mb-2">Toxic Sorting</h1>
-            <p class="text-sm text-slate-400 leading-relaxed">Sort e-waste components before processing. Toxic materials like lead, mercury, and cadmium must be isolated.</p>
+            <p class="text-xl text-slate-400 leading-relaxed">Sort e-waste components before processing. Toxic materials like lead, mercury, and cadmium must be isolated.</p>
         </div>
 
         <div class="ui-panel score-panel" id="score-container">
             <div class="text-center">
-                <div class="text-[10px] font-bold text-slate-500 uppercase">Score</div>
+                <div class="text-[20px] font-bold text-slate-500 uppercase">Score</div>
                 <div class="text-2xl font-bold text-white" id="score">000</div>
             </div>
             <div class="w-px h-8 bg-white/10"></div>
             <div class="text-center">
-                <div class="text-[10px] font-bold text-slate-500 uppercase">Level</div>
+                <div class="text-[20px] font-bold text-slate-500 uppercase">Level</div>
                 <div class="text-2xl font-bold text-blue-400">1</div>
             </div>
         </div>

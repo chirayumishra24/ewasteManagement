@@ -43,7 +43,7 @@
 
         .purpose-box {
             position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 24px; font-size: 12px; color: rgba(153, 246, 228, 0.6);
+            padding: 24px; font-size: 20px; color: rgba(153, 246, 228, 0.6);
             background: rgba(13, 148, 136, 0.1); border: 1px solid rgba(20, 184, 166, 0.1);
         }
 
@@ -55,50 +55,60 @@
         .hologram-pulse { animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-teal-400 uppercase tracking-widest mb-2">Module 3.4 • Future Frontier</div>
+            <div class="text-[20px] font-bold text-teal-400 uppercase tracking-widest mb-2">Module 3.4 • Future Frontier</div>
             <h1 class="text-2xl font-bold mb-2">Innovation Holodeck</h1>
-            <p class="text-sm text-teal-200/60 leading-relaxed">The circular economy of tomorrow relies on radical new recovery methods. Interrogate the technology vault below.</p>
+            <p class="text-xl text-teal-200/60 leading-relaxed">The circular economy of tomorrow relies on radical new recovery methods. Interrogate the technology vault below.</p>
         </div>
 
         <div class="ui-panel tech-menu">
-            <p class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-4">Active Prototypes</p>
+            <p class="text-xl font-bold text-teal-400 uppercase tracking-widest mb-4">Active Prototypes</p>
             
             <button class="tech-btn" onclick="activateTech('robot', this)">
                 <div class="w-10 h-10 bg-teal-500/20 rounded-lg flex items-center justify-center text-teal-400">🤖</div>
                 <div>
-                    <h4 class="text-sm font-bold">AI Sorting Swarm</h4>
-                    <p class="text-[10px] opacity-60">Computer vision at 500 units/min</p>
+                    <h4 class="text-xl font-bold">AI Sorting Swarm</h4>
+                    <p class="text-[20px] opacity-60">Computer vision at 500 units/min</p>
                 </div>
             </button>
 
             <button class="tech-btn" onclick="activateTech('laser', this)">
                 <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">⚡</div>
                 <div>
-                    <h4 class="text-sm font-bold">Molecular Distiller</h4>
-                    <p class="text-[10px] opacity-60">Laser-based elemental separation</p>
+                    <h4 class="text-xl font-bold">Molecular Distiller</h4>
+                    <p class="text-[20px] opacity-60">Laser-based elemental separation</p>
                 </div>
             </button>
 
             <button class="tech-btn" onclick="activateTech('bio', this)">
                 <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">🧬</div>
                 <div>
-                    <h4 class="text-sm font-bold">Bio-Leaching Vat</h4>
-                    <p class="text-[10px] opacity-60">Microbial metal extraction</p>
+                    <h4 class="text-xl font-bold">Bio-Leaching Vat</h4>
+                    <p class="text-[20px] opacity-60">Microbial metal extraction</p>
                 </div>
             </button>
         </div>
 
         <div class="tech-dossier ui-panel">
             <h4 id="tech-title" class="font-bold text-teal-400 mb-2 tracking-tight">System Idle</h4>
-            <p id="tech-description" class="text-xs text-slate-400 leading-relaxed italic">Select a prototype to begin the holographic projection.</p>
+            <p id="tech-description" class="text-xl text-slate-400 leading-relaxed italic">Select a prototype to begin the holographic projection.</p>
             <div id="tech-stat-container" class="hidden mt-4 pt-4 border-t border-white/5">
-                <div class="flex justify-between text-[10px] mb-1">
+                <div class="flex justify-between text-[20px] mb-1">
                     <span class="text-slate-500 uppercase">Efficiency</span>
                     <span id="tech-stat-val" class="text-teal-400 font-bold">0%</span>
                 </div>
@@ -109,7 +119,7 @@
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-teal-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-teal-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To glimpse the future of e-waste recycling. Current manual methods are slow and dangerous; these emerging technologies represent the shift toward fully automated, chemical-free, and high-yield resource recovery.
         </div>
     </div>

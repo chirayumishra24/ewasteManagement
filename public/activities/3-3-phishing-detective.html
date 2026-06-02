@@ -48,30 +48,40 @@
 
         .purpose-box {
             position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 20px; font-size: 12px; color: rgba(199, 210, 254, 0.6);
+            padding: 20px; font-size: 20px; color: rgba(199, 210, 254, 0.6);
             background: rgba(30, 27, 75, 0.3); border: 1px solid rgba(99, 102, 241, 0.1);
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2">Module 3.3 • Forensic Analysis</div>
+            <div class="text-[20px] font-bold text-indigo-400 uppercase tracking-widest mb-2">Module 3.3 • Forensic Analysis</div>
             <h1 class="text-2xl font-bold mb-2">Detective's Desk</h1>
-            <p class="text-sm text-indigo-200/60 leading-relaxed">Scammers often use e-waste disposal as a pretext to hijack accounts. Analyze the evidence below to spot phishing attempts.</p>
+            <p class="text-xl text-indigo-200/60 leading-relaxed">Scammers often use e-waste disposal as a pretext to hijack accounts. Analyze the evidence below to spot phishing attempts.</p>
         </div>
 
         <div id="game-ui" class="ui-panel case-panel">
             <div class="flex justify-between items-center mb-6">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Case <span id="current-case-num">1</span>/5</span>
-                <span class="text-xs font-bold text-indigo-400" id="score-display">Score: 0</span>
+                <span class="text-[20px] font-bold text-slate-400 uppercase tracking-widest">Active Case <span id="current-case-num">1</span>/5</span>
+                <span class="text-xl font-bold text-indigo-400" id="score-display">Score: 0</span>
             </div>
 
             <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 mb-6">
-                <h3 class="text-lg font-bold mb-3" id="case-title">Loading case...</h3>
-                <p class="text-sm text-slate-300 italic leading-relaxed" id="case-content">"..."</p>
+                <h3 class="text-xl font-bold mb-3" id="case-title">Loading case...</h3>
+                <p class="text-xl text-slate-300 italic leading-relaxed" id="case-content">"..."</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -81,7 +91,7 @@
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-indigo-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-indigo-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To recognize social engineering tactics. As devices are retired, "verification" emails or "find my device" alerts are common vectors for credential theft.
         </div>
     </div>
@@ -91,7 +101,7 @@
         <h2 class="text-4xl font-bold mb-2">Forensic Report</h2>
         <p class="text-xl text-slate-400 mb-8" id="final-score">You identified 0/5 threats correctly.</p>
         <div id="rank-card" class="bg-white/5 p-6 rounded-3xl border border-white/10 text-center max-w-sm mb-8">
-            <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">Assigned Rank</p>
+            <p class="text-xl text-slate-400 uppercase tracking-widest mb-2">Assigned Rank</p>
             <h3 class="text-2xl font-bold text-indigo-400" id="rank-title">Rookie Analyst</h3>
         </div>
         <button class="bg-indigo-600 px-8 py-3 rounded-full font-bold hover:bg-indigo-500 transition-all" onclick="location.reload()">RE-EXAMINE CASES</button>

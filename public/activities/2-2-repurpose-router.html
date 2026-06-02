@@ -82,7 +82,17 @@
         select, button { transition: all 0.2s; }
         select:focus { border-color: var(--accent); ring: 2px var(--accent); outline: none; }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body class="p-6">
     <div class="relative max-w-6xl mx-auto space-y-6">
         <button class="fullscreen-btn" id="fs-btn">
@@ -90,14 +100,14 @@
         </button>
 
         <header class="text-center space-y-2">
-            <div class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[10px] font-bold uppercase tracking-widest mb-2">Module 2.2 • Circular Computing</div>
+            <div class="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-[20px] font-bold uppercase tracking-widest mb-2">Module 2.2 • Circular Computing</div>
             <h1 class="text-3xl font-bold">The Repurpose Router</h1>
             <p class="text-slate-500 max-w-2xl mx-auto">Hardware doesn't die, it just needs a new mission. Match your old device's specs with a low-power, high-impact role to keep it out of the landfill.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div id="canvas-container" class="lg:col-span-7">
-                <div class="absolute top-6 left-6 z-10 font-mono text-[10px] text-purple-400 opacity-60">
+                <div class="absolute top-6 left-6 z-10 font-mono text-[20px] text-purple-400 opacity-60">
                     ROUTING_ALGORITHM_v2.0 // STATUS: READY
                 </div>
             </div>
@@ -108,7 +118,7 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">CPU Category</label>
+                            <label class="text-[20px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">CPU Category</label>
                             <select id="cpu" class="w-full p-3 border-2 border-slate-100 rounded-xl bg-slate-50 font-medium">
                                 <option value="low">Atom / Celeron / Early i3</option>
                                 <option value="med">Core i5 / Ryzen 3 (Quad Core)</option>
@@ -117,7 +127,7 @@
                         </div>
 
                         <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Memory (RAM)</label>
+                            <label class="text-[20px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Memory (RAM)</label>
                             <select id="ram" class="w-full p-3 border-2 border-slate-100 rounded-xl bg-slate-50 font-medium">
                                 <option value="low">Less than 4GB</option>
                                 <option value="med">4GB - 8GB</option>
@@ -132,18 +142,18 @@
                 </div>
 
                 <div id="result-area" class="hidden space-y-4">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Calculated Mission</p>
+                    <p class="text-xl font-bold text-slate-400 uppercase tracking-widest">Calculated Mission</p>
                     <div class="mission-result">
                         <div class="mission-icon" id="res-icon">🚀</div>
                         <div>
                             <h4 class="font-bold text-purple-900" id="res-title">Mission Name</h4>
-                            <p class="text-xs text-purple-700/70 mt-1" id="res-desc">Mission description goes here.</p>
+                            <p class="text-xl text-purple-700/70 mt-1" id="res-desc">Mission description goes here.</p>
                         </div>
                     </div>
                     
                     <div class="p-4 bg-slate-100 rounded-xl">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase mb-2">Technical Rationale</p>
-                        <p class="text-xs text-slate-600 leading-relaxed" id="res-why"></p>
+                        <p class="text-[20px] font-bold text-slate-500 uppercase mb-2">Technical Rationale</p>
+                        <p class="text-xl text-slate-600 leading-relaxed" id="res-why"></p>
                     </div>
                 </div>
             </div>

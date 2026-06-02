@@ -42,59 +42,69 @@
 
         .purpose-box {
             position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 20px; font-size: 12px; color: rgba(167, 243, 208, 0.6);
+            padding: 20px; font-size: 20px; color: rgba(167, 243, 208, 0.6);
             background: rgba(6, 78, 59, 0.3); border: 1px solid rgba(16, 185, 129, 0.1);
         }
 
         .status-badge {
-            font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 6px;
+            font-size: 20px; font-weight: 800; padding: 4px 10px; border-radius: 6px;
             text-transform: uppercase; letter-spacing: 1px;
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Module 3.3 • Data Security</div>
+            <div class="text-[20px] font-bold text-emerald-400 uppercase tracking-widest mb-2">Module 3.3 • Data Security</div>
             <h1 class="text-2xl font-bold mb-2">Data Sanitation Lab</h1>
-            <p class="text-sm text-emerald-200/60 leading-relaxed">Before a device enters the recycling stream, its physical storage must be sanitized. A simple "delete" is not enough.</p>
+            <p class="text-xl text-emerald-200/60 leading-relaxed">Before a device enters the recycling stream, its physical storage must be sanitized. A simple "delete" is not enough.</p>
         </div>
 
         <div class="ui-panel controls-panel">
             <div class="flex justify-between items-center mb-4">
-                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Sanitation Protocols</p>
+                <p class="text-xl font-bold text-slate-400 uppercase tracking-widest">Sanitation Protocols</p>
                 <span id="status-tag" class="status-badge bg-red-500/20 text-red-400 border border-red-500/30">VULNERABLE</span>
             </div>
 
             <button class="secure-btn" onclick="applyProtocol('encrypt')">
                 <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">🔐</div>
                 <div>
-                    <h4 class="text-sm font-bold">Disk Encryption</h4>
-                    <p class="text-[10px] opacity-60">Scramble data with AES-256</p>
+                    <h4 class="text-xl font-bold">Disk Encryption</h4>
+                    <p class="text-[20px] opacity-60">Scramble data with AES-256</p>
                 </div>
             </button>
 
             <button class="secure-btn" onclick="applyProtocol('wipe')">
                 <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">🧹</div>
                 <div>
-                    <h4 class="text-sm font-bold">DOD-Level Wipe</h4>
-                    <p class="text-[10px] opacity-60">3-pass overwrite with random data</p>
+                    <h4 class="text-xl font-bold">DOD-Level Wipe</h4>
+                    <p class="text-[20px] opacity-60">3-pass overwrite with random data</p>
                 </div>
             </button>
 
             <button class="secure-btn" onclick="applyProtocol('shred')">
                 <div class="w-10 h-10 bg-slate-500/20 rounded-lg flex items-center justify-center text-slate-400">⚔️</div>
                 <div>
-                    <h4 class="text-sm font-bold">Physical Shredding</h4>
-                    <p class="text-[10px] opacity-60">Puncturing the physical platters</p>
+                    <h4 class="text-xl font-bold">Physical Shredding</h4>
+                    <p class="text-[20px] opacity-60">Puncturing the physical platters</p>
                 </div>
             </button>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-emerald-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-emerald-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To understand that e-waste management includes data liability. Sanitization ensures that personal, financial, and medical data cannot be recovered by third parties after disposal.
         </div>
     </div>

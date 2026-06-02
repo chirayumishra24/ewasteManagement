@@ -45,13 +45,13 @@
 
         .purpose-box {
             position: absolute; top: 24px; right: 24px; max-width: 320px;
-            padding: 16px; font-size: 11px; color: rgba(34, 211, 238, 0.6);
+            padding: 16px; font-size: 20px; color: rgba(34, 211, 238, 0.6);
             background: rgba(8, 51, 68, 0.4); border: 1px solid rgba(34, 211, 238, 0.1);
         }
 
         .instruction-tag {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: monospace; font-size: 12px; letter-spacing: 2px;
+            font-family: monospace; font-size: 20px; letter-spacing: 2px;
             color: rgba(34, 211, 238, 0.4); pointer-events: none;
             text-transform: uppercase; animation: pulse 2s infinite;
         }
@@ -65,20 +65,30 @@
         }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
     <div class="sweep"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-2">Module 3.1 • Resource Discovery</div>
+            <div class="text-[20px] font-bold text-cyan-400 uppercase tracking-widest mb-2">Module 3.1 • Resource Discovery</div>
             <h1 class="text-2xl font-bold mb-2">Regional Sonar Triage</h1>
-            <p class="text-sm text-cyan-800/80 leading-relaxed">Scan local urban mines to detect valuable mineral nodes. E-waste concentrations are often hidden in plain sight.</p>
+            <p class="text-xl text-cyan-800/80 leading-relaxed">Scan local urban mines to detect valuable mineral nodes. E-waste concentrations are often hidden in plain sight.</p>
             
             <div class="mt-4 p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
-                <p class="text-xs font-bold text-cyan-400 uppercase mb-2">Operation Manual</p>
-                <ul class="text-[10px] space-y-1 text-cyan-300">
+                <p class="text-xl font-bold text-cyan-400 uppercase mb-2">Operation Manual</p>
+                <ul class="text-[20px] space-y-1 text-cyan-300">
                     <li>• The sonar sweep automatically identifies potential nodes.</li>
                     <li>• Click on a detected node to analyze its mineral yield.</li>
                     <li>• Higher brightness indicates higher concentration of precious metals.</li>
@@ -88,12 +98,12 @@
 
         <div class="ui-panel radar-stats">
             <div>
-                <p class="text-[9px] font-bold text-cyan-600 uppercase mb-1">Active Nodes</p>
+                <p class="text-[20px] font-bold text-cyan-600 uppercase mb-1">Active Nodes</p>
                 <p class="text-xl font-bold text-cyan-400" id="nodes-count">5</p>
             </div>
             <div class="w-px h-8 bg-cyan-500/20"></div>
             <div>
-                <p class="text-[9px] font-bold text-cyan-600 uppercase mb-1">Scanner Range</p>
+                <p class="text-[20px] font-bold text-cyan-600 uppercase mb-1">Scanner Range</p>
                 <p class="text-xl font-bold text-cyan-400">12.5 KM</p>
             </div>
         </div>
@@ -101,26 +111,26 @@
         <div class="ui-panel node-info" id="node-info">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-xl text-white" id="node-type">Node Alpha</h3>
-                <span class="text-[10px] font-bold bg-cyan-900/50 px-2 py-1 rounded text-cyan-400 uppercase" id="node-id">#42</span>
+                <span class="text-[20px] font-bold bg-cyan-900/50 px-2 py-1 rounded text-cyan-400 uppercase" id="node-id">#42</span>
             </div>
             
             <div class="space-y-4">
                 <div class="p-3 bg-white/5 rounded-xl border border-white/5">
-                    <p class="text-[10px] font-bold text-cyan-600 uppercase mb-2">Detected Minerals</p>
+                    <p class="text-[20px] font-bold text-cyan-600 uppercase mb-2">Detected Minerals</p>
                     <div class="flex flex-wrap gap-2" id="node-minerals">
                         <!-- Filled by JS -->
                     </div>
                 </div>
                 
                 <div class="p-3 bg-cyan-900/20 rounded-xl border border-cyan-500/20">
-                    <p class="text-[10px] font-bold text-cyan-400 uppercase mb-1">Yield Potential</p>
-                    <p class="text-xs text-cyan-200/80" id="node-desc"></p>
+                    <p class="text-[20px] font-bold text-cyan-400 uppercase mb-1">Yield Potential</p>
+                    <p class="text-xl text-cyan-200/80" id="node-desc"></p>
                 </div>
             </div>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-cyan-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-cyan-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To understand that e-waste is not "trash" but a high-density resource. Sonar represents the data-driven approach to urban mining, mapping high-yield collection points in a city.
         </div>
 
@@ -259,7 +269,7 @@
             
             const minerals = document.getElementById('node-minerals');
             minerals.innerHTML = data.minerals.map(m => `
-                <span class="text-[10px] font-bold px-2 py-1 bg-cyan-900/50 rounded border border-cyan-500/30">${m}</span>
+                <span class="text-[20px] font-bold px-2 py-1 bg-cyan-900/50 rounded border border-cyan-500/30">${m}</span>
             `).join('');
 
             info.classList.add('active');

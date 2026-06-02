@@ -110,7 +110,7 @@
             padding: 4px 10px;
             background: white;
             border-radius: 6px;
-            font-size: 10px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary);
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -139,7 +139,17 @@
             border: 1px solid rgba(0,0,0,0.05);
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
@@ -147,7 +157,7 @@
         <header class="flex justify-between items-start">
             <div class="glass p-5 px-8">
                 <h1 class="text-2xl font-bold font-['Poppins']">Inside the Machine</h1>
-                <p class="text-sm text-[var(--muted)]">Interactive 3D Hardware Anatomy</p>
+                <p class="text-xl text-[var(--muted)]">Interactive 3D Hardware Anatomy</p>
             </div>
             
             <button class="fullscreen-btn" id="toggle-fullscreen" title="Toggle Fullscreen">
@@ -158,37 +168,37 @@
         </header>
 
         <div id="component-info" class="glass p-6">
-            <h3 class="text-lg font-bold mb-1" id="part-name">Motherboard</h3>
-            <p class="text-xs text-[var(--muted)] mb-4" id="part-desc">The central nervous system of the device.</p>
+            <h3 class="text-xl font-bold mb-1" id="part-name">Motherboard</h3>
+            <p class="text-xl text-[var(--muted)] mb-4" id="part-desc">The central nervous system of the device.</p>
             
             <div class="space-y-4">
                 <div class="p-3 bg-blue-50 rounded-xl border border-blue-100">
-                    <p class="text-[10px] font-bold text-blue-600 uppercase mb-2">Valuable Recovery</p>
+                    <p class="text-[20px] font-bold text-blue-600 uppercase mb-2">Valuable Recovery</p>
                     <div class="flex flex-wrap gap-2" id="valuable-list">
                         <!-- Filled by JS -->
                     </div>
                 </div>
                 
                 <div class="p-3 bg-red-50 rounded-xl border border-red-100">
-                    <p class="text-[10px] font-bold text-red-600 uppercase mb-2">Hazardous Content</p>
+                    <p class="text-[20px] font-bold text-red-600 uppercase mb-2">Hazardous Content</p>
                     <div class="flex flex-wrap gap-2" id="hazard-list">
                         <!-- Filled by JS -->
                     </div>
                 </div>
             </div>
             
-            <p class="mt-4 text-[10px] text-center italic text-[var(--muted)]">Click a component to explore its composition</p>
+            <p class="mt-4 text-[20px] text-center italic text-[var(--muted)]">Click a component to explore its composition</p>
         </div>
 
         <div class="control-panel glass">
             <div class="flex justify-between items-center mb-3">
-                <span class="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Exploded View</span>
-                <span class="text-xs font-mono font-bold text-[var(--primary)]" id="offset-val">0%</span>
+                <span class="text-xl font-bold uppercase tracking-widest text-[var(--muted)]">Exploded View</span>
+                <span class="text-xl font-mono font-bold text-[var(--primary)]" id="offset-val">0%</span>
             </div>
             <input type="range" id="explode-slider" min="0" max="100" value="0">
             <div class="flex justify-between mt-2">
-                <span class="text-[10px] text-[var(--muted)]">Assembled</span>
-                <span class="text-[10px] text-[var(--muted)]">Full Teardown</span>
+                <span class="text-[20px] text-[var(--muted)]">Assembled</span>
+                <span class="text-[20px] text-[var(--muted)]">Full Teardown</span>
             </div>
         </div>
     </div>

@@ -54,7 +54,7 @@
         .metric-box { background: #f1f5f9; padding: 1rem; border-radius: 12px; text-align: center; }
         .metric-val { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); }
         .metric-val.danger { color: #ef4444; }
-        .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+        .metric-label { font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
         
         .fullscreen-btn {
             position: absolute; top: 24px; right: 24px; z-index: 100;
@@ -67,7 +67,17 @@
         .fullscreen-btn:hover { background: rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
         .is-embedded main { padding-top: 1rem; }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <main class="relative max-w-6xl mx-auto px-6 py-8 space-y-8">
         <button class="fullscreen-btn" id="fs-btn">
@@ -75,7 +85,7 @@
         </button>
 
         <header class="text-center space-y-2">
-            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold uppercase tracking-wider">Module 2.1 • Reduce</span>
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xl font-bold uppercase tracking-wider">Module 2.1 • Reduce</span>
             <h1 class="text-3xl font-bold">Battery Degradation Lab</h1>
             <p class="text-slate-500 max-w-2xl mx-auto">Observe how daily charging habits trigger chemical stress inside a lithium-ion cell. Extending battery life is the most effective way to delay device replacement.</p>
         </header>
@@ -87,11 +97,11 @@
                     <!-- Overlay Stats -->
                     <div class="absolute bottom-6 left-6 flex gap-4 z-10">
                         <div class="bg-black/50 backdrop-blur-md border border-white/10 p-3 rounded-xl text-white">
-                            <p class="text-[10px] text-white/50 uppercase font-bold tracking-wider mb-1">Core Temp</p>
+                            <p class="text-[20px] text-white/50 uppercase font-bold tracking-wider mb-1">Core Temp</p>
                             <p class="font-mono text-xl" id="core-temp">25.0°C</p>
                         </div>
                         <div class="bg-black/50 backdrop-blur-md border border-white/10 p-3 rounded-xl text-white">
-                            <p class="text-[10px] text-white/50 uppercase font-bold tracking-wider mb-1">Cell Stress</p>
+                            <p class="text-[20px] text-white/50 uppercase font-bold tracking-wider mb-1">Cell Stress</p>
                             <p class="font-mono text-xl" id="cell-stress">Low</p>
                         </div>
                     </div>
@@ -101,7 +111,7 @@
             <!-- Side Panel -->
             <div class="glass-panel p-6 flex flex-col gap-6">
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Degradation Metrics</h3>
+                    <h3 class="text-xl font-bold mb-4">Degradation Metrics</h3>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="metric-box">
                             <div class="metric-val" id="health-val">100%</div>
@@ -115,13 +125,13 @@
                 </div>
                 
                 <div class="flex-1">
-                    <h3 class="text-lg font-bold mb-4">Toggle Stressors</h3>
+                    <h3 class="text-xl font-bold mb-4">Toggle Stressors</h3>
                     <div class="space-y-3" id="habits-container">
                         <!-- Filled by JS -->
                     </div>
                 </div>
                 
-                <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-sm text-blue-800">
+                <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 text-xl text-blue-800">
                     <strong>Insight:</strong> <span id="insight-text">A healthy battery stays cool and avoids 0% or 100% extremes.</span>
                 </div>
             </div>
@@ -270,7 +280,7 @@
             HABITS.forEach(h => {
                 const btn = document.createElement('button');
                 btn.className = 'habit-btn';
-                btn.innerHTML = `<span class="text-2xl">${h.icon}</span><span class="font-bold text-sm text-slate-700">${h.label}</span>`;
+                btn.innerHTML = `<span class="text-2xl">${h.icon}</span><span class="font-bold text-xl text-slate-700">${h.label}</span>`;
                 btn.onclick = () => {
                     if (activeHabits.has(h.id)) {
                         activeHabits.delete(h.id);

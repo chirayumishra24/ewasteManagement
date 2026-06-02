@@ -42,7 +42,7 @@
 
         .purpose-box {
             position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 20px; font-size: 12px; color: rgba(199, 210, 254, 0.6);
+            padding: 20px; font-size: 20px; color: rgba(199, 210, 254, 0.6);
             background: rgba(30, 27, 75, 0.3); border: 1px solid rgba(99, 102, 241, 0.1);
         }
 
@@ -52,54 +52,64 @@
             border-radius: 16px;
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2">Module 3.3 • Identity Theft</div>
+            <div class="text-[20px] font-bold text-indigo-400 uppercase tracking-widest mb-2">Module 3.3 • Identity Theft</div>
             <h1 class="text-2xl font-bold mb-2">The Residual Shadow</h1>
-            <p class="text-sm text-indigo-200/60 leading-relaxed">Your "Digital Shadow" follows your physical device even after you discard it. Un-sanitized hardware is a goldmine for identity thieves.</p>
+            <p class="text-xl text-indigo-200/60 leading-relaxed">Your "Digital Shadow" follows your physical device even after you discard it. Un-sanitized hardware is a goldmine for identity thieves.</p>
         </div>
 
         <div class="ui-panel data-panel">
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Device Leakage Points</p>
+            <p class="text-xl font-bold text-slate-400 uppercase tracking-widest mb-4">Device Leakage Points</p>
             
             <button class="data-point" onclick="spawnLeak('Account Sync', 0x6366f1)">
                 <div class="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center text-indigo-400">👤</div>
                 <div>
-                    <h4 class="text-sm font-bold">Cloud Sync</h4>
-                    <p class="text-[10px] opacity-60">Emails, Contacts, Passwords</p>
+                    <h4 class="text-xl font-bold">Cloud Sync</h4>
+                    <p class="text-[20px] opacity-60">Emails, Contacts, Passwords</p>
                 </div>
             </button>
 
             <button class="data-point" onclick="spawnLeak('Location Log', 0xf43f5e)">
                 <div class="w-10 h-10 bg-rose-500/20 rounded-lg flex items-center justify-center text-rose-400">📍</div>
                 <div>
-                    <h4 class="text-sm font-bold">Location History</h4>
-                    <p class="text-[10px] opacity-60">Home address & frequent routes</p>
+                    <h4 class="text-xl font-bold">Location History</h4>
+                    <p class="text-[20px] opacity-60">Home address & frequent routes</p>
                 </div>
             </button>
 
             <button class="data-point" onclick="spawnLeak('Financial Token', 0x10b981)">
                 <div class="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center text-emerald-400">💳</div>
                 <div>
-                    <h4 class="text-sm font-bold">Payment Tokens</h4>
-                    <p class="text-[10px] opacity-60">Digital wallets & card proxies</p>
+                    <h4 class="text-xl font-bold">Payment Tokens</h4>
+                    <p class="text-[20px] opacity-60">Digital wallets & card proxies</p>
                 </div>
             </button>
         </div>
 
         <div class="alert-box">
-            <p class="text-[10px] font-bold text-rose-400 uppercase mb-2 flex items-center gap-2">
+            <p class="text-[20px] font-bold text-rose-400 uppercase mb-2 flex items-center gap-2">
                 <span class="animate-pulse">●</span> Threat Analysis
             </p>
-            <p class="text-xs text-rose-200/80 leading-relaxed" id="threat-log">Awaiting data interrogation... Interacting with leakage points to see residual impact.</p>
+            <p class="text-xl text-rose-200/80 leading-relaxed" id="threat-log">Awaiting data interrogation... Interacting with leakage points to see residual impact.</p>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-indigo-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-indigo-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To visualize how personal data persists on hardware. Factory resets often leave metadata intact; only deep sanitization or physical destruction ensures total privacy in e-waste.
         </div>
     </div>

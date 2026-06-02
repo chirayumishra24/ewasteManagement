@@ -2068,20 +2068,24 @@ export function toSkillizeeImageUrl(path: string) {
   const skillizeeAssetPrefix = 'https://login.skillizee.io'
   const skillizeeArticleImagePrefix = `${skillizeeAssetPrefix}/s/articles/6a1030afe7aac6873aee2b88/images/`
 
+  if (path.startsWith(skillizeeArticleImagePrefix)) {
+    const filename = path.substring(skillizeeArticleImagePrefix.length)
+    return `/images/${filename}`
+  }
+
   if (path.startsWith('http') || path.startsWith('/local/')) {
     return path
   }
 
   if (path.startsWith('/images/')) {
-    const filename = path.substring('/images/'.length)
-    return `${skillizeeArticleImagePrefix}${filename}`
+    return path
   }
 
   if (path.startsWith('/')) {
     return `${skillizeeAssetPrefix}${path}`
   }
 
-  return `${skillizeeArticleImagePrefix}${path}`
+  return `/images/${path}`
 }
 
 export function toYouTubeEmbedUrl(url: string) {

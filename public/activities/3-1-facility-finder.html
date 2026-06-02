@@ -52,7 +52,7 @@
         .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
         .status-badge {
-            padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 800;
+            padding: 4px 10px; border-radius: 6px; font-size: 20px; font-weight: 800;
             text-transform: uppercase; letter-spacing: 1px;
         }
         .status-safe { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
@@ -72,11 +72,21 @@
 
         .purpose-box {
             position: absolute; bottom: 24px; left: 24px; max-width: 400px;
-            padding: 16px; font-size: 12px; color: rgba(255,255,255,0.6);
+            padding: 16px; font-size: 20px; color: rgba(255,255,255,0.6);
             background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
     <div class="scan-overlay"><div class="scan-line"></div></div>
@@ -87,13 +97,13 @@
         </button>
 
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Module 3.1 • Verification</div>
+            <div class="text-[20px] font-bold text-blue-400 uppercase tracking-widest mb-2">Module 3.1 • Verification</div>
             <h1 class="text-2xl font-bold mb-2">Certified Facility Scanner</h1>
-            <p class="text-sm text-slate-400">Scan the industrial zone to locate certified recyclers. Not every "Urban Mine" follows safety standards. Identify the authorized nodes.</p>
+            <p class="text-xl text-slate-400">Scan the industrial zone to locate certified recyclers. Not every "Urban Mine" follows safety standards. Identify the authorized nodes.</p>
             
             <div class="mt-6 p-4 bg-slate-800/50 rounded-xl border border-white/5">
-                <p class="text-xs font-bold text-slate-500 uppercase mb-3">How to operate</p>
-                <ul class="text-[11px] space-y-2 text-slate-300">
+                <p class="text-xl font-bold text-slate-500 uppercase mb-3">How to operate</p>
+                <ul class="text-[20px] space-y-2 text-slate-300">
                     <li class="flex gap-2"><span>1.</span> <span>Use mouse to rotate and scan the city block.</span></li>
                     <li class="flex gap-2"><span>2.</span> <span>Click on a holographic building to analyze data.</span></li>
                     <li class="flex gap-2"><span>3.</span> <span>Verify certifications (R2/e-Stewards) before approval.</span></li>
@@ -115,25 +125,25 @@
             <div class="space-y-6 flex-1">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Safety Index</p>
+                        <p class="text-[20px] font-bold text-slate-500 uppercase mb-1">Safety Index</p>
                         <p class="text-xl font-bold text-blue-400" id="fac-safety">--</p>
                     </div>
                     <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Impact Score</p>
+                        <p class="text-[20px] font-bold text-slate-500 uppercase mb-1">Impact Score</p>
                         <p class="text-xl font-bold text-emerald-400" id="fac-impact">--</p>
                     </div>
                 </div>
 
                 <div>
-                    <p class="text-xs font-bold text-slate-500 uppercase mb-3 tracking-wider">Active Certifications</p>
-                    <ul class="space-y-3 text-sm text-slate-300" id="fac-certs">
+                    <p class="text-xl font-bold text-slate-500 uppercase mb-3 tracking-wider">Active Certifications</p>
+                    <ul class="space-y-3 text-xl text-slate-300" id="fac-certs">
                         <!-- Filled by JS -->
                     </ul>
                 </div>
 
                 <div class="p-4 bg-slate-900/50 rounded-xl border border-blue-500/20">
-                    <p class="text-xs font-bold text-blue-400 uppercase mb-1">Intelligence Report</p>
-                    <p class="text-[11px] text-slate-400 leading-relaxed" id="fac-intel"></p>
+                    <p class="text-xl font-bold text-blue-400 uppercase mb-1">Intelligence Report</p>
+                    <p class="text-[20px] text-slate-400 leading-relaxed" id="fac-intel"></p>
                 </div>
             </div>
 
@@ -143,7 +153,7 @@
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-blue-400 uppercase text-[9px] block mb-1">Learning Objective</span>
+            <span class="font-bold text-blue-400 uppercase text-[20px] block mb-1">Learning Objective</span>
             Understand that illegal e-waste processing leads to heavy metal poisoning. Proper certification (R2/e-Stewards) ensures worker safety and environmental protection.
         </div>
     </div>

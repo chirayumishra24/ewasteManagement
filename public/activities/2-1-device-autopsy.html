@@ -84,7 +84,7 @@
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 20px;
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -138,7 +138,7 @@
             color: white;
             padding: 6px 10px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 20px;
             font-weight: 600;
             letter-spacing: 0.5px;
             pointer-events: auto;
@@ -175,7 +175,17 @@
             pointer-events: none;
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
     <div id="annotations-container" class="ui-layer" style="width: 100vw; height: 100vh;"></div>
@@ -186,9 +196,9 @@
         </button>
 
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Module 2.1 • Autopsy Lab</div>
+            <div class="text-[20px] font-bold text-blue-400 uppercase tracking-widest mb-2">Module 2.1 • Autopsy Lab</div>
             <h1 class="text-2xl font-bold mb-2">Hardware Autopsy</h1>
-            <p class="text-sm text-slate-400">Perform a virtual autopsy to diagnose bottlenecks. Most devices are scrapped when only one component fails. Identify the weak link.</p>
+            <p class="text-xl text-slate-400">Perform a virtual autopsy to diagnose bottlenecks. Most devices are scrapped when only one component fails. Identify the weak link.</p>
         </div>
 
         <div class="ui-panel controls-panel">
@@ -199,20 +209,20 @@
         <div class="ui-panel info-card" id="info-card">
             <div class="flex justify-between items-start mb-2">
                 <h3 class="font-bold text-xl text-white" id="node-name">Select Component</h3>
-                <span class="text-[10px] font-bold bg-slate-800 px-2 py-1 rounded text-slate-300 uppercase tracking-wider" id="node-type">WAITING</span>
+                <span class="text-[20px] font-bold bg-slate-800 px-2 py-1 rounded text-slate-300 uppercase tracking-wider" id="node-type">WAITING</span>
             </div>
             
-            <p class="text-sm text-slate-400 leading-relaxed mb-4" id="node-desc">Click on any module in the exploded view to inspect its lifespan, repairability, and failure rate.</p>
+            <p class="text-xl text-slate-400 leading-relaxed mb-4" id="node-desc">Click on any module in the exploded view to inspect its lifespan, repairability, and failure rate.</p>
             
             <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 hidden" id="diagnosis-panel">
                 <div class="flex justify-between items-end mb-1">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Repairability Index</span>
+                    <span class="text-xl font-bold text-slate-400 uppercase tracking-wider">Repairability Index</span>
                     <span id="repair-score-text" class="text-green-400 font-bold font-mono">0%</span>
                 </div>
                 <div class="health-bar-bg mb-3">
                     <div class="health-bar-fill" id="repair-score-bar"></div>
                 </div>
-                <p class="text-[11px] text-slate-300 font-medium leading-relaxed" id="node-diagnosis"></p>
+                <p class="text-[20px] text-slate-300 font-medium leading-relaxed" id="node-diagnosis"></p>
             </div>
         </div>
     </div>

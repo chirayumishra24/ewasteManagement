@@ -71,7 +71,7 @@
             width: 24px; height: 24px; border-radius: 50%;
             background: #e2e8f0; color: #64748b;
             display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; flex-shrink: 0;
+            font-size: 20px; font-weight: 700; flex-shrink: 0;
         }
         .step-item.active .step-number { background: var(--accent); color: white; }
 
@@ -88,10 +88,20 @@
         .badge {
             background: #f0fdfa; color: #0f766e;
             padding: 4px 12px; border-radius: 99px;
-            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            font-size: 20px; font-weight: 700; text-transform: uppercase;
         }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body class="p-6">
     <div class="relative max-w-6xl mx-auto space-y-6">
         <button class="fullscreen-btn" id="fs-btn">
@@ -108,7 +118,7 @@
             <!-- 3D Viewer -->
             <div id="canvas-container" class="lg:col-span-8">
                 <div class="absolute bottom-6 left-6 z-10 bg-black/40 backdrop-blur-md p-3 rounded-lg border border-white/10">
-                    <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest">Transformation Progress</p>
+                    <p class="text-[20px] text-white/60 font-bold uppercase tracking-widest">Transformation Progress</p>
                     <input type="range" id="progress-slider" min="0" max="100" value="0" class="w-48 mt-2 accent-[#2bc1a6]">
                 </div>
             </div>
@@ -116,21 +126,21 @@
             <!-- Sidebar -->
             <div class="lg:col-span-4 space-y-6">
                 <div class="space-y-3">
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Project</p>
+                    <p class="text-xl font-bold text-slate-400 uppercase tracking-widest">Select Project</p>
                     <div class="blueprint-card active" data-type="planter">
                         <h4 class="font-bold">CRT Monitor Planter</h4>
-                        <p class="text-xs text-slate-500">Repurposing plastic shells as indoor gardens.</p>
+                        <p class="text-xl text-slate-500">Repurposing plastic shells as indoor gardens.</p>
                     </div>
                     <div class="blueprint-card" data-type="jewelry">
                         <h4 class="font-bold">Circuit Board Jewelry</h4>
-                        <p class="text-xs text-slate-500">Transforming PCB patterns into wearable art.</p>
+                        <p class="text-xl text-slate-500">Transforming PCB patterns into wearable art.</p>
                     </div>
                 </div>
 
                 <div class="step-panel space-y-4">
                     <h3 class="font-bold border-b pb-3 flex justify-between items-center">
                         Technical Steps
-                        <span class="text-[10px] bg-slate-100 px-2 py-1 rounded" id="step-count">Step 1/3</span>
+                        <span class="text-[20px] bg-slate-100 px-2 py-1 rounded" id="step-count">Step 1/3</span>
                     </h3>
                     <div id="steps-list" class="space-y-4">
                         <!-- Filled by JS -->
@@ -242,7 +252,7 @@
                 div.id = `step-${i}`;
                 div.innerHTML = `
                     <div class="step-number">${i+1}</div>
-                    <p class="text-xs text-slate-600">${step}</p>
+                    <p class="text-xl text-slate-600">${step}</p>
                 `;
                 stepsList.appendChild(div);
             });

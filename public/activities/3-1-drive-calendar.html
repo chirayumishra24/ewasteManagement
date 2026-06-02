@@ -58,7 +58,7 @@
 
         .purpose-box {
             position: absolute; bottom: 24px; left: 24px; max-width: 400px;
-            padding: 16px; font-size: 12px; color: rgba(255,255,255,0.6);
+            padding: 16px; font-size: 20px; color: rgba(255,255,255,0.6);
             background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -66,7 +66,7 @@
         .month-label {
             position: absolute;
             color: rgba(255, 255, 255, 0.3);
-            font-size: 10px;
+            font-size: 20px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -84,20 +84,30 @@
         }
         .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.1); }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
     <div id="labels-container" class="ui-layer"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-2">Module 3.1 • Strategic Planning</div>
+            <div class="text-[20px] font-bold text-amber-400 uppercase tracking-widest mb-2">Module 3.1 • Strategic Planning</div>
             <h1 class="text-2xl font-bold mb-2">Temporal Orbit</h1>
-            <p class="text-sm text-slate-400">Map your collection events to the yearly cycle. Strategic timing increases participation by 40%.</p>
+            <p class="text-xl text-slate-400">Map your collection events to the yearly cycle. Strategic timing increases participation by 40%.</p>
             
             <div class="mt-4 p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
-                <p class="text-xs font-bold text-amber-400 uppercase mb-2">Instructions</p>
-                <ul class="text-[10px] space-y-1 text-slate-300">
+                <p class="text-xl font-bold text-amber-400 uppercase mb-2">Instructions</p>
+                <ul class="text-[20px] space-y-1 text-slate-300">
                     <li>• Click an event on the right to pin it to the orbit.</li>
                     <li>• Observe the "Golden Months" of high e-waste generation.</li>
                     <li>• Rotate the view to inspect the yearly timeline.</li>
@@ -106,35 +116,35 @@
         </div>
 
         <div class="ui-panel event-list">
-            <h3 class="text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Available Events</h3>
+            <h3 class="text-xl font-bold text-slate-500 uppercase mb-2 tracking-widest">Available Events</h3>
             
             <div class="event-card" onclick="pinEvent('Intl E-Waste Day', 'Oct 14', 0xff6b6b, 9)">
                 <div class="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center text-red-400">📅</div>
                 <div>
-                    <h4 class="text-sm font-bold">Intl E-Waste Day</h4>
-                    <p class="text-[10px] opacity-60">Global Outreach (Oct 14)</p>
+                    <h4 class="text-xl font-bold">Intl E-Waste Day</h4>
+                    <p class="text-[20px] opacity-60">Global Outreach (Oct 14)</p>
                 </div>
             </div>
 
             <div class="event-card" onclick="pinEvent('School Drive', 'Mar 15', 0x4dabf7, 2)">
                 <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400">🏫</div>
                 <div>
-                    <h4 class="text-sm font-bold">School Drive</h4>
-                    <p class="text-[10px] opacity-60">Mid-Term Cycle (Mar 15)</p>
+                    <h4 class="text-xl font-bold">School Drive</h4>
+                    <p class="text-[20px] opacity-60">Mid-Term Cycle (Mar 15)</p>
                 </div>
             </div>
 
             <div class="event-card" onclick="pinEvent('Corporate Clean', 'Jun 22', 0x10b981, 5)">
                 <div class="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400">🏢</div>
                 <div>
-                    <h4 class="text-sm font-bold">Corporate Clean</h4>
-                    <p class="text-[10px] opacity-60">End of Quarter (Jun 22)</p>
+                    <h4 class="text-xl font-bold">Corporate Clean</h4>
+                    <p class="text-[20px] opacity-60">End of Quarter (Jun 22)</p>
                 </div>
             </div>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-amber-400 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-amber-400 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To understand the seasonality of e-waste generation (e.g., after festivals or new product launches) and align collection efforts with community awareness windows.
         </div>
 

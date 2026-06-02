@@ -21,7 +21,17 @@
         .choice-btn { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
         .choice-btn:hover { border-color: #3b82f6; transform: translateY(-2px); }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body class="p-6">
     <div class="max-w-6xl mx-auto space-y-6">
         <h1 class="text-3xl font-bold text-center">Lifecycle Decision Lab</h1>

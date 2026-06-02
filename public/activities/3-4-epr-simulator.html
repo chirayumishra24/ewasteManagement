@@ -36,26 +36,36 @@
 
         .purpose-box {
             position: absolute; bottom: 30px; right: 30px; max-width: 320px;
-            padding: 20px; font-size: 12px; color: #9f1239;
+            padding: 20px; font-size: 20px; color: #9f1239;
             background: rgba(254, 226, 226, 0.6); border: 1px solid rgba(225, 29, 72, 0.1);
         }
 
-        .market-labels { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #fb7185; }
+        .market-labels { display: flex; justify-content: space-between; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #fb7185; }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
         <div class="ui-panel header-panel">
-            <div class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-2">Module 3.4 • Policy Impact</div>
+            <div class="text-[20px] font-bold text-rose-500 uppercase tracking-widest mb-2">Module 3.4 • Policy Impact</div>
             <h1 class="text-2xl font-bold mb-2">EPR Policy Simulator</h1>
-            <p class="text-sm text-rose-800/70 leading-relaxed">Extended Producer Responsibility (EPR) forces manufacturers to finance e-waste collection. Watch how targets shift the market balance.</p>
+            <p class="text-xl text-rose-800/70 leading-relaxed">Extended Producer Responsibility (EPR) forces manufacturers to finance e-waste collection. Watch how targets shift the market balance.</p>
         </div>
 
         <div class="ui-panel policy-panel">
             <div class="flex justify-between items-center mb-6">
-                <p class="text-xs font-bold text-rose-400 uppercase tracking-widest">Mandatory Recovery Target</p>
+                <p class="text-xl font-bold text-rose-400 uppercase tracking-widest">Mandatory Recovery Target</p>
                 <span class="text-xl font-bold text-rose-600" id="target-label">30%</span>
             </div>
 
@@ -63,18 +73,18 @@
             
             <div class="mt-8 grid grid-cols-2 gap-4">
                 <div class="p-3 bg-rose-50 rounded-xl border border-rose-100">
-                    <p class="text-[9px] uppercase font-bold text-rose-400 mb-1">Informal Sector</p>
-                    <p class="text-lg font-bold text-rose-900" id="informal-rate">70%</p>
+                    <p class="text-[20px] uppercase font-bold text-rose-400 mb-1">Informal Sector</p>
+                    <p class="text-xl font-bold text-rose-900" id="informal-rate">70%</p>
                 </div>
                 <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <p class="text-[9px] uppercase font-bold text-emerald-400 mb-1">Formal Sector</p>
-                    <p class="text-lg font-bold text-emerald-900" id="formal-rate">30%</p>
+                    <p class="text-[20px] uppercase font-bold text-emerald-400 mb-1">Formal Sector</p>
+                    <p class="text-xl font-bold text-emerald-900" id="formal-rate">30%</p>
                 </div>
             </div>
         </div>
 
         <div class="ui-panel purpose-box rounded-xl">
-            <span class="font-bold text-rose-600 uppercase text-[9px] block mb-1">Learning Purpose</span>
+            <span class="font-bold text-rose-600 uppercase text-[20px] block mb-1">Learning Purpose</span>
             To visualize the economic lever of EPR. By increasing recovery targets, the government forces the industry to invest in formal recycling infrastructure, reducing the dominance of hazardous informal processing.
         </div>
     </div>

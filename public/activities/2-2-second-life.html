@@ -70,14 +70,24 @@
         }
         .fullscreen-btn:hover { background: rgba(15, 23, 42, 0.1); transform: translateY(-2px); }
     </style>
-</head>
+
+    <style>
+        /* Global font size override fallback */
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
+    </style>
+    </head>
 <body>
     <main class="relative max-w-6xl mx-auto px-6 py-8 space-y-8">
         <button class="fullscreen-btn" id="fs-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
         </button>
         <header class="text-center space-y-2">
-            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wider">Module 2.2 • Reuse</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xl font-bold uppercase tracking-wider">Module 2.2 • Reuse</span>
             <h1 class="text-3xl font-bold">Second Life Workshop</h1>
             <p class="text-slate-500 max-w-2xl mx-auto">Retired hardware is not junk. It is computing power waiting for a new purpose. Match old devices with new "missions" to unlock massive carbon savings.</p>
         </header>
@@ -88,7 +98,7 @@
             
             <div class="absolute bottom-6 w-full text-center pointer-events-none z-10">
                 <h2 class="text-3xl font-bold text-white tracking-wide" id="device-name">Smartphone</h2>
-                <p class="text-purple-300 font-mono text-sm mt-1" id="device-spec">Snapdragon 845 • 6GB RAM</p>
+                <p class="text-purple-300 font-mono text-xl mt-1" id="device-spec">Snapdragon 845 • 6GB RAM</p>
             </div>
         </div>
 
@@ -99,11 +109,11 @@
             </div>
             
             <div id="outcome-box" class="mt-8 p-6 bg-purple-50 rounded-xl border border-purple-100 hidden">
-                <h4 class="text-lg font-bold text-purple-900 flex items-center gap-2"><span id="outcome-icon">✨</span> <span id="outcome-title">Mission Assigned</span></h4>
+                <h4 class="text-xl font-bold text-purple-900 flex items-center gap-2"><span id="outcome-icon">✨</span> <span id="outcome-title">Mission Assigned</span></h4>
                 <p class="text-purple-700 mt-2" id="outcome-desc">Description</p>
                 <div class="mt-4 flex gap-4">
-                    <span class="px-3 py-1 bg-white rounded-full text-sm font-bold text-green-600 shadow-sm" id="outcome-save">Saves ₹2500</span>
-                    <span class="px-3 py-1 bg-white rounded-full text-sm font-bold text-emerald-600 shadow-sm" id="outcome-co2">-70kg CO₂</span>
+                    <span class="px-3 py-1 bg-white rounded-full text-xl font-bold text-green-600 shadow-sm" id="outcome-save">Saves ₹2500</span>
+                    <span class="px-3 py-1 bg-white rounded-full text-xl font-bold text-emerald-600 shadow-sm" id="outcome-co2">-70kg CO₂</span>
                 </div>
             </div>
         </div>

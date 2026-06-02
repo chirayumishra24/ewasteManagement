@@ -62,9 +62,9 @@ function renderDeviceGrid() {
         <div class="device-card flex flex-col justify-between" id="card-${d.id}">
             <div class="w-full h-28 relative mb-2 flex items-center justify-center overflow-hidden rounded-xl bg-slate-950/40 border border-white/5 shadow-inner transition-all duration-300">
                 <canvas id="canvas-${d.id}" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-                <div class="absolute bottom-1 right-2 text-[8px] font-mono text-slate-500/80 pointer-events-none uppercase">3D DRAG</div>
+                <div class="absolute bottom-1 right-2 text-[20px] font-mono text-slate-500/80 pointer-events-none uppercase">3D DRAG</div>
             </div>
-            <p class="text-[10px] font-bold text-[var(--muted)] uppercase mb-3">${d.name}</p>
+            <p class="text-[20px] font-bold text-[var(--muted)] uppercase mb-3">${d.name}</p>
             <div class="stepper mt-auto">
                 <button onclick="changeCount('${d.id}', -1)">−</button>
                 <input type="number" id="input-${d.id}" value="0" min="0" onchange="setCount('${d.id}', this.value)">
@@ -84,8 +84,8 @@ function renderYieldList() {
     list.innerHTML = Object.keys(METALS).map(key => `
         <div class="space-y-2">
             <div class="flex justify-between items-end">
-                <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">${METALS[key].name} (${METALS[key].symbol})</span>
-                <span class="text-sm font-black" id="val-${key}">0.000 g</span>
+                <span class="text-xl font-bold uppercase tracking-wider text-[var(--muted)]">${METALS[key].name} (${METALS[key].symbol})</span>
+                <span class="text-xl font-black" id="val-${key}">0.000 g</span>
             </div>
             <div class="yield-bar-track">
                 <div class="yield-bar-fill" id="bar-${key}" style="background: ${METALS[key].color}"></div>
