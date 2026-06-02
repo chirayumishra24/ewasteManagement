@@ -1458,12 +1458,12 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
         </div>
 
         {/* Central Dial + Nodes Grid */}
-        <div className="flex items-center gap-6 my-2">
+        <div className="flex flex-col sm:flex-row items-center gap-6 my-4">
           {/* Glowing Radar Circle */}
-          <div className="relative flex-shrink-0 w-[110px] h-[110px] rounded-full border-4 border-slate-900 bg-slate-950 flex flex-col items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(251,191,36,0.05)]">
+          <div className="relative flex-shrink-0 w-[140px] h-[140px] rounded-full border-4 border-slate-900 bg-slate-950 flex flex-col items-center justify-center overflow-hidden shadow-[inset_0_0_25px_rgba(251,191,36,0.08)]">
             {/* Radar Grid circles */}
-            <div className="absolute w-[80px] h-[80px] rounded-full border border-slate-800/40" />
-            <div className="absolute w-[50px] h-[50px] rounded-full border border-slate-800/40" />
+            <div className="absolute w-[110px] h-[110px] rounded-full border border-slate-800/40" />
+            <div className="absolute w-[70px] h-[70px] rounded-full border border-slate-800/40" />
             <div className="absolute w-full h-[1px] bg-slate-900/60" />
             <div className="absolute h-full w-[1px] bg-slate-900/60" />
             
@@ -1471,11 +1471,11 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
             <div className="absolute inset-0 rounded-full animate-radar-sweep pointer-events-none" style={{ background: 'conic-gradient(from 0deg, rgba(251,191,36,0.15) 0deg, transparent 90deg)' }} />
 
             {/* Content inside the dial */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
+            <div className="relative z-10 flex flex-col items-center justify-center p-2 text-center">
               {progress === 100 ? (
-                <span className="text-3xl animate-bounce">⚡</span>
+                <span className="text-3xl animate-bounce mb-1">⚡</span>
               ) : (
-                <svg className="w-12 h-6 text-amber-500/70" viewBox="0 0 100 40">
+                <svg className="w-12 h-6 text-amber-500/70 mb-1" viewBox="0 0 100 40">
                   <path
                     d="M0 20 Q 25 5, 50 20 T 100 20"
                     fill="none"
@@ -1485,8 +1485,8 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
                   />
                 </svg>
               )}
-              <span className={`text-xl font-black font-mono leading-none ${progress === 100 ? 'text-emerald-400' : 'text-amber-400'}`}>{progress}%</span>
-              <span className="text-[20px] font-bold text-slate-500 uppercase tracking-widest mt-1">SYNC STATUS</span>
+              <span className={`text-2xl font-black font-mono leading-none ${progress === 100 ? 'text-emerald-400' : 'text-amber-400'}`}>{progress}%</span>
+              <span className="text-[20px] font-extrabold text-slate-500 uppercase tracking-wider mt-1.5 block leading-none">SYNC</span>
             </div>
           </div>
 
@@ -1632,12 +1632,12 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
         </div>
         <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F] relative">
           {completedCount === 0 ? (
-            <div className="w-48 h-32 rounded-xl border-4 border-slate-700 bg-black flex flex-col items-center justify-center p-3 text-center">
+            <div className="w-full max-w-[340px] min-h-[160px] rounded-xl border-4 border-slate-700 bg-black flex flex-col items-center justify-center p-4 text-center">
               <span className="text-[20px] font-mono text-red-500 uppercase tracking-wider animate-pulse mb-1">⚠️ SYSTEM OFFLINE</span>
               <span className="text-[20px] font-mono text-slate-500">[NO OPERATING SYSTEM DETECTED]</span>
             </div>
           ) : completedCount === 1 ? (
-            <div className="w-48 h-32 rounded-xl border-4 border-slate-650 bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
+            <div className="w-full max-w-[340px] min-h-[160px] rounded-xl border-4 border-slate-650 bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
               <span className="text-[20px] font-mono text-amber-500 uppercase mb-2 animate-pulse">🔧 FLASHING OS...</span>
               <div className="w-32 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-600">
                 <div className="h-full bg-amber-400 animate-pulse" style={{ width: '45%' }} />
@@ -1645,20 +1645,23 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               <span className="text-[20px] font-mono text-slate-400 mt-2">Android 12 Bootloader active</span>
             </div>
           ) : (
-            <div className={`w-48 h-32 rounded-xl border-4 transition-all duration-300 bg-black flex flex-col items-center justify-center p-3 relative ${
-              completedCount === 3 ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.25)]' : 'border-amber-600'
+            <div className={`w-full max-w-[380px] min-h-[220px] rounded-2xl border-4 transition-all duration-300 bg-black flex flex-col items-center justify-center p-5 relative ${
+              completedCount === 3 ? 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.3)]' : 'border-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.15)]'
             }`}>
-              <span className="absolute top-1 right-2 text-[20px] font-mono text-slate-400">
-                {completedCount === 3 ? '🔋 100% Connected' : '🔌 DISCONNECTED (15%)'}
-              </span>
-              <div className={`text-3xl font-black font-mono tracking-wider mb-1 ${completedCount === 3 ? 'text-emerald-400' : 'text-amber-500'}`}>
+              <div className="absolute top-2 right-3 flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${completedCount === 3 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                <span className="text-[20px] font-mono font-bold text-slate-400">
+                  {completedCount === 3 ? '🔋 100% Connected' : '🔌 DISCONNECTED (15%)'}
+                </span>
+              </div>
+              <div className={`text-4xl font-black font-mono tracking-wider mb-2 mt-4 ${completedCount === 3 ? 'text-emerald-400' : 'text-amber-500'}`}>
                 {formattedTime}<span className="text-slate-500 text-xl font-bold">:{formattedSeconds}</span>
               </div>
-              <div className="text-[20px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
+              <div className="text-[20px] font-mono text-slate-300 font-extrabold uppercase text-center mb-2">
                 {formattedDate}
               </div>
-              <div className={`text-[20px] mt-2 font-bold px-2 py-0.5 border rounded ${
-                completedCount === 3 ? 'text-emerald-400 border-emerald-400/40 bg-emerald-500/5' : 'text-amber-400 border-amber-400/40 bg-amber-500/5'
+              <div className={`text-[20px] mt-1 font-bold px-3 py-1 border rounded text-center max-w-[320px] leading-tight ${
+                completedCount === 3 ? 'text-emerald-400 border-emerald-400/40 bg-emerald-500/10' : 'text-amber-400 border-amber-400/40 bg-amber-500/10'
               }`}>
                 {completedCount === 3 ? '💡 WALL MOUNTED: Recovery stats active' : '⚠️ MOUNT SYSTEM INCOMPLETE'}
               </div>
@@ -1693,20 +1696,20 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               <span className="text-[20px] font-mono text-slate-400">[WAITING FOR USER INITIATION]</span>
             </div>
           ) : (
-            <div className={`grid grid-cols-3 gap-2 border-3 p-3.5 rounded-lg transition-all duration-300 ${
-              completedCount === 3 ? 'border-purple-500 bg-slate-800 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : 'border-slate-600 bg-slate-900'
+            <div className={`grid grid-cols-2 sm:grid-cols-3 gap-3 border-3 p-4 rounded-xl transition-all duration-300 w-full max-w-[360px] ${
+              completedCount === 3 ? 'border-purple-500 bg-slate-850 shadow-[0_0_20px_rgba(168,85,247,0.25)]' : 'border-slate-700 bg-slate-900'
             }`}>
               {[
-                { label: '🔇 MUTE', color: completedCount === 3 ? 'bg-red-500/20 text-red-400 border-red-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
-                { label: '📷 CAM', color: completedCount === 3 ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
-                { label: '⏺ REC', color: completedCount === 3 ? 'bg-amber-500/20 text-amber-400 border-amber-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
-                { label: '🚀 RUN', color: completedCount === 3 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
-                { label: '📝 EDIT', color: completedCount === 3 ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
-                { label: '🔄 SYNC', color: completedCount === 3 ? 'bg-pink-500/20 text-pink-400 border-pink-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' }
+                { label: '🔇 MUTE', color: completedCount === 3 ? 'bg-red-500/20 text-red-400 border-red-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' },
+                { label: '📷 CAM', color: completedCount === 3 ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' },
+                { label: '⏺ REC', color: completedCount === 3 ? 'bg-amber-500/20 text-amber-400 border-amber-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' },
+                { label: '🚀 RUN', color: completedCount === 3 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' },
+                { label: '📝 EDIT', color: completedCount === 3 ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' },
+                { label: '🔄 SYNC', color: completedCount === 3 ? 'bg-pink-500/20 text-pink-400 border-pink-500/50' : 'bg-slate-800 text-slate-500 border-slate-750' }
               ].map((btn, idx) => (
                 <button 
                   key={idx}
-                  className={`border-2 p-2 rounded font-mono text-[20px] font-extrabold transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${
+                  className={`border-2 p-2.5 rounded-lg font-mono text-[20px] font-extrabold transition-all w-full min-h-[50px] flex items-center justify-center text-center leading-tight shadow-md ${
                     completedCount === 3 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-40 cursor-not-allowed'
                   } ${btn.color}`}
                   onClick={() => completedCount === 3 && alert(`Macro Active: ${btn.label}`)}
@@ -1885,8 +1888,52 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
   const totalSegments = 10
   const activeSegments = Math.round((progress / 100) * totalSegments)
 
+  const getInstructionsAndPurpose = (title: string) => {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('habit') || lowerTitle.includes('longevity')) {
+      return {
+        instruction: "Check off each habit that you practice to maintain device health and prevent premature breakdown.",
+        purpose: "To adopt simple maintenance protocols that extend hardware utility and reduce electronic waste."
+      };
+    } else if (lowerTitle.includes('reflection') || lowerTitle.includes('completion')) {
+      return {
+        instruction: "Review your capstone files and check off the required items to verify submission readiness.",
+        purpose: "To synthesize your learning into permanent behavior changes and finalize your capstone project."
+      };
+    } else if (lowerTitle.includes('readiness') || lowerTitle.includes('survey')) {
+      return {
+        instruction: "Verify the core data points required to launch your e-waste community survey successfully.",
+        purpose: "To prepare survey parameters that effectively identify local community recycling behavior and access gaps."
+      };
+    } else {
+      return {
+        instruction: "Complete all building steps to unlock the interactive system preview.",
+        purpose: "To master practical hardware and software transitions that turn decommissioned devices into secondary assets."
+      };
+    }
+  }
+
+  const metadata = getInstructionsAndPurpose(block.title)
+
   return (
     <section className="content-card checklist-card bg-transparent border-0 p-0 shadow-none my-8">
+      {/* Premium Instructions & Purpose Briefing */}
+      <div className="mb-6 border-4 border-[#1A1A2E] rounded-2xl bg-[#FFFDF7] p-5 shadow-[4px_4px_0px_#1A1A2E] relative overflow-hidden">
+        <div className="absolute top-0 right-0 bg-[#FF5A5F] text-white font-black px-4 py-1 border-b-4 border-l-4 border-[#1A1A2E] text-[20px] uppercase font-mono tracking-wider">
+          Task Briefing
+        </div>
+        <div className="space-y-4 pr-32">
+          <div>
+            <span className="text-[20px] font-black text-rose-500 uppercase tracking-widest block mb-1">Learning Purpose</span>
+            <p className="text-xl text-[#1A1A2E] font-bold leading-relaxed">{metadata.purpose}</p>
+          </div>
+          <div className="border-t-2 border-dashed border-[#1A1A2E]/10 pt-3">
+            <span className="text-[20px] font-black text-emerald-600 uppercase tracking-widest block mb-1">Instruction</span>
+            <p className="text-xl text-slate-700 font-semibold leading-relaxed">{metadata.instruction}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
         <div className="border-4 border-[#1A1A2E] p-6 rounded-3xl bg-[#FFFDF7] shadow-[8px_8px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1a1a2e 2px, transparent 2px)', backgroundSize: '12px 12px' }} />
@@ -2642,15 +2689,15 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
     <section className="content-card policy-timeline bg-transparent border-0 p-0 shadow-none my-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         <div className="lg:col-span-5 border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute top-0 bottom-0 left-[34px] w-1 bg-[#1A1A2E]/10 pointer-events-none" />
-          <div className="absolute top-0 bottom-0 left-[34px] w-1 bg-gradient-to-b from-amber-400 via-emerald-400 to-blue-500 pointer-events-none" style={{ height: `${((selectedIdx + 1) / block.events.length) * 100}%` }} />
+          <div className="absolute top-0 bottom-0 left-[64px] w-1 bg-[#1A1A2E]/10 pointer-events-none" />
+          <div className="absolute top-0 bottom-0 left-[64px] w-1 bg-gradient-to-b from-amber-400 via-emerald-400 to-blue-500 pointer-events-none" style={{ height: `${((selectedIdx + 1) / block.events.length) * 100}%` }} />
           
           <div className="space-y-6 relative z-10">
             <div className="mb-4">
               <span className="bg-[#1A1A2E] text-white text-[20px] font-black px-2 py-0.5 rounded uppercase">Regulatory Roadmap</span>
               <h4 className="font-black text-[#1A1A2E] text-xl mt-1.5">Indian E-Waste Policies</h4>
             </div>
-
+ 
             {block.events.map((e, i) => {
               const isSelected = selectedIdx === i
               return (
@@ -2659,9 +2706,9 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
                   className="flex items-start gap-4 cursor-pointer group transition-all"
                   onClick={() => setSelectedIdx(i)}
                 >
-                  <div className={`w-8 h-8 rounded-full border-3 border-[#1A1A2E] flex items-center justify-center font-bold text-xl flex-shrink-0 transition-all ${
+                  <div className={`w-20 h-10 rounded-full border-3 border-[#1A1A2E] flex items-center justify-center font-bold text-xl flex-shrink-0 transition-all ${
                     isSelected 
-                      ? 'bg-amber-400 text-[#1A1A2E] scale-110 shadow-[2px_2px_0px_#1A1A2E]' 
+                      ? 'bg-amber-400 text-[#1A1A2E] scale-105 shadow-[2px_2px_0px_#1A1A2E]' 
                       : 'bg-white text-slate-400 group-hover:text-[#1A1A2E] group-hover:bg-slate-50'
                   }`}>
                     {e.year}
