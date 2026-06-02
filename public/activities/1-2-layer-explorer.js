@@ -439,9 +439,9 @@ function createPhone() {
     logic.add(ram);
 
     // NAND Flash
-    const flash = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.4, 0.05), new THREE.MeshStandardMaterial({ color: 0x0c0a09, roughness: 0.4 }));
-    flash.position.set(-w * 0.225, -h * 0.12, d * 0.12);
-    logic.add(flash);
+    const nandFlash = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.4, 0.05), new THREE.MeshStandardMaterial({ color: 0x0c0a09, roughness: 0.4 }));
+    nandFlash.position.set(-w * 0.225, -h * 0.12, d * 0.12);
+    logic.add(nandFlash);
     
     // Silver shielding
     const shield = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.4, 0.08), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.2 }));
