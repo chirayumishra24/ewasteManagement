@@ -410,8 +410,8 @@ export const chapters: CourseChapter[] = [
           {
             type: 'storyCarousel',
             stories: [
-              { title: "School Bins", before: "Scattered waste", after: "240kg recovered", image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800", quote: "The collection drive changed how our school handles tech." },
-              { title: "Repair Hubs", before: "Broken devices", after: "85 units revived", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?auto=format&fit=crop&q=80&w=800", quote: "Extending life is the first step in responsible salvage." }
+              { title: "School Bins", before: "Scattered waste", after: "240kg recovered", image: "/local/story_school_bins.png", quote: "The collection drive changed how our school handles tech." },
+              { title: "Repair Hubs", before: "Broken devices", after: "85 units revived", image: "/local/story_repair_hubs.png", quote: "Extending life is the first step in responsible salvage." }
             ]
           },
           callout('Final Objective', 'A strong final project makes the local recovery chain feel possible, specific, and worth participating in.', 'success', 'Capstone'),
