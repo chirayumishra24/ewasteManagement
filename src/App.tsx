@@ -2683,59 +2683,80 @@ function renderBlock(block: ChapterBlock): ReactNode {
     if (block.type === 'bulletList' && block.items[0]?.startsWith('Formal recycling protects workers')) {
       return (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform rotate-6 shadow-[2px_2px_0px_#1A1A2E]">
-              01
+          {/* Card 1: Formal Recycling */}
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-gradient-to-br from-[#EEFDF7] to-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            {/* Halftone Pattern Overlay */}
+            <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+            
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+              PATH 01
             </div>
             
-            <div className="mb-6 w-14 h-14 bg-emerald-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-3 group-hover:rotate-3 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
-              <svg className="w-8 h-8 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <div className="mb-8 w-14 h-14 bg-[#D1FAE5] rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-6 group-hover:rotate-6 group-hover:scale-110 transition-all duration-300 shadow-[3px_3px_0px_#1A1A2E] relative z-10">
+              <svg className="w-8 h-8 text-[#065F46]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
 
-            <div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Formal Recycling</h4>
-              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+            <div className="relative z-10">
+              <div className="inline-block bg-[#059669] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
+                SAFE RECOVERY
+              </div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase">Formal Recycling</h4>
+              <p className="text-[#334155] text-sm leading-relaxed font-bold">
                 Protects workers under strict safety protocols while recovering high-purity saleable metals and materials.
               </p>
             </div>
           </div>
 
-          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform -rotate-6 shadow-[2px_2px_0px_#1A1A2E]">
-              02
+          {/* Card 2: Circular Design */}
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-gradient-to-br from-[#F0F9FF] to-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            {/* Halftone Pattern Overlay */}
+            <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform -rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+              PATH 02
             </div>
 
-            <div className="mb-6 w-14 h-14 bg-sky-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform rotate-6 group-hover:-rotate-6 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
-              <svg className="w-8 h-8 text-sky-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <div className="mb-8 w-14 h-14 bg-[#E0F2FE] rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform rotate-6 group-hover:-rotate-6 group-hover:scale-110 transition-all duration-300 shadow-[3px_3px_0px_#1A1A2E] relative z-10">
+              <svg className="w-8 h-8 text-[#075985]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3 3L22 4" />
               </svg>
             </div>
 
-            <div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Circular Design</h4>
-              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+            <div className="relative z-10">
+              <div className="inline-block bg-[#0284C7] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
+                RESOURCE LOOP
+              </div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase">Circular Design</h4>
+              <p className="text-[#334155] text-sm leading-relaxed font-bold">
                 Lowers dependence on volatile, hazardous, and fragile raw-material supply chains by keeping resources in use.
               </p>
             </div>
           </div>
 
-          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-lg px-3 py-1 rounded-lg transform rotate-3 shadow-[2px_2px_0px_#1A1A2E]">
-              03
+          {/* Card 3: Upstream Decisions */}
+          <div className="border-4 border-[#1A1A2E] p-6 rounded-2xl bg-gradient-to-br from-[#FFF7ED] to-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
+            {/* Halftone Pattern Overlay */}
+            <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform rotate-3 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+              PATH 03
             </div>
 
-            <div className="mb-6 w-14 h-14 bg-amber-100 rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-6 group-hover:rotate-6 transition-transform shadow-[3px_3px_0px_#1A1A2E]">
-              <svg className="w-8 h-8 text-amber-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <div className="mb-8 w-14 h-14 bg-[#FFEDD5] rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center transform -rotate-6 group-hover:rotate-6 group-hover:scale-110 transition-all duration-300 shadow-[3px_3px_0px_#1A1A2E] relative z-10">
+              <svg className="w-8 h-8 text-[#9A3412]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
 
-            <div>
-              <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2">Upstream Decisions</h4>
-              <p className="text-slate-700 text-sm leading-relaxed font-bold">
+            <div className="relative z-10">
+              <div className="inline-block bg-[#C2410C] text-white font-black text-[10px] uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-2.5 shadow-[2px_2px_0px_#1A1A2E]">
+                UPSTREAM FOCUS
+              </div>
+              <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 tracking-tight uppercase">Upstream Decisions</h4>
+              <p className="text-[#334155] text-sm leading-relaxed font-bold">
                 Repairability and disassembly decisions made at the design stage directly dictate how much resource value can be salvaged.
               </p>
             </div>
