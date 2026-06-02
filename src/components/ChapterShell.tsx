@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import type { CourseChapter } from '../courseData';
 
 import './ChapterShell.css';
@@ -14,8 +13,6 @@ interface ChapterShellProps {
 
 export default function ChapterShell({
   chapter,
-  previousChapter,
-  nextChapter,
   children,
 }: ChapterShellProps) {
   const shellRef = useRef<HTMLDivElement>(null);
@@ -34,6 +31,10 @@ export default function ChapterShell({
 
   const audioUrl = getAudioUrl(chapter.id);
   const hasAudio = chapter.id !== '1-1';
+
+  const getAssemblyPartImage = (chapterId: string) => {
+    return `/images/robot_part_${chapterId.replace('-', '_')}.png`;
+  };
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -99,29 +100,16 @@ export default function ChapterShell({
             <a href={`#topic-${chapter.tabs[0]?.id ?? 'overview'}`} className="comic-btn-primary">
               <span className="btn-skew-text">START MISSION ⚡</span>
             </a>
-            {nextChapter && (
-              <Link to={`/${nextChapter.id}`} className="comic-btn-secondary">
-                <span className="btn-skew-text">NEXT ISSUE &gt;</span>
-              </Link>
-            )}
           </div>
         </div>
 
-        {/* Dynamic Salvage Schematic Preview */}
-        <div className="drone-schematic-card comic-panel">
-          <div className="schematic-header">
-            <span className="schematic-label comic-alert-badge">HERO GEAR SCHEMATIC</span>
-            <h3>{chapter.assembly.title}</h3>
-          </div>
-          <p className="schematic-desc">{chapter.assembly.summary}</p>
-          <div className="schematic-meta-row">
-            <div className="meta-badge comic-badge-flat">
-              ⚡ {chapter.assembly.schematic}
-            </div>
-            <div className="meta-badge comic-badge-flat text-gold">
-              ★ {chapter.assembly.reward.replace('XP', 'Hero Points')}
-            </div>
-          </div>
+        {/* Dynamic Salvage Schematic Preview Image */}
+        <div className="drone-schematic-card comic-panel" style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper-warm)' }}>
+          <img
+            src={getAssemblyPartImage(chapter.id)}
+            alt={chapter.assembly.title}
+            style={{ width: '100%', height: 'auto', maxHeight: '280px', objectFit: 'contain', border: '3px solid var(--ink-dark)' }}
+          />
         </div>
       </section>
 
@@ -173,48 +161,7 @@ export default function ChapterShell({
         <main className="chapter-content-stage">
           {children}
 
-          {/* Biome Restoration Complete Pager */}
-          <section className="chapter-completion-pager comic-panel-end">
-            <div className="pager-header">
-              <span className="pager-kicker comic-alert-badge">MISSION COMPLETE</span>
-              <h3>Next Adventure Sequence</h3>
-              <p>You have successfully gathered the intel and completed the training loops for this Sector. Gear up for your next quest!</p>
-            </div>
-            
-            <div className="pager-links-row">
-              {previousChapter ? (
-                <Link to={`/${previousChapter.id}`} className="pager-nav-link prev comic-nav-link">
-                  <div className="nav-link-inner">
-                    <span className="label">&lt; PREVIOUS MISSION</span>
-                    <strong>{previousChapter.title}</strong>
-                  </div>
-                </Link>
-              ) : (
-                <div className="pager-nav-link disabled comic-nav-link-disabled">
-                  <div className="nav-link-inner">
-                    <span className="label">FIRST SECTOR</span>
-                    <strong>Orientation HQ</strong>
-                  </div>
-                </div>
-              )}
 
-              {nextChapter ? (
-                <Link to={`/${nextChapter.id}`} className="pager-nav-link next comic-nav-link">
-                  <div className="nav-link-inner">
-                    <span className="label">NEXT MISSION &gt;</span>
-                    <strong>{nextChapter.title}</strong>
-                  </div>
-                </Link>
-              ) : (
-                <Link to="/dashboard" className="pager-nav-link next complete comic-nav-link complete">
-                  <div className="nav-link-inner">
-                    <span className="label">ALL SECECTORS SAVED</span>
-                    <strong>Return to HQ</strong>
-                  </div>
-                </Link>
-              )}
-            </div>
-          </section>
         </main>
       </div>
     </div>
