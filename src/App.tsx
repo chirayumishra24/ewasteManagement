@@ -700,7 +700,7 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
       const percentage = (seg.value / total) * 100
       const rotation = block.segments
         .slice(0, i)
-        .reduce((sum, s) => sum + (s.value / total) * 360, 0)
+        .reduce((sum, s) => sum + (s.value / total) * 360, 0) - 90
       return {
         ...seg,
         percentage,
@@ -708,6 +708,8 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
       }
     })
   }, [block.segments, total])
+
+  const circumference = 2 * Math.PI * 40;
 
   return (
     <section className="content-card pie-card">
@@ -727,7 +729,8 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
           <svg viewBox="0 0 100 100" className="pie-svg" aria-label="Material composition chart">
             <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(148, 163, 184, 0.15)" strokeWidth="20" />
             {segmentsWithRotation.map((seg, i) => {
-              const dashArray = `${seg.percentage} ${100 - seg.percentage}`
+              const strokeLength = (seg.percentage / 100) * circumference
+              const dashArray = `${strokeLength} ${circumference}`
               return (
                 <circle
                   key={seg.label}
@@ -736,7 +739,6 @@ function InteractivePieCard({ block }: { block: Extract<ChapterBlock, { type: 'i
                   stroke={seg.color}
                   strokeWidth="20"
                   strokeDasharray={dashArray}
-                  strokeDashoffset="25"
                   transform={`rotate(${seg.rotation} 50 50)`}
                   onMouseEnter={() => setActiveIndex(i)}
                   onFocus={() => setActiveIndex(i)}

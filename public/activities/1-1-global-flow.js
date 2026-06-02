@@ -33,13 +33,17 @@ const mouse = new THREE.Vector2();
 function init() {
     scene = new THREE.Scene();
     
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    const container = document.getElementById('globe-container');
+    const width = container.clientWidth || window.innerWidth || 1;
+    const height = container.clientHeight || window.innerHeight || 1;
+
+    camera = new THREE.PerspectiveCamera(45, width / height, 1, 2000);
     camera.position.z = 350;
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('globe-container').appendChild(renderer.domElement);
+    renderer.setSize(width, height);
+    container.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -66,6 +70,19 @@ function init() {
     scene.add(flowsGroup);
 
     window.addEventListener('resize', onWindowResize);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+            const { width: w, height: h } = entry.contentRect;
+            if (w > 0 && h > 0) {
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+            }
+        }
+    });
+    resizeObserver.observe(container);
+
     renderer.domElement.addEventListener('click', onDocumentMouseDown);
     
     // Hide loader
@@ -218,8 +235,9 @@ function createFlows(filter) {
 }
 
 function onDocumentMouseDown(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(hotspotsGroup.children);
@@ -267,9 +285,14 @@ document.querySelectorAll('.control-btn').forEach(btn => {
 });
 
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const container = document.getElementById('globe-container');
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    if (w > 0 && h > 0) {
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    }
 }
 
 function animate() {

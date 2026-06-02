@@ -165,6 +165,19 @@
             renderer.shadowMap.enabled = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             container.appendChild(renderer.domElement);
+            
+            // Setup ResizeObserver to handle visibility changes (e.g. inside hidden tabs)
+            const resizeObserver = new ResizeObserver((entries) => {
+                for (let entry of entries) {
+                    const { width: w, height: h } = entry.contentRect;
+                    if (w > 0 && h > 0) {
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(w, h);
+                    }
+                }
+            });
+            resizeObserver.observe(container);
 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;

@@ -47,6 +47,19 @@
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             container.appendChild(renderer.domElement);
+            
+            // Setup ResizeObserver to handle visibility changes (e.g. inside hidden tabs)
+            const resizeObserver = new ResizeObserver((entries) => {
+                for (let entry of entries) {
+                    const { width: w, height: h } = entry.contentRect;
+                    if (w > 0 && h > 0) {
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(w, h);
+                    }
+                }
+            });
+            resizeObserver.observe(container);
             sphere = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), new THREE.MeshStandardMaterial({ color: 0x3b82f6 }));
             scene.add(sphere);
             scene.add(new THREE.AmbientLight(0xffffff, 1));
