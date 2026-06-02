@@ -44,7 +44,7 @@
 
 .biome-name {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   text-transform: uppercase;
@@ -69,7 +69,7 @@
   border: 2.5px solid var(--ink-dark);
   box-shadow: 2.5px 2.5px 0 var(--ink-dark);
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   text-transform: uppercase;
@@ -110,7 +110,7 @@
 
 .hud-stat .stat-label {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--hero-blue);
   letter-spacing: 0.05em;
@@ -146,7 +146,7 @@
 
 .health-label-comic {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
 }
@@ -167,7 +167,7 @@
 
 .health-text-comic {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
 }

@@ -61,7 +61,7 @@
 
 .quiz-popin-badge {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: #ffffff;
   background: var(--hero-blue);
@@ -73,7 +73,7 @@
 
 .quiz-popin-xp-reward {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   background: var(--pow-yellow);
@@ -137,7 +137,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
 }
@@ -148,7 +148,7 @@
 
 .option-text {
   font-family: var(--font-body), sans-serif;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 750;
   color: var(--ink-dark);
 }
@@ -184,7 +184,7 @@
   padding: 1.1rem;
   border: 3.5px solid var(--ink-dark);
   font-family: var(--font-display), sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 900;
   text-transform: uppercase;
   cursor: pointer;
@@ -230,7 +230,7 @@
 
 .quiz-explanation {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 700;
   line-height: 1.6;
@@ -303,7 +303,7 @@
     box-shadow: 4px 4px 0 var(--ink-dark);
   }
   .quiz-popin-question {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     margin-bottom: 1.25rem;
   }
   .quiz-popin-option-btn {
@@ -312,10 +312,10 @@
     border-width: 2.5px;
   }
   .option-text {
-    font-size: 0.9rem;
+    font-size: 1.25rem;
   }
   .quiz-explanation {
-    font-size: 0.85rem;
+    font-size: 1.25rem;
     margin-bottom: 1.25rem;
   }
   .quiz-popin-header {
@@ -323,12 +323,12 @@
   }
   .quiz-popin-badge, .quiz-popin-xp-reward {
     padding: 0.25rem 0.5rem;
-    font-size: 0.65rem;
+    font-size: 1.25rem;
   }
   .quiz-popin-submit-btn,
   .quiz-popin-continue-btn {
     padding: 0.8rem;
-    font-size: 0.95rem;
+    font-size: 1.25rem;
     border-width: 2.5px;
   }
 }

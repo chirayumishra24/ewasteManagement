@@ -22,7 +22,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
           return (
             <p 
               key={idx} 
-              className={`mb-6 text-slate-800 leading-relaxed text-base font-medium ${block.emphasis ? 'text-lg font-bold p-4 bg-amber-50 border-3 border-ink-dark shadow-comic font-comic' : ''}`}
+              className={`mb-6 text-slate-800 leading-relaxed text-xl font-medium ${block.emphasis ? 'text-xl font-bold p-4 bg-amber-50 border-3 border-ink-dark shadow-comic font-comic' : ''}`}
             >
               {block.content}
             </p>
@@ -42,8 +42,8 @@ export function CardRenderer({ tab }: CardRendererProps) {
                     >
                       <div className="bento-icon">★</div>
                       <div className="flex flex-col gap-1">
-                        <div className="bento-title font-bold text-base">{title}</div>
-                        {desc && <div className="bento-desc text-sm">{desc}</div>}
+                        <div className="bento-title font-bold text-xl">{title}</div>
+                        {desc && <div className="bento-desc text-xl">{desc}</div>}
                       </div>
                     </div>
                   )
@@ -56,7 +56,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
               {block.items.map((item: string, i: number) => (
                 <li key={i} className="flex gap-3 items-start group">
                   <span 
-                    className="text-lg leading-none shrink-0" 
+                    className="text-xl leading-none shrink-0" 
                     style={{ color: accentColor || '#10b981' }}
                   >
                     ★
@@ -72,7 +72,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
               {block.items.map((item: string, i: number) => (
                 <li key={i} className="flex gap-4 items-start group">
                   <span 
-                    className="w-8 h-8 bg-pow-yellow border-2 border-ink-dark flex items-center justify-center text-sm font-bold text-ink-dark shrink-0 transform skewX(-6deg)"
+                    className="w-8 h-8 bg-pow-yellow border-2 border-ink-dark flex items-center justify-center text-xl font-bold text-ink-dark shrink-0 transform skewX(-6deg)"
                     style={{ borderColor: '#1a1a2e' }}
                   >
                     {i + 1}
@@ -89,8 +89,8 @@ export function CardRenderer({ tab }: CardRendererProps) {
               className="comic-quote-bubble mb-8"
               style={{ '--accent-color': accentColor || '#10b981' } as React.CSSProperties}
             >
-              <p className="text-lg italic font-bold text-ink-dark mb-2">"{block.content}"</p>
-              {block.author && <footer className="text-xs uppercase tracking-widest font-extrabold text-right" style={{ color: accentColor || '#10b981' }}>— {block.author}</footer>}
+              <p className="text-xl italic font-bold text-ink-dark mb-2">"{block.content}"</p>
+              {block.author && <footer className="text-xl uppercase tracking-widest font-extrabold text-right" style={{ color: accentColor || '#10b981' }}>— {block.author}</footer>}
               <div className="quote-bubble-tail"></div>
             </blockquote>
           )
@@ -109,7 +109,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
                 allowFullScreen
               />
               {block.note && (
-                <div className="absolute bottom-4 left-4 right-4 p-3 bg-black/60 backdrop-blur-md rounded-lg border border-white/5 text-[10px] text-white/60 pointer-events-none">
+                <div className="absolute bottom-4 left-4 right-4 p-3 bg-black/60 backdrop-blur-md rounded-lg border border-white/5 text-[20px] text-white/60 pointer-events-none">
                   {block.note}
                 </div>
               )}
@@ -126,7 +126,7 @@ export function CardRenderer({ tab }: CardRendererProps) {
                     src={img.src.startsWith('http') ? img.src : `${skillizeeAssetPrefix}${img.src}`} 
                     alt={img.alt} 
                   />
-                  <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent text-[10px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent text-[20px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     {img.alt}
                   </figcaption>
                 </figure>

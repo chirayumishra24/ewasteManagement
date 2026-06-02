@@ -68,7 +68,7 @@ export function BattleMeterCard({
             className="battle-slider"
           />
         </div>
-        <div style={{ fontSize: '0.85rem', color: 'var(--ink-dark)', fontWeight: 700, display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+        <div style={{ fontSize: '1.25rem', color: 'var(--ink-dark)', fontWeight: 700, display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
           <div style={{ flex: 1, opacity: value >= 50 ? 1 : 0.5 }}>
             <strong>Hero Impact:</strong> {heroDesc}
           </div>

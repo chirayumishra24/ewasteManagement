@@ -61,7 +61,7 @@ select {
 
 .activity-controls-hint span {
   color: var(--ink-dark);
-  font-size: 0.65rem;
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;

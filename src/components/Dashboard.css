@@ -20,7 +20,7 @@
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   text-transform: uppercase;
@@ -69,7 +69,7 @@
 /* Panel title */
 .panel-title {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   border-bottom: 3.5px solid var(--ink-dark);
@@ -79,7 +79,7 @@
 }
 
 .panel-desc {
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   line-height: 1.4;
   margin-bottom: 0.75rem;
@@ -119,7 +119,7 @@
 
 .profile-streak {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--hero-blue);
   text-transform: uppercase;
@@ -138,7 +138,7 @@
 .level-xp-details {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-family: var(--font-display);
   font-weight: 900;
   color: var(--ink-dark);
@@ -215,7 +215,7 @@
 
 .obs-health-label {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 1.25rem;
   font-weight: 900;
   letter-spacing: 0.05em;
   color: var(--ink-dark);
@@ -240,7 +240,7 @@
 
 .stat-box-label {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--hero-blue);
   letter-spacing: 0.05em;
@@ -307,7 +307,7 @@
 
 .part-info strong {
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   white-space: nowrap;
@@ -316,7 +316,7 @@
 }
 
 .part-info span {
-  font-size: 0.7rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 600;
   margin-top: 0.125rem;
@@ -400,14 +400,14 @@
 
 .trophy-info h4 {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   text-transform: uppercase;
 }
 
 .trophy-info p {
-  font-size: 0.78rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   margin-top: 0.125rem;
   line-height: 1.3;
@@ -416,7 +416,7 @@
 .trophy-xp {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--hero-blue);
   margin-top: 0.25rem;

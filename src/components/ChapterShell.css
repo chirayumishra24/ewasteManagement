@@ -58,7 +58,7 @@
   background: var(--ink-dark);
   color: var(--paper-warm);
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   padding: 0.35rem 0.85rem;
   margin-bottom: 1.5rem;
@@ -97,7 +97,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 800;
   padding: 0.75rem 1.75rem;
   border: 3px solid var(--ink-dark);
@@ -151,7 +151,7 @@
   background: var(--villain-orange);
   color: var(--paper-warm);
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 1.25rem;
   font-weight: 800;
   padding: 2px 6px;
   letter-spacing: 0.05em;
@@ -170,7 +170,7 @@
 
 .schematic-desc {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   line-height: 1.5;
   color: var(--ink-dark);
   margin-bottom: 1.5rem;
@@ -183,7 +183,7 @@
 
 .comic-badge-flat {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   padding: 4px 8px;
   border: 2px solid var(--ink-dark);
@@ -241,7 +241,7 @@
 
 .audio-time {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
 }
@@ -281,14 +281,14 @@
 
 .audio-status-label .live-badge {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--hero-blue);
 }
 
 .audio-status-label .audio-title {
   font-family: var(--font-comic);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: bold;
   color: var(--ink-dark);
 }
@@ -333,7 +333,7 @@
 
 .pager-header p {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   max-width: 500px;
   margin: 0 auto 2.5rem;
@@ -386,7 +386,7 @@
 .comic-nav-link .label, .comic-nav-link-disabled .label {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 800;
   margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
@@ -394,7 +394,7 @@
 
 .comic-nav-link strong, .comic-nav-link-disabled strong {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 800;
 }
 

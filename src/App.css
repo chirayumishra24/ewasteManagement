@@ -297,7 +297,7 @@ button {
 
 .terra-heading-sm {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -305,7 +305,7 @@ button {
 }
 
 .terra-body {
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.7;
   color: var(--text-secondary);
 }
@@ -316,7 +316,7 @@ button {
 }
 
 .terra-label {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -325,7 +325,7 @@ button {
 
 .terra-mono {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 1.25rem;
 }
 
 /* ═══════════════════════════════════════════
@@ -338,7 +338,7 @@ button {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   font-family: var(--font-display);
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   border-radius: var(--radius-full);
@@ -605,7 +605,7 @@ button {
 
 .chapter-hero-eyebrow {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -627,7 +627,7 @@ button {
 }
 
 .chapter-hero-summary {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.7;
   max-width: 600px;
@@ -644,7 +644,7 @@ button {
   align-items: center;
   gap: 0.5rem;
   color: var(--text-muted);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   animation: terra-float 2s ease-in-out infinite;
@@ -686,7 +686,7 @@ button {
   padding: 0.625rem 1.25rem;
   border-radius: var(--radius-full);
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: var(--text-muted);
   transition: all var(--duration-normal) var(--ease-out-expo);
@@ -728,7 +728,7 @@ button {
   padding: 1rem 1.25rem;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   border-top: 1px solid var(--glass-border);
 }
@@ -769,14 +769,14 @@ button {
 }
 
 .terra-stat-label {
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .terra-stat-detail {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
 }
 
@@ -824,7 +824,7 @@ button {
 
 .terra-timeline-step {
   font-family: var(--font-display);
-  font-size: 0.6875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -835,13 +835,13 @@ button {
 .terra-timeline-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .terra-timeline-detail {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -867,7 +867,7 @@ button {
 
 .terra-callout-eyebrow {
   font-family: var(--font-display);
-  font-size: 0.6875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -878,13 +878,13 @@ button {
 .terra-callout-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .terra-callout-content {
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.7;
 }
@@ -918,7 +918,7 @@ button {
 .terra-quote-author {
   display: block;
   margin-top: 1rem;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 500;
   font-style: normal;
   color: var(--text-muted);
@@ -939,7 +939,7 @@ button {
 .terra-bullet-list li {
   position: relative;
   padding-left: 1.5rem;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
@@ -968,7 +968,7 @@ button {
 .terra-numbered-list li {
   position: relative;
   padding-left: 2.5rem;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.6;
   counter-increment: terra-counter;
@@ -985,7 +985,7 @@ button {
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--biome-active);
   background: color-mix(in srgb, var(--biome-active) 10%, transparent);
@@ -1042,12 +1042,12 @@ button {
 .terra-resource-link-label {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
 }
 
 .terra-resource-link-desc {
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
   margin-top: 0.125rem;
 }
@@ -1076,7 +1076,7 @@ button {
   grid-column: 1 / -1;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--glass-border);
@@ -1088,7 +1088,7 @@ button {
 }
 
 .terra-comparison-cell-label {
-  font-size: 0.6875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1105,7 +1105,7 @@ button {
 
 .terra-comparison-insight {
   grid-column: 1 / -1;
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   padding-top: 0.75rem;
   border-top: 1px solid var(--glass-border);
@@ -1152,13 +1152,13 @@ button {
 .terra-activity-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .terra-activity-summary {
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
 }
 
@@ -1175,7 +1175,7 @@ button {
 }
 
 .terra-chart-eyebrow {
-  font-size: 0.6875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1192,7 +1192,7 @@ button {
 }
 
 .terra-chart-summary {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
 }
 
@@ -1204,7 +1204,7 @@ button {
 
 .terra-chart-note {
   margin-top: 1rem;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
   font-style: italic;
 }
@@ -1227,7 +1227,7 @@ button {
   border-radius: var(--radius-full);
   color: var(--text-secondary);
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   font-weight: 500;
   transition: all var(--duration-normal) var(--ease-out-expo);
   text-decoration: none;
@@ -1303,7 +1303,7 @@ button {
 
 .terra-course-map-title {
   font-family: var(--font-display);
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -1383,12 +1383,12 @@ button {
 }
 
 .terra-ticker-label {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
 }
 
 .terra-ticker-unit {
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
 }
 
@@ -1399,7 +1399,7 @@ button {
 
 .terra-drag-sort-prompt {
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 1.5rem;
@@ -1426,7 +1426,7 @@ button {
 .terra-drag-sort-bin-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   text-align: center;
   margin-bottom: 0.5rem;
@@ -1443,7 +1443,7 @@ button {
   background: var(--glass-bg-elevated);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   cursor: grab;
   transition: all var(--duration-fast) var(--ease-out-expo);
@@ -1464,7 +1464,7 @@ button {
 .terra-checklist-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   margin-bottom: 1rem;
 }
@@ -1501,13 +1501,13 @@ button {
 }
 
 .terra-checklist-label {
-  font-size: 0.9375rem;
+  font-size: 1.25rem;
   color: var(--text-primary);
   flex: 1;
 }
 
 .terra-checklist-impact {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
 }
 
@@ -1552,7 +1552,7 @@ button {
     top: 1rem;
     left: 1rem;
     padding: 0.375rem 0.75rem;
-    font-size: 0.75rem;
+    font-size: 1.25rem;
   }
 }
 
@@ -1682,7 +1682,7 @@ button {
 }
 
 .trend-spotlight span {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: var(--text-muted);
   font-family: var(--font-mono);
@@ -1697,7 +1697,7 @@ button {
 
 .trend-spotlight p {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
 }
 
@@ -1712,7 +1712,7 @@ button {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-full);
   padding: 0.5rem 1.25rem;
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   cursor: pointer;
   display: flex;
@@ -1764,7 +1764,7 @@ button {
 
 .trend-y-axis span {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #475569; /* Dark gray for high contrast */
   right: 12px !important;
@@ -1833,7 +1833,7 @@ button {
   color: #ffffff;
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius-md);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1856,13 +1856,13 @@ button {
 }
 
 .trend-tooltip strong {
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent-color, var(--biome-active));
 }
 
 .trend-tooltip span {
-  font-size: 0.6875rem;
+  font-size: 1.25rem;
   opacity: 0.8;
 }
 
@@ -1874,7 +1874,7 @@ button {
 .trend-x-tick {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 600;
   padding: 0.25rem 0.625rem;
   border-radius: var(--radius-sm);
@@ -1915,7 +1915,7 @@ button {
 }
 
 .trend-insight-card span {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: var(--text-muted);
   font-family: var(--font-mono);
@@ -1930,7 +1930,7 @@ button {
 
 .trend-insight-card p {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -1945,7 +1945,7 @@ button {
 
 .trend-note {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
   font-style: italic;
   text-align: center;

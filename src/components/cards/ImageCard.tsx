@@ -11,7 +11,7 @@ interface ImageCardProps {
 export function ImageCard({ title, subtitle, heroImage, accentColor, description }: ImageCardProps) {
   return (
     <div 
-      className="comic-panel-card overflow-hidden p-0 relative min-h-[380px] flex flex-col justify-end" 
+      className="comic-panel-card overflow-hidden p-0 relative min-h-[540px] flex flex-col justify-end" 
       style={{ 
         borderLeftColor: accentColor || '#fbbf24',
         '--accent-color': accentColor || '#fbbf24'
@@ -26,7 +26,7 @@ export function ImageCard({ title, subtitle, heroImage, accentColor, description
         <span className="comic-badge-flat self-start">{subtitle || 'BIOME VISUAL'}</span>
         <h3 className="comic-title text-white leading-tight mb-2" style={{ textShadow: '2px 2px 0 var(--ink-dark)' }}>{title}</h3>
         {description && (
-          <p className="text-slate-100 text-sm leading-relaxed max-w-[600px] mt-2 font-bold" style={{ textShadow: '1px 1px 0 var(--ink-dark)' }}>
+          <p className="text-slate-100 text-xl leading-relaxed max-w-[600px] mt-2 font-bold" style={{ textShadow: '1px 1px 0 var(--ink-dark)' }}>
             {description}
           </p>
         )}

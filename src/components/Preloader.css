@@ -102,7 +102,7 @@
 
 .preloader-subtitle {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 900;
   text-transform: uppercase;
@@ -137,7 +137,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   text-transform: uppercase;
@@ -172,7 +172,7 @@
 
 .preloader-quote {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 700;
   font-style: italic;
@@ -185,7 +185,7 @@
   background: var(--pow-yellow);
   color: var(--ink-dark);
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
   text-transform: uppercase;
   transform: skewX(-6deg);
@@ -237,6 +237,6 @@
   }
   .preloader-btn {
     padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
 }

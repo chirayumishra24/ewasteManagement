@@ -59,7 +59,7 @@
 
 .code-popin-badge {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: #ffffff;
   background: var(--hero-blue);
@@ -83,7 +83,7 @@
 .code-popin-desc {
   margin: 0 0 1.75rem 0;
   font-family: var(--font-body), sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 700;
   line-height: 1.5;
@@ -145,7 +145,7 @@
   padding: 1.1rem;
   border: 3.5px solid var(--ink-dark);
   font-family: var(--font-display), sans-serif;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 900;
   cursor: pointer;
   background: var(--pow-yellow);
@@ -182,7 +182,7 @@
 .code-error-msg {
   color: #e11d48;
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 900;
   text-transform: uppercase;
   text-align: center;
@@ -217,22 +217,22 @@
     font-size: 1.35rem;
   }
   .code-popin-desc {
-    font-size: 0.85rem;
+    font-size: 1.25rem;
     margin-bottom: 1.25rem;
   }
   .code-popin-input {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     padding: 0.8rem;
     border-width: 2.5px;
   }
   .code-popin-submit-btn {
-    font-size: 0.95rem;
+    font-size: 1.25rem;
     padding: 0.8rem;
     border-width: 2.5px;
   }
   .code-popin-badge {
     padding: 0.25rem 0.5rem;
-    font-size: 0.65rem;
+    font-size: 1.25rem;
     margin-bottom: 1rem;
     border-width: 2px;
   }

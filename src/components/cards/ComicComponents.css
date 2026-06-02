@@ -61,7 +61,7 @@
 
 .villain-chemical {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   color: var(--villain-red);
   font-weight: 900;
   margin-bottom: 1.25rem;
@@ -87,7 +87,7 @@
 
 .villain-stat-label {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   text-transform: uppercase;
@@ -97,14 +97,14 @@
 
 .villain-stat-value {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
 }
 
 .villain-description {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink-dark);
   line-height: 1.4;
@@ -116,7 +116,7 @@
   color: var(--ink-dark);
   border: 3px solid var(--ink-dark);
   font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 900;
   padding: 0.5rem 1rem;
   display: inline-block;
@@ -198,7 +198,7 @@
 
 .powerup-sub {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   color: var(--hero-green);
   font-weight: 900;
   text-transform: uppercase;
@@ -208,7 +208,7 @@
 
 .powerup-desc {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink-dark);
   line-height: 1.5;
@@ -220,7 +220,7 @@
   color: #ffffff;
   border: 3.5px solid var(--ink-dark);
   font-family: var(--font-display), sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
   padding: 0.75rem 1.5rem;
   cursor: pointer;
@@ -311,7 +311,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display), sans-serif;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 900;
   z-index: 5;
 }
@@ -344,7 +344,7 @@
   border: 2px solid var(--ink-dark);
   padding: 0.35rem 0.6rem;
   font-family: var(--font-speech), sans-serif;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   max-width: 80%;
@@ -354,7 +354,7 @@
 .comic-panel-caption {
   padding: 1rem;
   font-family: var(--font-body), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   line-height: 1.4;
@@ -390,7 +390,7 @@
 
 .battle-label {
   font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 900;
   text-transform: uppercase;
 }
@@ -443,7 +443,7 @@
 
 .battle-slider-label {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
 }
@@ -554,7 +554,7 @@
 
 .evidence-title {
   font-family: var(--font-display), sans-serif;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   font-weight: 900;
   text-transform: uppercase;
   color: var(--ink-dark);
@@ -580,7 +580,7 @@
 
 .evidence-detail-title {
   font-family: var(--font-display), sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
 }
@@ -589,7 +589,7 @@
   background: none;
   border: none;
   font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: var(--ink-dark);
   cursor: pointer;
@@ -597,7 +597,7 @@
 
 .evidence-detail-body {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink-dark);
   line-height: 1.5;

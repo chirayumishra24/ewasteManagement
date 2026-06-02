@@ -73,7 +73,7 @@ export function ExpandableCard({ title, subtitle, heroImage, accentColor, childr
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-slate-100 text-slate-500 font-bold text-sm">
+        <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-slate-100 text-slate-500 font-bold text-xl">
           <span>{isExpanded ? 'Collapse analysis details' : 'Expand for full analysis'}</span>
           <svg 
             className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 

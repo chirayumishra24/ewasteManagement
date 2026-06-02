@@ -70,7 +70,7 @@
 
 .chapter-briefing-lead p {
   color: var(--ink-dark);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   margin: 0;
   font-weight: 700;
@@ -98,7 +98,7 @@
 /* Labels */
 .rail-label, .briefing-label, .comparison-label {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 800;
@@ -129,7 +129,7 @@
 
 .chapter-briefing-head p {
   color: var(--ink-dark);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0.5rem 0 0 0;
 }
@@ -151,7 +151,7 @@
 }
 
 .chapter-briefing-metric span {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   color: var(--hero-blue);
   text-transform: uppercase;
   font-weight: 800;
@@ -167,7 +167,7 @@
 }
 
 .chapter-briefing-metric p {
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   margin: 0;
   line-height: 1.4;
@@ -224,7 +224,7 @@
   margin: 0 0 0.25rem 0;
   color: var(--ink-dark);
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -232,7 +232,7 @@
 .timeline-item p {
   margin: 0;
   color: var(--ink-dark);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   line-height: 1.5;
   font-weight: 700;
 }
@@ -263,7 +263,7 @@
 }
 
 .stat-grid-item span {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: var(--hero-blue);
   font-weight: 800;
@@ -280,7 +280,7 @@
 
 .stat-grid-item p {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 700;
 }
@@ -333,7 +333,7 @@
 }
 
 .comparison-column span {
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: var(--ink-dark);
   font-weight: 800;
@@ -341,14 +341,14 @@
 }
 
 .comparison-column strong {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 800;
 }
 
 .comparison-insight {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 700;
   border-left: 4px solid var(--hero-blue);
@@ -386,7 +386,7 @@
 
 .media-pill {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 800;
@@ -410,7 +410,7 @@
 }
 
 .media-note {
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   margin: 0.25rem 0 0 0;
   font-weight: 700;
@@ -518,7 +518,7 @@
 
 .stage-detail p {
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.5;
   color: var(--text-primary);
@@ -527,7 +527,7 @@
 
 .stage-output {
   font-family: var(--font-speech);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   background: var(--glass-bg);
   border: 3px solid var(--ink-dark);
   padding: 0.75rem 1.25rem;
@@ -538,7 +538,7 @@
 
 .stage-output strong {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   color: var(--villain-red);
 }
@@ -570,7 +570,7 @@
   padding: 1.25rem 1.5rem;
   text-align: left;
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink-dark);
   background: #ffffff;
@@ -657,7 +657,7 @@
 
 .quiz-feedback p {
   font-family: var(--font-speech);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
   color: var(--ink-dark);
@@ -712,7 +712,7 @@
 
 .image-card figcaption {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--ink-dark);
   margin-top: 1rem;
@@ -776,7 +776,7 @@
 
 .ticker-badge {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 800;
@@ -793,7 +793,7 @@
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--villain-orange);
@@ -867,7 +867,7 @@
 
 .ticker-rate {
   font-family: var(--font-speech);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--villain-red);
   text-transform: uppercase;

@@ -75,7 +75,7 @@ export default function GameHeader({ xp, level, currentChapterId, streakDays, on
           onClick={onOpenCodeEntry}
           className="game-header-btn code-btn"
           title="Enter Secret Code"
-          style={{ background: 'rgba(79, 70, 229, 0.05)', border: 'none', padding: '0.45rem', fontSize: '1rem', borderRadius: '50%' }}
+          style={{ background: 'rgba(79, 70, 229, 0.05)', border: 'none', padding: '0.45rem', fontSize: '1.25rem', borderRadius: '50%' }}
         >
           🔑
         </button>

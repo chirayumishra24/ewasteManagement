@@ -33,7 +33,7 @@
 
 .game-header-logo-sub {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.25em;
@@ -100,7 +100,7 @@
   padding: 0.4rem 0.8rem;
   border: 2px solid var(--ink-dark);
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 1.25rem;
   font-weight: 800;
   text-transform: uppercase;
   white-space: nowrap;
@@ -135,12 +135,12 @@
 }
 
 .badge-icon {
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 .badge-value {
   color: var(--ink-dark);
-  font-size: 0.9rem;
+  font-size: 1.25rem;
 }
 
 .xp-badge {
@@ -148,7 +148,7 @@
 }
 
 .xp-unit {
-  font-size: 0.7rem;
+  font-size: 1.25rem;
   color: var(--ink-dark);
   font-weight: 900;
 }
@@ -160,13 +160,13 @@
 
 .level-badge .level-label {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #ffffff;
 }
 
 .level-badge .level-value {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: #ffffff;
 }
@@ -182,7 +182,7 @@
   padding: 0.45rem 1rem;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
@@ -204,7 +204,7 @@
 }
 
 .dashboard-btn-text {
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

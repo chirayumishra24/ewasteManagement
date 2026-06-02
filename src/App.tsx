@@ -935,7 +935,7 @@ function InteractiveMindfulnessInfographic() {
     <div className="border-4 border-[#1A1A2E] rounded-2xl bg-[#FFFDF7] shadow-[6px_6px_0px_#1A1A2E] overflow-hidden my-6">
       <div className="bg-[#1A1A2E] text-white p-4 border-b-4 border-[#1A1A2E] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div>
-          <span className="bg-amber-400 text-[#1A1A2E] text-xs font-black px-2 py-0.5 rounded border-2 border-[#1A1A2E] inline-block mb-1">CYBER-HYGIENE SIMULATOR</span>
+          <span className="bg-amber-400 text-[#1A1A2E] text-xl font-black px-2 py-0.5 rounded border-2 border-[#1A1A2E] inline-block mb-1">CYBER-HYGIENE SIMULATOR</span>
           <h3 className="font-extrabold text-xl tracking-tight">Active Mindfulness Console</h3>
         </div>
         <div className="flex gap-2">
@@ -943,7 +943,7 @@ function InteractiveMindfulnessInfographic() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 rounded-lg border-2 border-white font-extrabold text-xs transition-all ${
+              className={`px-3 py-1.5 rounded-lg border-2 border-white font-extrabold text-xl transition-all ${
                 activeTab === tab 
                   ? 'bg-amber-400 text-[#1A1A2E] border-amber-400 shadow-[2px_2px_0px_white]' 
                   : 'bg-transparent text-white hover:bg-white/10'
@@ -961,16 +961,16 @@ function InteractiveMindfulnessInfographic() {
         {activeTab === 'phishing' && (
           <div>
             <div className="mb-4">
-              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 01: Suspicion Protocol</h4>
-              <p className="text-slate-600 text-sm font-bold">Unexpected message detected. Click on the suspicious elements (Sender, Link, Attachment) to inspect them.</p>
+              <h4 className="font-black text-[#1A1A2E] text-xl">Tactic 01: Suspicion Protocol</h4>
+              <p className="text-slate-600 text-xl font-bold">Unexpected message detected. Click on the suspicious elements (Sender, Link, Attachment) to inspect them.</p>
             </div>
             <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-4 shadow-[4px_4px_0px_#1A1A2E] max-w-xl mx-auto">
-              <div className="border-b-2 border-slate-200 pb-3 mb-3 text-sm">
+              <div className="border-b-2 border-slate-200 pb-3 mb-3 text-xl">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-extrabold text-slate-500">From:</span>
                   <button 
                     onClick={() => handlePhishClick('sender')}
-                    className={`font-mono text-xs px-2 py-0.5 rounded border transition-colors ${
+                    className={`font-mono text-xl px-2 py-0.5 rounded border transition-colors ${
                       phishingFlags.sender ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-slate-100 border-slate-300 hover:bg-slate-200 text-slate-800'
                     }`}
                   >
@@ -982,13 +982,13 @@ function InteractiveMindfulnessInfographic() {
                   <span className="font-bold text-red-600">URGENT: Your account will be suspended in 2 hours</span>
                 </div>
               </div>
-              <div className="text-slate-700 text-sm leading-relaxed mb-4 space-y-2">
+              <div className="text-slate-700 text-xl leading-relaxed mb-4 space-y-2">
                 <p>Dear Customer,</p>
                 <p>Our automated systems detected unusual hardware access from your IP. To prevent total lock, click the authorization node immediately to verify identity:</p>
                 <div className="my-3 text-center">
                   <button 
                     onClick={() => handlePhishClick('link')}
-                    className={`font-mono text-xs px-3 py-1.5 rounded border transition-all ${
+                    className={`font-mono text-xl px-3 py-1.5 rounded border transition-all ${
                       phishingFlags.link ? 'bg-red-100 border-red-500 text-red-700 font-bold' : 'bg-blue-50 border-blue-300 hover:bg-blue-100 text-blue-700 underline'
                     }`}
                   >
@@ -1001,13 +1001,13 @@ function InteractiveMindfulnessInfographic() {
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">📄</span>
                   <div>
-                    <div className="text-xs font-bold text-slate-800">security_patch_v4.2.exe</div>
-                    <div className="text-[10px] text-slate-400">Executable application (1.8 MB)</div>
+                    <div className="text-xl font-bold text-slate-800">security_patch_v4.2.exe</div>
+                    <div className="text-[20px] text-slate-400">Executable application (1.8 MB)</div>
                   </div>
                 </div>
                 <button 
                   onClick={() => handlePhishClick('attachment')}
-                  className={`text-xs px-3 py-1 rounded border-2 transition-all font-extrabold ${
+                  className={`text-xl px-3 py-1 rounded border-2 transition-all font-extrabold ${
                     phishingFlags.attachment ? 'bg-red-100 border-red-500 text-red-700' : 'bg-[#1A1A2E] text-white border-[#1A1A2E] hover:bg-slate-800'
                   }`}
                 >
@@ -1019,10 +1019,10 @@ function InteractiveMindfulnessInfographic() {
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.sender ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-lg">{phishingFlags.sender ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Sender Audit</h5>
+                  <span className="text-xl">{phishingFlags.sender ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Sender Audit</h5>
                 </div>
-                <p className="text-xs text-slate-600 font-bold leading-normal">
+                <p className="text-xl text-slate-600 font-bold leading-normal">
                   {phishingFlags.sender 
                     ? "Domain Spoofing! The domain 'paypal-verify-alert.com' is not official. Spoofers set up official-looking domains to bypass basic mail security filters." 
                     : "Inspect the 'From' address. Phishers use domain variants resembling trusted services to deceive busy eyes."}
@@ -1031,10 +1031,10 @@ function InteractiveMindfulnessInfographic() {
 
               <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.link ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-lg">{phishingFlags.link ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Link Audit</h5>
+                  <span className="text-xl">{phishingFlags.link ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Link Audit</h5>
                 </div>
-                <p className="text-xs text-slate-600 font-bold leading-normal">
+                <p className="text-xl text-slate-600 font-bold leading-normal">
                   {phishingFlags.link 
                     ? "Typosquatting alert! The URL uses a capital 'I' instead of lower 'l' (sec-paypaI.com instead of paypal.com). Clicking this routes logins directly to hacker databases." 
                     : "Inspect the URL node. Phishers buy typo-squatted domains containing homoglyphs or clever visual substitutions."}
@@ -1043,10 +1043,10 @@ function InteractiveMindfulnessInfographic() {
 
               <div className={`border-3 p-4 rounded-xl transition-all ${phishingFlags.attachment ? 'border-red-500 bg-red-50/50 shadow-[3px_3px_0px_#EF4444]' : 'border-slate-200 bg-slate-50/30'}`}>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-lg">{phishingFlags.attachment ? '❌' : '🔍'}</span>
-                  <h5 className="font-extrabold text-sm text-[#1A1A2E]">Attachment Audit</h5>
+                  <span className="text-xl">{phishingFlags.attachment ? '❌' : '🔍'}</span>
+                  <h5 className="font-extrabold text-xl text-[#1A1A2E]">Attachment Audit</h5>
                 </div>
-                <p className="text-xs text-slate-600 font-bold leading-normal">
+                <p className="text-xl text-slate-600 font-bold leading-normal">
                   {phishingFlags.attachment 
                     ? "Malicious Extension! Patches are never distributed as unprompted '.exe' emails. Executing this registers a trojan directly in the operating system." 
                     : "Inspect the file suffix. Official channels distribute alerts inside secure application dashboards, never loose scripts or executables."}
@@ -1054,7 +1054,7 @@ function InteractiveMindfulnessInfographic() {
               </div>
             </div>
             {phishingFlags.sender && phishingFlags.link && phishingFlags.attachment && (
-              <div className="mt-4 text-center text-xs font-black text-emerald-600 border-2 border-dashed border-emerald-400 p-2 rounded-lg bg-emerald-50">
+              <div className="mt-4 text-center text-xl font-black text-emerald-600 border-2 border-dashed border-emerald-400 p-2 rounded-lg bg-emerald-50">
                 🎉 Phishing Protocol Completed! All indicators cataloged. +50 XP
               </div>
             )}
@@ -1064,18 +1064,18 @@ function InteractiveMindfulnessInfographic() {
         {activeTab === 'permissions' && (
           <div>
             <div className="mb-4">
-              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 02: Permission Sandbox</h4>
-              <p className="text-slate-600 text-sm font-bold">Configure permissions for <strong>Simple Flashlight Pro</strong>. Toggle options and see how privacy score changes.</p>
+              <h4 className="font-black text-[#1A1A2E] text-xl">Tactic 02: Permission Sandbox</h4>
+              <p className="text-slate-600 text-xl font-bold">Configure permissions for <strong>Simple Flashlight Pro</strong>. Toggle options and see how privacy score changes.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto items-center">
               <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-5 shadow-[4px_4px_0px_#1A1A2E] space-y-3">
-                <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">App Permissions Request</span>
+                <span className="text-xl font-extrabold text-slate-400 uppercase tracking-wider">App Permissions Request</span>
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">📷</span>
+                    <span className="text-xl">📷</span>
                     <div>
-                      <div className="text-sm font-extrabold text-[#1A1A2E]">Camera Access</div>
-                      <div className="text-[10px] text-slate-400">Required for flash control on older APIs</div>
+                      <div className="text-xl font-extrabold text-[#1A1A2E]">Camera Access</div>
+                      <div className="text-[20px] text-slate-400">Required for flash control on older APIs</div>
                     </div>
                   </div>
                   <input 
@@ -1087,10 +1087,10 @@ function InteractiveMindfulnessInfographic() {
                 </div>
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">📍</span>
+                    <span className="text-xl">📍</span>
                     <div>
-                      <div className="text-sm font-extrabold text-[#1A1A2E]">Location Coordinates</div>
-                      <div className="text-[10px] text-slate-400">Used for localized service optimizations</div>
+                      <div className="text-xl font-extrabold text-[#1A1A2E]">Location Coordinates</div>
+                      <div className="text-[20px] text-slate-400">Used for localized service optimizations</div>
                     </div>
                   </div>
                   <input 
@@ -1102,10 +1102,10 @@ function InteractiveMindfulnessInfographic() {
                 </div>
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">👤</span>
+                    <span className="text-xl">👤</span>
                     <div>
-                      <div className="text-sm font-extrabold text-[#1A1A2E]">Contact Lists</div>
-                      <div className="text-[10px] text-slate-400">Share flashlight achievements with friends</div>
+                      <div className="text-xl font-extrabold text-[#1A1A2E]">Contact Lists</div>
+                      <div className="text-[20px] text-slate-400">Share flashlight achievements with friends</div>
                     </div>
                   </div>
                   <input 
@@ -1117,10 +1117,10 @@ function InteractiveMindfulnessInfographic() {
                 </div>
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">🎤</span>
+                    <span className="text-xl">🎤</span>
                     <div>
-                      <div className="text-sm font-extrabold text-[#1A1A2E]">Microphone Input</div>
-                      <div className="text-[10px] text-slate-400">Sound-activated strobe features</div>
+                      <div className="text-xl font-extrabold text-[#1A1A2E]">Microphone Input</div>
+                      <div className="text-[20px] text-slate-400">Sound-activated strobe features</div>
                     </div>
                   </div>
                   <input 
@@ -1132,10 +1132,10 @@ function InteractiveMindfulnessInfographic() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">💾</span>
+                    <span className="text-xl">💾</span>
                     <div>
-                      <div className="text-sm font-extrabold text-[#1A1A2E]">Local Storage</div>
-                      <div className="text-[10px] text-slate-400">Cache local user layout settings</div>
+                      <div className="text-xl font-extrabold text-[#1A1A2E]">Local Storage</div>
+                      <div className="text-[20px] text-slate-400">Cache local user layout settings</div>
                     </div>
                   </div>
                   <input 
@@ -1148,7 +1148,7 @@ function InteractiveMindfulnessInfographic() {
               </div>
 
               <div className="flex flex-col items-center justify-center p-6 border-4 border-[#1A1A2E] rounded-xl bg-amber-50/50 shadow-[4px_4px_0px_#1A1A2E] text-center">
-                <span className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">PRIVACY & SAFETY GRADE</span>
+                <span className="text-xl font-black text-slate-500 uppercase tracking-widest mb-1">PRIVACY & SAFETY GRADE</span>
                 <div className={`text-5xl font-black mb-3 ${safetyScore >= 80 ? 'text-emerald-600' : safetyScore >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
                   {safetyScore}/100
                 </div>
@@ -1158,7 +1158,7 @@ function InteractiveMindfulnessInfographic() {
                     style={{ width: `${safetyScore}%` }}
                   />
                 </div>
-                <p className="text-xs font-bold text-slate-700 leading-relaxed">
+                <p className="text-xl font-bold text-slate-700 leading-relaxed">
                   {safetyScore === 100 
                     ? "Perfect! Flashlights need zero extra permissions. Keeping them disabled prevents tracking engines and ads from logging background analytics."
                     : safetyScore >= 70 
@@ -1173,14 +1173,14 @@ function InteractiveMindfulnessInfographic() {
         {activeTab === 'slider' && (
           <div>
             <div className="mb-4">
-              <h4 className="font-black text-[#1A1A2E] text-lg">Tactic 03: Adaptability Radar</h4>
-              <p className="text-slate-600 text-sm font-bold">Use the slider to see how security tactics change from passive trusting habits to modern zero-trust active defense.</p>
+              <h4 className="font-black text-[#1A1A2E] text-xl">Tactic 03: Adaptability Radar</h4>
+              <p className="text-slate-600 text-xl font-bold">Use the slider to see how security tactics change from passive trusting habits to modern zero-trust active defense.</p>
             </div>
             <div className="max-w-2xl mx-auto space-y-6">
               <div className="border-4 border-[#1A1A2E] rounded-xl bg-white p-6 shadow-[4px_4px_0px_#1A1A2E]">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-black text-slate-400 uppercase">Strictness Quotient</span>
-                  <span className="font-black text-[#1A1A2E] bg-amber-400 border-2 border-[#1A1A2E] px-2 py-0.5 rounded text-sm">{sliderVal}%</span>
+                  <span className="text-xl font-black text-slate-400 uppercase">Strictness Quotient</span>
+                  <span className="font-black text-[#1A1A2E] bg-amber-400 border-2 border-[#1A1A2E] px-2 py-0.5 rounded text-xl">{sliderVal}%</span>
                 </div>
                 <input 
                   type="range"
@@ -1194,8 +1194,8 @@ function InteractiveMindfulnessInfographic() {
                 <div className="border-3 border-[#1A1A2E] rounded-lg p-4 bg-[#FFFDF7] min-h-[100px] flex flex-col justify-center">
                   {sliderVal < 35 ? (
                     <div>
-                      <div className="font-extrabold text-red-600 text-sm mb-1">🔴 Passive Trust Mode (0% - 34%)</div>
-                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                      <div className="font-extrabold text-red-600 text-xl mb-1">🔴 Passive Trust Mode (0% - 34%)</div>
+                      <p className="text-xl text-slate-600 font-bold leading-relaxed">
                         "If it looks like a bank email, I click it. If an app works, I allow whatever it wants."
                         <br/>
                         <span className="text-red-500">Modern Risk:</span> Vulnerable to automated typosquatting, session harvesting, and background metadata mining.
@@ -1203,8 +1203,8 @@ function InteractiveMindfulnessInfographic() {
                     </div>
                   ) : sliderVal < 70 ? (
                     <div>
-                      <div className="font-extrabold text-amber-500 text-sm mb-1">🟡 Standard Protection Mode (35% - 69%)</div>
-                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                      <div className="font-extrabold text-amber-500 text-xl mb-1">🟡 Standard Protection Mode (35% - 69%)</div>
+                      <p className="text-xl text-slate-600 font-bold leading-relaxed">
                         "I use 2FA and passwords. I only install apps from official stores."
                         <br/>
                         <span className="text-amber-600">Modern Risk:</span> 2FA via SMS can be intercepted by SIM-swaps. Session tokens can be stolen via active cookie sniffers, rendering passwords useless.
@@ -1212,8 +1212,8 @@ function InteractiveMindfulnessInfographic() {
                     </div>
                   ) : (
                     <div>
-                      <div className="font-extrabold text-emerald-600 text-sm mb-1">🟢 Zero-Trust Active Defense (70% - 100%)</div>
-                      <p className="text-xs text-slate-600 font-bold leading-relaxed">
+                      <div className="font-extrabold text-emerald-600 text-xl mb-1">🟢 Zero-Trust Active Defense (70% - 100%)</div>
+                      <p className="text-xl text-slate-600 font-bold leading-relaxed">
                         "Verify every domain segment, revoke all camera/mic permissions by default, update device parameters frequently."
                         <br/>
                         <span className="text-emerald-600">Defense Impact:</span> Proactively shuts down data harvesting pipelines before they exploit sandbox vulnerabilities in modern OS systems.
@@ -1275,17 +1275,17 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
             <span className="w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-slate-950" />
             <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950" />
           </div>
-          <div className="bg-slate-950 border-2 border-slate-800 text-[10px] font-bold px-4 py-1 rounded-md text-slate-400 text-center tracking-tight truncate max-w-[200px]">
+          <div className="bg-slate-950 border-2 border-slate-800 text-[20px] font-bold px-4 py-1 rounded-md text-slate-400 text-center tracking-tight truncate max-w-[200px]">
             https://ewaste-tracker.local
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-[10px] text-emerald-400 font-black tracking-widest">LIVE</span>
+            <span className="text-[20px] text-emerald-400 font-black tracking-widest">LIVE</span>
           </div>
         </div>
 
         {/* Console logs */}
-        <div className="p-4 flex-1 flex flex-col gap-2.5 bg-slate-950 overflow-y-auto text-[10px] select-none">
+        <div className="p-4 flex-1 flex flex-col gap-2.5 bg-slate-950 overflow-y-auto text-[20px] select-none">
           {sections.slice(0, total).map((s, idx) => {
             const isCompleted = checked.has(idx)
             return (
@@ -1299,7 +1299,7 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
               >
                 <div className="flex justify-between items-center mb-1.5 font-bold">
                   <span className={`tracking-wide ${isCompleted ? 'text-emerald-300' : 'text-slate-500'}`}>[{s.tag}]</span>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${isCompleted ? 'bg-emerald-950/60 border border-emerald-500/30 text-emerald-400' : 'bg-slate-900 border border-slate-800 text-slate-500'}`}>
+                  <span className={`text-[20px] px-1.5 py-0.5 rounded font-mono ${isCompleted ? 'bg-emerald-950/60 border border-emerald-500/30 text-emerald-400' : 'bg-slate-900 border border-slate-800 text-slate-500'}`}>
                     {isCompleted ? '✓ COMPILED' : '◦ PENDING'}
                   </span>
                 </div>
@@ -1317,12 +1317,12 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
               ✓
             </div>
             <h4 className="text-xl font-black text-white uppercase tracking-wider font-mono">Build Success</h4>
-            <div className="bg-emerald-950/30 text-emerald-400 text-[10px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(52,211,153,0.05)]">
+            <div className="bg-emerald-950/30 text-emerald-400 text-[20px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(52,211,153,0.05)]">
               BUILD ID: ewaste-compiler-v1.0<br/>
               COMPLIANCE AUDIT: VERIFIED ✅<br/>
               DEPLOY STATUS: COMPLETED 🚀
             </div>
-            <p className="text-xs text-slate-300 font-bold max-w-xs leading-relaxed">
+            <p className="text-xl text-slate-300 font-bold max-w-xs leading-relaxed">
               All system variables calibrated and compiled successfully. Ready for public release!
             </p>
           </div>
@@ -1396,10 +1396,10 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
         <div className="flex justify-between items-center mb-4 border-b-2 border-slate-900 pb-3">
           <div className="flex items-center gap-2">
             <div className={`w-2.5 h-2.5 rounded-full ${progress === 100 ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'} animate-pulse`} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] font-mono text-slate-300">System Diagnostics</span>
+            <span className="text-[20px] font-black uppercase tracking-[0.2em] font-mono text-slate-300">System Diagnostics</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[9px] text-slate-500 tracking-wider uppercase font-black">{checked.size}/{total} NODES SYNCED</span>
+            <span className="font-mono text-[20px] text-slate-500 tracking-wider uppercase font-black">{checked.size}/{total} NODES SYNCED</span>
           </div>
         </div>
 
@@ -1432,7 +1432,7 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
                 </svg>
               )}
               <span className={`text-xl font-black font-mono leading-none ${progress === 100 ? 'text-emerald-400' : 'text-amber-400'}`}>{progress}%</span>
-              <span className="text-[7px] font-bold text-slate-500 uppercase tracking-widest mt-1">SYNC STATUS</span>
+              <span className="text-[20px] font-bold text-slate-500 uppercase tracking-widest mt-1">SYNC STATUS</span>
             </div>
           </div>
 
@@ -1450,8 +1450,8 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
                   }`}
                 >
                   <div className="flex justify-between items-start mb-1.5">
-                    <span className="font-mono text-[9px] font-black leading-none text-slate-400">N-0{i+1}</span>
-                    <span className={`text-[7px] font-bold px-1.5 py-0.5 rounded font-mono ${
+                    <span className="font-mono text-[20px] font-black leading-none text-slate-400">N-0{i+1}</span>
+                    <span className={`text-[20px] font-bold px-1.5 py-0.5 rounded font-mono ${
                       isCompleted ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/20' : 'bg-slate-900 text-slate-600 border border-slate-800'
                     }`}>
                       {isCompleted ? 'PASS' : 'STBY'}
@@ -1476,7 +1476,7 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
         </div>
 
         {/* Real-time Diagnostics Terminal Feed */}
-        <div className="mt-3 bg-slate-950 border-2 border-slate-900 rounded-xl p-2.5 font-mono text-[8px] text-slate-400 min-h-[50px] max-h-[50px] overflow-hidden flex flex-col justify-end gap-0.5 border-dashed">
+        <div className="mt-3 bg-slate-950 border-2 border-slate-900 rounded-xl p-2.5 font-mono text-[20px] text-slate-400 min-h-[50px] max-h-[50px] overflow-hidden flex flex-col justify-end gap-0.5 border-dashed">
           {syncLogs.slice(-3).map((log, idx) => (
             <div key={idx} className="flex gap-1.5 items-center leading-none">
               <span className="text-emerald-500">{'>'}</span>
@@ -1493,12 +1493,12 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
             ✓
           </div>
           <h4 className="text-xl font-black text-white uppercase tracking-wider font-mono">DIAGNOSTICS SECURE</h4>
-          <div className="bg-emerald-950/30 text-emerald-400 text-[10px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+          <div className="bg-emerald-950/30 text-emerald-400 text-[20px] font-mono px-4 py-3 border-2 border-emerald-500/30 rounded-xl max-w-[260px] my-3 leading-relaxed text-left shadow-[0_0_15px_rgba(16,185,129,0.05)]">
             DEVICES VERIFIED: {total}/{total}<br/>
             SIGNAL INTEGRITY: 100%<br/>
             DEVICES HANDSHAKE: SUCCESSFUL ✅
           </div>
-          <p className="text-xs text-slate-300 font-bold max-w-xs leading-relaxed">
+          <p className="text-xl text-slate-300 font-bold max-w-xs leading-relaxed">
             All nodes verified. Compliance pipeline active and synchronized.
           </p>
         </div>
@@ -1531,7 +1531,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isKiosk) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>KIOSK SYSTEM PROT-04</span>
           <span className="text-emerald-400 font-extrabold animate-pulse">● ONLINE</span>
         </div>
@@ -1556,11 +1556,11 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               <text x="40" y="105" fill="#FFF" fontSize="6" fontWeight="bold">RECEIPT</text>
             </svg>
           </div>
-          <div className="absolute bottom-2 left-2 text-[8px] font-mono text-slate-500">
+          <div className="absolute bottom-2 left-2 text-[20px] font-mono text-slate-500">
             Source: https://login.skillizee.io/s/articles/6a1030afe7aac6873aee2b88/images/ewaste_atm.png
           </div>
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xl font-bold text-amber-400">
           Incentivized Deposit Station: Link to student/citizen IDs
         </div>
       </div>
@@ -1570,7 +1570,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isClock) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>SMART WALL CLOCK CORE</span>
           <span className={`font-extrabold ${completedCount === 3 ? 'text-emerald-400 animate-pulse' : 'text-amber-400'}`}>
             {completedCount === 3 ? 'CONNECTED' : completedCount === 2 ? 'LOW POWER' : 'OFFLINE'}
@@ -1579,31 +1579,31 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
         <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F] relative">
           {completedCount === 0 ? (
             <div className="w-48 h-32 rounded-xl border-4 border-slate-700 bg-black flex flex-col items-center justify-center p-3 text-center">
-              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider animate-pulse mb-1">⚠️ SYSTEM OFFLINE</span>
-              <span className="text-[8px] font-mono text-slate-500">[NO OPERATING SYSTEM DETECTED]</span>
+              <span className="text-[20px] font-mono text-red-500 uppercase tracking-wider animate-pulse mb-1">⚠️ SYSTEM OFFLINE</span>
+              <span className="text-[20px] font-mono text-slate-500">[NO OPERATING SYSTEM DETECTED]</span>
             </div>
           ) : completedCount === 1 ? (
             <div className="w-48 h-32 rounded-xl border-4 border-slate-650 bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
-              <span className="text-[10px] font-mono text-amber-500 uppercase mb-2 animate-pulse">🔧 FLASHING OS...</span>
+              <span className="text-[20px] font-mono text-amber-500 uppercase mb-2 animate-pulse">🔧 FLASHING OS...</span>
               <div className="w-32 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-600">
                 <div className="h-full bg-amber-400 animate-pulse" style={{ width: '45%' }} />
               </div>
-              <span className="text-[8px] font-mono text-slate-400 mt-2">Android 12 Bootloader active</span>
+              <span className="text-[20px] font-mono text-slate-400 mt-2">Android 12 Bootloader active</span>
             </div>
           ) : (
             <div className={`w-48 h-32 rounded-xl border-4 transition-all duration-300 bg-black flex flex-col items-center justify-center p-3 relative ${
               completedCount === 3 ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.25)]' : 'border-amber-600'
             }`}>
-              <span className="absolute top-1 right-2 text-[6px] font-mono text-slate-400">
+              <span className="absolute top-1 right-2 text-[20px] font-mono text-slate-400">
                 {completedCount === 3 ? '🔋 100% Connected' : '🔌 DISCONNECTED (15%)'}
               </span>
               <div className={`text-3xl font-black font-mono tracking-wider mb-1 ${completedCount === 3 ? 'text-emerald-400' : 'text-amber-500'}`}>
                 {formattedTime}<span className="text-slate-500 text-xl font-bold">:{formattedSeconds}</span>
               </div>
-              <div className="text-[8px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
+              <div className="text-[20px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
                 {formattedDate}
               </div>
-              <div className={`text-[6px] mt-2 font-bold px-2 py-0.5 border rounded ${
+              <div className={`text-[20px] mt-2 font-bold px-2 py-0.5 border rounded ${
                 completedCount === 3 ? 'text-emerald-400 border-emerald-400/40 bg-emerald-500/5' : 'text-amber-400 border-amber-400/40 bg-amber-500/5'
               }`}>
                 {completedCount === 3 ? '💡 WALL MOUNTED: Recovery stats active' : '⚠️ MOUNT SYSTEM INCOMPLETE'}
@@ -1611,7 +1611,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
             </div>
           )}
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xl font-bold text-amber-400">
           Fullscreen Clock Dashboard: Re-purposed Android/iOS Tablet
         </div>
       </div>
@@ -1621,7 +1621,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isKeyboard) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>MACRO KEYBOARD CONSOLE</span>
           <span className={`font-extrabold ${completedCount === 3 ? 'text-purple-400' : 'text-slate-500'}`}>
             {completedCount === 3 ? 'TOUCH DECK ACTIVE' : 'STANDBY'}
@@ -1630,13 +1630,13 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
         <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F]">
           {completedCount === 0 ? (
             <div className="border-3 border-slate-700 bg-slate-900 p-4 rounded-lg text-center">
-              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ HARDWARE DISCONNECTED</span>
-              <span className="text-[8px] font-mono text-slate-500">[USB COM PORT OFFLINE]</span>
+              <span className="text-[20px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ HARDWARE DISCONNECTED</span>
+              <span className="text-[20px] font-mono text-slate-500">[USB COM PORT OFFLINE]</span>
             </div>
           ) : completedCount === 1 ? (
             <div className="border-3 border-slate-700 bg-slate-950 p-4 rounded-lg text-center">
-              <span className="text-[10px] font-mono text-amber-500 uppercase animate-pulse block mb-1">🔄 SYNCING PORTAL APP...</span>
-              <span className="text-[8px] font-mono text-slate-400">[WAITING FOR USER INITIATION]</span>
+              <span className="text-[20px] font-mono text-amber-500 uppercase animate-pulse block mb-1">🔄 SYNCING PORTAL APP...</span>
+              <span className="text-[20px] font-mono text-slate-400">[WAITING FOR USER INITIATION]</span>
             </div>
           ) : (
             <div className={`grid grid-cols-3 gap-2 border-3 p-3.5 rounded-lg transition-all duration-300 ${
@@ -1652,7 +1652,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               ].map((btn, idx) => (
                 <button 
                   key={idx}
-                  className={`border-2 p-2 rounded font-mono text-[9px] font-extrabold transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${
+                  className={`border-2 p-2 rounded font-mono text-[20px] font-extrabold transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${
                     completedCount === 3 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-40 cursor-not-allowed'
                   } ${btn.color}`}
                   onClick={() => completedCount === 3 && alert(`Macro Active: ${btn.label}`)}
@@ -1663,7 +1663,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
             </div>
           )}
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xl font-bold text-amber-400">
           Touch portal shortkey interface: Re-mapped phone grid
         </div>
       </div>
@@ -1673,7 +1673,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isMonitor) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>LVDS DRIVER INTEGRATION</span>
           <span className={`font-extrabold ${completedCount === 3 ? 'text-sky-400' : 'text-slate-500'}`}>
             {completedCount === 3 ? 'MONITOR LIVE' : 'NO SIGNAL'}
@@ -1682,8 +1682,8 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
         <div className="flex-1 flex flex-col items-center justify-center p-4 bg-[#0D0D1F] space-y-4">
           {completedCount === 0 ? (
             <div className="w-52 h-32 border-4 border-dashed border-slate-800 bg-slate-950/40 flex flex-col items-center justify-center p-3 text-center rounded-lg">
-              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ EXTRACTED PANEL REQUIRED</span>
-              <span className="text-[8px] font-mono text-slate-650">[SAFE TEARDOWN INITIATION STAGE]</span>
+              <span className="text-[20px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ EXTRACTED PANEL REQUIRED</span>
+              <span className="text-[20px] font-mono text-slate-650">[SAFE TEARDOWN INITIATION STAGE]</span>
             </div>
           ) : (
             <svg width="220" height="140" viewBox="0 0 220 140" fill="none">
@@ -1717,7 +1717,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
             </svg>
           )}
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xl font-bold text-amber-400">
           Extracted laptop display panel connected via standard LVDS card
         </div>
       </div>
@@ -1727,14 +1727,14 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isBank) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>SORTING HUB METRICS</span>
           <span className="text-emerald-400 font-extrabold">E-WASTE BANK</span>
         </div>
         <div className="flex-1 flex flex-col justify-center p-6 bg-[#0D0D1F] space-y-4">
           <div className="space-y-3">
             <div>
-              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+              <div className="flex justify-between text-[20px] font-mono mb-1 text-slate-300 font-bold">
                 <span>🔌 Cables & Power Adapters</span>
                 <span>75% Capacity</span>
               </div>
@@ -1743,7 +1743,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+              <div className="flex justify-between text-[20px] font-mono mb-1 text-slate-300 font-bold">
                 <span>📱 Mobiles & Small Tablets</span>
                 <span>20% Capacity</span>
               </div>
@@ -1752,7 +1752,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-[10px] font-mono mb-1 text-slate-300 font-bold">
+              <div className="flex justify-between text-[20px] font-mono mb-1 text-slate-300 font-bold">
                 <span>💻 Laptops & Mainboards</span>
                 <span>45% Capacity</span>
               </div>
@@ -1762,7 +1762,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
             </div>
           </div>
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xl font-bold text-amber-400">
           Community Sorting Hub: Local complex drop-off shelf & recycler links
         </div>
       </div>
@@ -1772,7 +1772,7 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   if (isTradeIn) {
     return (
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
-        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
+        <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[20px] font-mono">
           <span>SCANNER RADAR CORE</span>
           <span className="text-emerald-400 font-extrabold">TRADE-IN DESK</span>
         </div>
@@ -1780,20 +1780,20 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
           <div className="w-40 h-32 border-3 border-[#1A1A2E] bg-white rounded-lg p-3 relative overflow-hidden flex flex-col justify-between shadow-lg">
             <div className="absolute left-0 right-0 top-[40%] h-0.5 bg-red-500 shadow-[0_0_8px_red] animate-bounce" />
             <div className="flex justify-between items-center border-b pb-1">
-              <span className="text-[8px] font-black text-slate-500 uppercase">Verification Scan</span>
-              <span className="text-[6px] font-mono bg-emerald-100 text-emerald-800 px-1 rounded font-bold">READY</span>
+              <span className="text-[20px] font-black text-slate-500 uppercase">Verification Scan</span>
+              <span className="text-[20px] font-mono bg-emerald-100 text-emerald-800 px-1 rounded font-bold">READY</span>
             </div>
             <div className="text-center my-1.5">
-              <div className="text-[14px] font-black text-slate-800 font-mono tracking-tight">$25.00</div>
-              <div className="text-[6px] text-slate-400 font-mono">VOUCHER REWARD ID: #4819</div>
+              <div className="text-[20px] font-black text-slate-800 font-mono tracking-tight">$25.00</div>
+              <div className="text-[20px] text-slate-400 font-mono">VOUCHER REWARD ID: #4819</div>
             </div>
-            <div className="border-t pt-1 flex justify-between text-[6px] font-mono text-slate-500 font-bold">
+            <div className="border-t pt-1 flex justify-between text-[20px] font-mono text-slate-500 font-bold">
               <span>Partner: Local Repair</span>
               <span>Ref: 2026-E</span>
             </div>
           </div>
         </div>
-        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xs font-bold text-amber-400">
+        <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xl font-bold text-amber-400">
           Scan-line validator: Partners trade-in electronics for discount store cards
         </div>
       </div>
@@ -1803,8 +1803,8 @@ function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: str
   return (
     <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white p-5 flex flex-col justify-center items-center min-h-[300px] shadow-[4px_4px_0px_rgba(26,26,46,0.15)]">
       <span className="text-4xl mb-2">💡</span>
-      <h5 className="font-extrabold text-sm text-center">{device}</h5>
-      <p className="text-xs text-slate-400 text-center mt-1">Ready for transition into a custom build layout.</p>
+      <h5 className="font-extrabold text-xl text-center">{device}</h5>
+      <p className="text-xl text-slate-400 text-center mt-1">Ready for transition into a custom build layout.</p>
     </div>
   )
 }
@@ -1839,12 +1839,12 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
           <div>
             <div className="flex justify-between items-start mb-6 relative z-10">
               <div>
-                <span className="inline-block bg-[#FF5A5F] text-white text-[11px] font-black px-3 py-1 border-2 border-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] uppercase -rotate-1 transform origin-left tracking-wide">
+                <span className="inline-block bg-[#FF5A5F] text-white text-[20px] font-black px-3 py-1 border-2 border-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] uppercase -rotate-1 transform origin-left tracking-wide">
                   {block.scoreLabel || 'Blueprint'}
                 </span>
                 <h4 className="font-black text-[#1A1A2E] text-2xl mt-3 tracking-tight">{block.title}</h4>
               </div>
-              <div className="bg-white border-2 border-[#1A1A2E] px-2.5 py-1 text-xs font-mono font-black text-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] rounded-md rotate-2">
+              <div className="bg-white border-2 border-[#1A1A2E] px-2.5 py-1 text-xl font-mono font-black text-[#1A1A2E] shadow-[2px_2px_0px_#1A1A2E] rounded-md rotate-2">
                 {checked.size}/{block.items.length} DONE
               </div>
             </div>
@@ -1863,7 +1863,7 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
                     onClick={() => toggle(i)}
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      <div className={`w-7 h-7 rounded-lg border-3 border-[#1A1A2E] flex items-center justify-center font-black text-base flex-shrink-0 transition-all duration-200 ${
+                      <div className={`w-7 h-7 rounded-lg border-3 border-[#1A1A2E] flex items-center justify-center font-black text-xl flex-shrink-0 transition-all duration-200 ${
                         isChecked 
                           ? 'bg-[#34D399] text-[#1A1A2E] scale-100 rotate-[3deg] shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)]' 
                           : 'bg-slate-50 hover:bg-slate-100 text-transparent scale-95'
@@ -1871,12 +1871,12 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
                         ✓
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <strong className="text-sm text-[#1A1A2E] font-black tracking-tight">{item.label}</strong>
-                        <span className="text-xs text-slate-500 font-bold leading-normal mt-0.5">{item.impact}</span>
+                        <strong className="text-xl text-[#1A1A2E] font-black tracking-tight">{item.label}</strong>
+                        <span className="text-xl text-slate-500 font-bold leading-normal mt-0.5">{item.impact}</span>
                       </div>
                     </div>
                     <div className="flex-shrink-0">
-                      <span className={`text-[9px] font-black font-mono border-2 border-[#1A1A2E] px-2 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E] transition-colors ${
+                      <span className={`text-[20px] font-black font-mono border-2 border-[#1A1A2E] px-2 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E] transition-colors ${
                         isChecked ? 'bg-[#A7F3D0] text-[#065F46]' : 'bg-slate-100 text-slate-600'
                       }`}>
                         +{Math.round(100 / block.items.length)}%
@@ -1890,8 +1890,8 @@ function ChecklistCard({ block }: { block: Extract<ChapterBlock, { type: 'checkl
 
           <div className="mt-8 border-t-2 border-slate-200 pt-5 relative z-10">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-xs font-black text-slate-400 uppercase tracking-widest">CALIBRATION LEVEL</span>
-              <span className="text-sm font-black text-[#1A1A2E] font-mono bg-amber-300 border-2 border-[#1A1A2E] px-2.5 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E]">{progress}% SYNCED</span>
+              <span className="text-xl font-black text-slate-400 uppercase tracking-widest">CALIBRATION LEVEL</span>
+              <span className="text-xl font-black text-[#1A1A2E] font-mono bg-amber-300 border-2 border-[#1A1A2E] px-2.5 py-0.5 rounded shadow-[1.5px_1.5px_0px_#1A1A2E]">{progress}% SYNCED</span>
             </div>
             <div className="flex gap-1.5 justify-between">
               {Array.from({ length: totalSegments }).map((_, idx) => {
@@ -2020,22 +2020,22 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
           <div className={`idea-content ${isSpinning ? 'spinning' : ''} flex-1 flex flex-col justify-between`}>
             <div>
               <div className="flex justify-between items-center mb-4">
-                <span className={`difficulty-pill ${idea.difficulty} px-2 py-0.5 rounded text-[10px] font-black text-white uppercase`}>
+                <span className={`difficulty-pill ${idea.difficulty} px-2 py-0.5 rounded text-[20px] font-black text-white uppercase`}>
                   {idea.difficulty}
                 </span>
-                <span className="text-xs font-black text-slate-400">Idea {index + 1} of {block.combinations.length}</span>
+                <span className="text-xl font-black text-slate-400">Idea {index + 1} of {block.combinations.length}</span>
               </div>
               <div className="idea-route mb-4">
-                <span className="idea-device text-lg font-black text-[#1A1A2E]">{idea.device}</span>
+                <span className="idea-device text-xl font-black text-[#1A1A2E]">{idea.device}</span>
                 <span className="idea-arrow mx-2 text-slate-400 font-extrabold" aria-hidden="true">→</span>
-                <span className="idea-purpose text-lg font-black text-[#1D4ED8]">{idea.purpose}</span>
+                <span className="idea-purpose text-xl font-black text-[#1D4ED8]">{idea.purpose}</span>
               </div>
-              <p className="text-xs text-slate-500 font-bold mb-4 leading-relaxed">
+              <p className="text-xl text-slate-500 font-bold mb-4 leading-relaxed">
                 Repurpose the device with a simple transformation path instead of sending it straight to storage or scrap.
               </p>
               <div className="bg-white border-2 border-[#1A1A2E] rounded-xl p-4 shadow-[2px_2px_0px_#1A1A2E]">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">Build sequence (Click steps to check)</span>
-                <ol className="list-decimal list-inside space-y-2 text-xs text-[#1A1A2E] font-bold">
+                <span className="text-[20px] font-black text-slate-400 uppercase tracking-wider block mb-2">Build sequence (Click steps to check)</span>
+                <ol className="list-decimal list-inside space-y-2 text-xl text-[#1A1A2E] font-bold">
                   {idea.steps.map((s, i) => {
                     const isDone = completedSteps.has(i)
                     return (
@@ -2063,7 +2063,7 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
               </div>
             </div>
             <button 
-              className="w-full mt-6 bg-amber-400 hover:bg-amber-300 text-[#1A1A2E] border-3 border-[#1A1A2E] p-3 rounded-xl font-black text-sm transition-all hover:translate-y-[-2px] active:translate-y-[0px] shadow-[3px_3px_0px_#1A1A2E] disabled:opacity-55 cursor-pointer"
+              className="w-full mt-6 bg-amber-400 hover:bg-amber-300 text-[#1A1A2E] border-3 border-[#1A1A2E] p-3 rounded-xl font-black text-xl transition-all hover:translate-y-[-2px] active:translate-y-[0px] shadow-[3px_3px_0px_#1A1A2E] disabled:opacity-55 cursor-pointer"
               onClick={spin} 
               disabled={isSpinning}
             >
@@ -2104,7 +2104,7 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
     <section className="content-card story-carousel-card p-6 md:p-8 flex flex-col gap-6">
       {/* Header and Controls */}
       <div className="flex justify-between items-center border-b-3 border-[#1A1A2E] pb-4">
-        <span className="rail-label bg-[#1E40AF] text-white font-extrabold uppercase text-xs tracking-wider px-3 py-1 rounded">
+        <span className="rail-label bg-[#1E40AF] text-white font-extrabold uppercase text-xl tracking-wider px-3 py-1 rounded">
           Impact Case Study
         </span>
         <div className="carousel-controller flex items-center gap-2">
@@ -2122,7 +2122,7 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
                 className={`w-2.5 h-2.5 rounded-full border border-[#1A1A2E] transition-all ${i === index ? 'bg-[#FACC15] scale-125' : 'bg-slate-200'}`}
               />
             ))}
-            <span className="text-[10px] font-black text-slate-500 ml-2 tracking-wider">
+            <span className="text-[20px] font-black text-slate-500 ml-2 tracking-wider">
               {index + 1}/{block.stories.length}
             </span>
           </div>
@@ -2147,7 +2147,7 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
               className="w-full h-full object-cover"
             />
             {/* Ribbon comparison badge */}
-            <div className="absolute top-3 left-3 bg-[#B91C1C] text-white border-2 border-[#1A1A2E] font-black text-[11px] tracking-wider px-3 py-1 rounded shadow-[2px_2px_0px_#1A1A2E] transform -skew-x-6">
+            <div className="absolute top-3 left-3 bg-[#B91C1C] text-white border-2 border-[#1A1A2E] font-black text-[20px] tracking-wider px-3 py-1 rounded shadow-[2px_2px_0px_#1A1A2E] transform -skew-x-6">
               {story.before} VS {story.after}
             </div>
           </div>
@@ -2163,7 +2163,7 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
           {/* Dialog Bubble Quote */}
           <div className="comic-dialog-bubble relative bg-[#FFFDF7] border-4 border-[#1A1A2E] p-5 rounded-2xl shadow-[4px_4px_0px_#1A1A2E] flex flex-col gap-2">
             <div className="quote-icon text-3xl font-black text-[#FB923C] leading-none select-none">“</div>
-            <blockquote className="quote-text font-black text-sm md:text-base text-[#1A1A2E] italic leading-relaxed pl-2 pr-2">
+            <blockquote className="quote-text font-black text-xl md:text-xl text-[#1A1A2E] italic leading-relaxed pl-2 pr-2">
               {story.quote}
             </blockquote>
             
@@ -2175,7 +2175,7 @@ function StoryCarouselCard({ block }: { block: Extract<ChapterBlock, { type: 'st
             <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-b-[12px] border-b-[#FFFDF7] border-r-[8px] border-r-transparent md:hidden" />
           </div>
           
-          <div className="flex items-center gap-2 self-end text-[10px] font-black text-[#1E40AF] bg-[#3B82F6]/10 px-3 py-1 rounded-full border border-[#3B82F6]/20 uppercase tracking-widest animate-pulse">
+          <div className="flex items-center gap-2 self-end text-[20px] font-black text-[#1E40AF] bg-[#3B82F6]/10 px-3 py-1 rounded-full border border-[#3B82F6]/20 uppercase tracking-widest animate-pulse">
             <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
             Verified Recovery
           </div>
@@ -2379,10 +2379,10 @@ function CampaignWizardCard({ block }: { block: Extract<ChapterBlock, { type: 'c
             <ul className="space-y-4">
               {block.steps.map((s, i) => (
                 <li key={i} className="flex flex-col gap-1">
-                  <span className="text-[10px] font-bold text-muted uppercase">{s.title}</span>
+                  <span className="text-[20px] font-bold text-muted uppercase">{s.title}</span>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-text">{selections[i]}</span>
-                    <span className="text-xs text-success">Optimal Choice ✓</span>
+                    <span className="text-xl text-success">Optimal Choice ✓</span>
                   </div>
                 </li>
               ))}
@@ -2593,7 +2593,7 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
           
           <div className="space-y-6 relative z-10">
             <div className="mb-4">
-              <span className="bg-[#1A1A2E] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">Regulatory Roadmap</span>
+              <span className="bg-[#1A1A2E] text-white text-[20px] font-black px-2 py-0.5 rounded uppercase">Regulatory Roadmap</span>
               <h4 className="font-black text-[#1A1A2E] text-xl mt-1.5">Indian E-Waste Policies</h4>
             </div>
 
@@ -2605,7 +2605,7 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
                   className="flex items-start gap-4 cursor-pointer group transition-all"
                   onClick={() => setSelectedIdx(i)}
                 >
-                  <div className={`w-8 h-8 rounded-full border-3 border-[#1A1A2E] flex items-center justify-center font-bold text-xs flex-shrink-0 transition-all ${
+                  <div className={`w-8 h-8 rounded-full border-3 border-[#1A1A2E] flex items-center justify-center font-bold text-xl flex-shrink-0 transition-all ${
                     isSelected 
                       ? 'bg-amber-400 text-[#1A1A2E] scale-110 shadow-[2px_2px_0px_#1A1A2E]' 
                       : 'bg-white text-slate-400 group-hover:text-[#1A1A2E] group-hover:bg-slate-50'
@@ -2618,9 +2618,9 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
                       : 'hover:bg-slate-50 hover:translate-x-0.5 shadow-[1px_1px_0px_#1A1A2E]'
                   }`}>
                     <div className="flex justify-between items-start">
-                      <span className="text-[9px] font-black bg-[#1A1A2E] text-white px-1.5 py-0.2 rounded uppercase">{e.region}</span>
+                      <span className="text-[20px] font-black bg-[#1A1A2E] text-white px-1.5 py-0.2 rounded uppercase">{e.region}</span>
                     </div>
-                    <strong className={`block text-xs font-black mt-1 leading-tight ${isSelected ? 'text-[#1D4ED8]' : 'text-[#1A1A2E]'}`}>
+                    <strong className={`block text-xl font-black mt-1 leading-tight ${isSelected ? 'text-[#1D4ED8]' : 'text-[#1A1A2E]'}`}>
                       {e.title}
                     </strong>
                   </div>
@@ -2631,43 +2631,43 @@ function PolicyTimelineCard({ block }: { block: Extract<ChapterBlock, { type: 'p
         </div>
 
         <div className="lg:col-span-7 border-4 border-[#1A1A2E] rounded-2xl bg-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(26,26,46,0.15)] min-h-[400px]">
-          <div className="bg-[#242445] px-4 py-3 border-b-2 border-[#1A1A2E] flex justify-between items-center text-xs font-mono">
+          <div className="bg-[#242445] px-4 py-3 border-b-2 border-[#1A1A2E] flex justify-between items-center text-xl font-mono">
             <span className="flex items-center gap-2 text-amber-400 font-extrabold">
               {getIconForYear(currentEvent.year)}
               ANALYSIS PROTOCOL: {currentEvent.year} REGULATION
             </span>
-            <span className={`px-2 py-0.5 border rounded text-[9px] font-extrabold uppercase ${activeDetails.statusColor}`}>
+            <span className={`px-2 py-0.5 border rounded text-[20px] font-extrabold uppercase ${activeDetails.statusColor}`}>
               {activeDetails.status}
             </span>
           </div>
 
           <div className="flex-1 p-6 space-y-5 bg-[#0D0D1F]">
             <div>
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Impact Summary</span>
-              <p className="text-sm font-bold text-slate-200 leading-relaxed">{currentEvent.impact}</p>
+              <span className="text-[20px] font-black text-slate-400 uppercase tracking-wider block mb-1">Impact Summary</span>
+              <p className="text-xl font-bold text-slate-200 leading-relaxed">{currentEvent.impact}</p>
             </div>
 
             <div className="border-t border-slate-800 pt-4">
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Primary Regulatory Focus</span>
-              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.focus}</p>
+              <span className="text-[20px] font-black text-slate-400 uppercase tracking-wider block mb-1">Primary Regulatory Focus</span>
+              <p className="text-xl text-slate-300 font-medium leading-relaxed">{activeDetails.focus}</p>
             </div>
 
             <div className="border-t border-slate-800 pt-4">
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Enforcement & Auditing Actions</span>
-              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.enforcement}</p>
+              <span className="text-[20px] font-black text-slate-400 uppercase tracking-wider block mb-1">Enforcement & Auditing Actions</span>
+              <p className="text-xl text-slate-300 font-medium leading-relaxed">{activeDetails.enforcement}</p>
             </div>
 
             <div className="border-t border-slate-800 pt-4">
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider block mb-1">Compliance & Operation Friction</span>
-              <p className="text-xs text-slate-300 font-medium leading-relaxed">{activeDetails.compliance}</p>
+              <span className="text-[20px] font-black text-slate-400 uppercase tracking-wider block mb-1">Compliance & Operation Friction</span>
+              <p className="text-xl text-slate-300 font-medium leading-relaxed">{activeDetails.compliance}</p>
             </div>
           </div>
 
           <div className="bg-[#1A1A2E] p-4 grid grid-cols-3 gap-2 border-t-2 border-slate-800">
             {activeDetails.metrics.map((m, idx) => (
               <div key={idx} className="bg-[#242445]/50 border border-slate-800 rounded-lg p-2 text-center">
-                <span className="block text-[8px] font-mono text-slate-400 uppercase">{m.label}</span>
-                <strong className="block text-xs font-mono text-amber-400 mt-1">{m.value}</strong>
+                <span className="block text-[20px] font-mono text-slate-400 uppercase">{m.label}</span>
+                <strong className="block text-xl font-mono text-amber-400 mt-1">{m.value}</strong>
               </div>
             ))}
           </div>
@@ -2711,7 +2711,7 @@ function PathwayFlipCards() {
           <div className="flip-card-front bg-gradient-to-br from-[#EEFDF7] to-[#FFFDF7] border-4 border-[#1A1A2E] p-6 rounded-2xl shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[20px] tracking-wider px-2.5 py-0.5 rounded transform rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
               PATH 01
             </div>
             
@@ -2723,10 +2723,10 @@ function PathwayFlipCards() {
 
             <div>
               <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Formal Recycling</h4>
-              <p className="text-[#334155] text-base leading-relaxed font-bold">
+              <p className="text-[#334155] text-xl leading-relaxed font-bold">
                 Protects workers under strict safety protocols while recovering high-purity saleable metals and materials.
               </p>
-              <div className="flip-hint mt-4 text-xs text-[#059669] font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xl text-[#059669] font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2737,27 +2737,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#059669] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#059669] text-white font-black text-xl uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 IMPACT ANALYSIS
               </div>
               <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Reduces toxic heavy metal contamination in landfills.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Ensures safe disposal of mercury, cadmium, and lead.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#059669] font-extrabold">★</span>
                   Supports green jobs under verified labor regulations.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-xs text-[#059669] font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xl text-[#059669] font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
@@ -2778,7 +2778,7 @@ function PathwayFlipCards() {
           <div className="flip-card-front bg-gradient-to-br from-[#F0F9FF] to-[#FFFDF7] border-4 border-[#1A1A2E] p-6 rounded-2xl shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
 
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform -rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[20px] tracking-wider px-2.5 py-0.5 rounded transform -rotate-6 shadow-[2px_2px_0px_#1A1A2E] uppercase">
               PATH 02
             </div>
 
@@ -2790,10 +2790,10 @@ function PathwayFlipCards() {
 
             <div>
               <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Circular Design</h4>
-              <p className="text-[#334155] text-base leading-relaxed font-bold">
+              <p className="text-[#334155] text-xl leading-relaxed font-bold">
                 Lowers dependence on volatile, hazardous, and fragile raw-material supply chains by keeping resources in use.
               </p>
-              <div className="flip-hint mt-4 text-xs text-[#0284C7] font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xl text-[#0284C7] font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2804,27 +2804,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#0284C7] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#0284C7] text-white font-black text-xl uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 DESIGN STRATEGY
               </div>
               <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Eliminates permanent adhesives in favor of modular design.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Reduces the demand for newly mined critical raw materials.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#0284C7] font-extrabold">★</span>
                   Simplifies manual teardown, saving sorting time and costs.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-xs text-[#0284C7] font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xl text-[#0284C7] font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
@@ -2845,7 +2845,7 @@ function PathwayFlipCards() {
           <div className="flip-card-front bg-gradient-to-br from-[#FFF7ED] to-[#FFFDF7] border-4 border-[#1A1A2E] p-6 rounded-2xl shadow-[6px_6px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1.5 hover:translate-x-1.5 hover:shadow-[10px_10px_0px_#1A1A2E] transition-all duration-300">
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
 
-            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[10px] tracking-wider px-2.5 py-0.5 rounded transform rotate-3 shadow-[2px_2px_0px_#1A1A2E] uppercase">
+            <div className="absolute top-4 right-4 bg-[#FACC15] border-3 border-[#1A1A2E] text-[#1A1A2E] font-black text-[20px] tracking-wider px-2.5 py-0.5 rounded transform rotate-3 shadow-[2px_2px_0px_#1A1A2E] uppercase">
               PATH 03
             </div>
 
@@ -2858,10 +2858,10 @@ function PathwayFlipCards() {
 
             <div>
               <h4 className="font-extrabold text-[#1A1A2E] text-2xl mb-2 tracking-tight uppercase font-['Poppins']">Upstream Decisions</h4>
-              <p className="text-[#334155] text-base leading-relaxed font-bold">
+              <p className="text-[#334155] text-xl leading-relaxed font-bold">
                 Repairability and disassembly decisions made at the design stage directly dictate how much resource value can be salvaged.
               </p>
-              <div className="flip-hint mt-4 text-xs text-orange-800 font-bold flex items-center gap-1">
+              <div className="flip-hint mt-4 text-xl text-orange-800 font-bold flex items-center gap-1">
                 <span className="flip-hint-arrow">↻</span> Click to read details
               </div>
             </div>
@@ -2872,27 +2872,27 @@ function PathwayFlipCards() {
             <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
             
             <div>
-              <div className="inline-block bg-[#C2410C] text-white font-black text-xs uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
+              <div className="inline-block bg-[#C2410C] text-white font-black text-xl uppercase px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -skew-x-12 mb-3 shadow-[2px_2px_0px_#1A1A2E]">
                 UPSTREAM FOCUS
               </div>
               <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-4 uppercase tracking-tight font-['Poppins']">Key Takeaways</h4>
               <ul className="space-y-3">
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Over 80% of a product's environmental footprint is determined at design.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Standardized parts make future repair and upgrades vastly cheaper.
                 </li>
-                <li className="flex items-start gap-2.5 text-sm text-[#334155] font-bold">
+                <li className="flex items-start gap-2.5 text-xl text-[#334155] font-bold">
                   <span className="text-[#C2410C] font-extrabold">★</span>
                   Upstream choices directly determine downstream recovery efficiency.
                 </li>
               </ul>
             </div>
             
-            <div className="flip-hint mt-4 text-xs text-orange-800 font-bold flex items-center gap-1">
+            <div className="flip-hint mt-4 text-xl text-orange-800 font-bold flex items-center gap-1">
               <span className="flip-hint-arrow">↺</span> Click to return
             </div>
           </div>
@@ -2924,14 +2924,14 @@ function CreativeUpcycleBento() {
               <path d="M58,16 Q64,15 61,11 Q55,12 58,16" fill="#34D399" stroke="#1A1A2E" strokeWidth="2" />
             </svg>
           </div>
-          <span className="bg-[#10B981] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+          <span className="bg-[#10B981] text-white font-black text-[20px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
             IDEA 01
           </span>
         </div>
 
         <div className="relative z-10">
-          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">CRT Planters</h4>
-          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+          <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 uppercase tracking-tight font-['Poppins']">CRT Planters</h4>
+          <p className="text-[#334155] text-xl leading-relaxed font-bold">
             Convert old CRT monitor shells into unique planters or pet beds.
           </p>
         </div>
@@ -2955,14 +2955,14 @@ function CreativeUpcycleBento() {
               <circle cx="50" cy="50" r="3.5" fill="#FFF" stroke="#1A1A2E" strokeWidth="2" />
             </svg>
           </div>
-          <span className="bg-[#A855F7] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+          <span className="bg-[#A855F7] text-white font-black text-[20px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
             IDEA 02
           </span>
         </div>
 
         <div className="relative z-10">
-          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">PCB Jewelry</h4>
-          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+          <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 uppercase tracking-tight font-['Poppins']">PCB Jewelry</h4>
+          <p className="text-[#334155] text-xl leading-relaxed font-bold">
             Transform retired circuit boards into high-tech jewelry and decorative wall art.
           </p>
         </div>
@@ -2987,14 +2987,14 @@ function CreativeUpcycleBento() {
               <circle cx="64" cy="64" r="2.5" fill="#10B981" />
             </svg>
           </div>
-          <span className="bg-[#F59E0B] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-6 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+          <span className="bg-[#F59E0B] text-white font-black text-[20px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-6 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
             IDEA 03
           </span>
         </div>
 
         <div className="relative z-10">
-          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">Tactile Inputs</h4>
-          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+          <h4 className="font-extrabold text-[#1A1A2E] text-xl mb-2 uppercase tracking-tight font-['Poppins']">Tactile Inputs</h4>
+          <p className="text-[#334155] text-xl leading-relaxed font-bold">
             Use mechanical keyboard components to build custom controllers or tactile interfaces.
           </p>
         </div>
@@ -3454,7 +3454,7 @@ function InteractiveDigitalCitizenship() {
     <div className="comic-privacy-shield">
       <div className="comic-privacy-header flex justify-between items-center text-slate-900">
         <span className="font-extrabold">DATA DEFENSE SYSTEM</span>
-        <span className="text-[10px] bg-[#1A1A2E] text-white px-2 py-0.5 border border-white/20 font-mono">CORE: ONLINE</span>
+        <span className="text-[20px] bg-[#1A1A2E] text-white px-2 py-0.5 border border-white/20 font-mono">CORE: ONLINE</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
@@ -3477,15 +3477,15 @@ function InteractiveDigitalCitizenship() {
             </div>
 
             {/* Floating visual indicators */}
-            {layers.auth && <span className="absolute top-2 left-2 text-[9px] bg-rose-100 border border-[#1A1A2E] font-bold px-1 rounded">2FA</span>}
-            {layers.crypto && <span className="absolute top-2 right-2 text-[9px] bg-amber-100 border border-[#1A1A2E] font-bold px-1 rounded">AES</span>}
-            {layers.tracker && <span className="absolute bottom-2 left-2 text-[9px] bg-sky-100 border border-[#1A1A2E] font-bold px-1 rounded">DNT</span>}
-            {layers.wipe && <span className="absolute bottom-2 right-2 text-[9px] bg-emerald-100 border border-[#1A1A2E] font-bold px-1 rounded">WIPED</span>}
+            {layers.auth && <span className="absolute top-2 left-2 text-[20px] bg-rose-100 border border-[#1A1A2E] font-bold px-1 rounded">2FA</span>}
+            {layers.crypto && <span className="absolute top-2 right-2 text-[20px] bg-amber-100 border border-[#1A1A2E] font-bold px-1 rounded">AES</span>}
+            {layers.tracker && <span className="absolute bottom-2 left-2 text-[20px] bg-sky-100 border border-[#1A1A2E] font-bold px-1 rounded">DNT</span>}
+            {layers.wipe && <span className="absolute bottom-2 right-2 text-[20px] bg-emerald-100 border border-[#1A1A2E] font-bold px-1 rounded">WIPED</span>}
           </div>
 
           {/* Strength Bar */}
           <div className="w-full mt-4">
-            <div className="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+            <div className="flex justify-between items-center text-[20px] font-bold text-slate-600 mb-1">
               <span>SHIELD INTEGRITY</span>
               <span className={strength === 100 ? 'text-emerald-600' : strength > 0 ? 'text-amber-600' : 'text-rose-600'}>{strength}%</span>
             </div>
@@ -3506,10 +3506,10 @@ function InteractiveDigitalCitizenship() {
           >
             <div className="text-xl">🔑</div>
             <div className="flex-1 text-left">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase">2FA Authentication</h4>
-              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Dual credentials lock down access.</p>
+              <h4 className="text-xl font-extrabold text-slate-800 uppercase">2FA Authentication</h4>
+              <p className="text-[20px] text-slate-500 font-medium leading-tight mt-0.5">Dual credentials lock down access.</p>
             </div>
-            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.auth ? 'bg-rose-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            <div className={`text-[20px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.auth ? 'bg-rose-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
               {layers.auth ? 'SECURED' : 'ENABLE'}
             </div>
           </div>
@@ -3520,10 +3520,10 @@ function InteractiveDigitalCitizenship() {
           >
             <div className="text-xl">💾</div>
             <div className="flex-1 text-left">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Storage Encryption</h4>
-              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Scrambles local data files.</p>
+              <h4 className="text-xl font-extrabold text-slate-800 uppercase">Storage Encryption</h4>
+              <p className="text-[20px] text-slate-500 font-medium leading-tight mt-0.5">Scrambles local data files.</p>
             </div>
-            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.crypto ? 'bg-amber-400 text-slate-900' : 'bg-slate-100 text-slate-600'}`}>
+            <div className={`text-[20px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.crypto ? 'bg-amber-400 text-slate-900' : 'bg-slate-100 text-slate-600'}`}>
               {layers.crypto ? 'ENCRYPTED' : 'EXPOSED'}
             </div>
           </div>
@@ -3534,10 +3534,10 @@ function InteractiveDigitalCitizenship() {
           >
             <div className="text-xl">🌐</div>
             <div className="flex-1 text-left">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Ad-Tracker Block</h4>
-              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Stops behavioral ad cookies.</p>
+              <h4 className="text-xl font-extrabold text-slate-800 uppercase">Ad-Tracker Block</h4>
+              <p className="text-[20px] text-slate-500 font-medium leading-tight mt-0.5">Stops behavioral ad cookies.</p>
             </div>
-            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.tracker ? 'bg-sky-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            <div className={`text-[20px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.tracker ? 'bg-sky-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
               {layers.tracker ? 'BLOCKED' : 'ALLOW'}
             </div>
           </div>
@@ -3548,10 +3548,10 @@ function InteractiveDigitalCitizenship() {
           >
             <div className="text-xl">🧹</div>
             <div className="flex-1 text-left">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase">Old Account Purge</h4>
-              <p className="text-[9px] text-slate-500 font-medium leading-tight mt-0.5">Deletes unused tech profiles.</p>
+              <h4 className="text-xl font-extrabold text-slate-800 uppercase">Old Account Purge</h4>
+              <p className="text-[20px] text-slate-500 font-medium leading-tight mt-0.5">Deletes unused tech profiles.</p>
             </div>
-            <div className={`text-[9px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.wipe ? 'bg-emerald-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            <div className={`text-[20px] font-extrabold px-2 py-0.5 border-2 border-[#1A1A2E] ${layers.wipe ? 'bg-emerald-400 text-white' : 'bg-slate-100 text-slate-600'}`}>
               {layers.wipe ? 'WIPED' : 'CLUTTERED'}
             </div>
           </div>
@@ -3560,7 +3560,7 @@ function InteractiveDigitalCitizenship() {
 
       {strength === 100 && (
         <div className="comic-privacy-victory mt-3 text-center border-t-3 border-[#1A1A2E] pt-3 pb-1 bg-emerald-50 text-emerald-800">
-          <p className="text-xs font-extrabold uppercase tracking-wider">
+          <p className="text-xl font-extrabold uppercase tracking-wider">
             🎉 SHIELD FULLY CHARGED! DIGITAL CITIZENSHIP LEVEL MAXED!
           </p>
         </div>
