@@ -1507,13 +1507,26 @@ function ChecklistPreview({ title, checked, total }: { title: string; checked: S
   )
 }
 
-function IdeaIllustration({ device, purpose }: { device: string; purpose: string }) {
+function IdeaIllustration({ device, purpose, completedCount = 3 }: { device: string; purpose: string; completedCount?: number }) {
   const isKiosk = purpose.toLowerCase().includes('kiosk') || purpose.toLowerCase().includes('atm')
   const isClock = purpose.toLowerCase().includes('clock')
   const isKeyboard = purpose.toLowerCase().includes('keyboard')
   const isMonitor = purpose.toLowerCase().includes('monitor')
   const isBank = purpose.toLowerCase().includes('bank')
   const isTradeIn = purpose.toLowerCase().includes('trade-in') || purpose.toLowerCase().includes('counter')
+
+  const [time, setTime] = useState(new Date())
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+  const formattedSeconds = time.getSeconds().toString().padStart(2, '0')
+  const formattedDate = time.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })
 
   if (isKiosk) {
     return (
@@ -1559,21 +1572,44 @@ function IdeaIllustration({ device, purpose }: { device: string; purpose: string
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
         <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
           <span>SMART WALL CLOCK CORE</span>
-          <span className="text-amber-400 font-extrabold">TABLET MOUNT</span>
+          <span className={`font-extrabold ${completedCount === 3 ? 'text-emerald-400 animate-pulse' : 'text-amber-400'}`}>
+            {completedCount === 3 ? 'CONNECTED' : completedCount === 2 ? 'LOW POWER' : 'OFFLINE'}
+          </span>
         </div>
         <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F] relative">
-          <div className="w-48 h-32 rounded-xl border-4 border-slate-500 bg-black flex flex-col items-center justify-center p-3 relative shadow-[0_0_20px_rgba(250,204,21,0.2)]">
-            <span className="absolute top-1 right-2 text-[6px] font-mono text-slate-400">🔋 100% Connected</span>
-            <div className="text-3xl font-black font-mono text-emerald-400 tracking-wider mb-1 animate-pulse">
-              10:42<span className="text-slate-500 text-xl font-bold">:15</span>
+          {completedCount === 0 ? (
+            <div className="w-48 h-32 rounded-xl border-4 border-slate-700 bg-black flex flex-col items-center justify-center p-3 text-center">
+              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider animate-pulse mb-1">⚠️ SYSTEM OFFLINE</span>
+              <span className="text-[8px] font-mono text-slate-500">[NO OPERATING SYSTEM DETECTED]</span>
             </div>
-            <div className="text-[8px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
-              Thursday, May 21
+          ) : completedCount === 1 ? (
+            <div className="w-48 h-32 rounded-xl border-4 border-slate-650 bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
+              <span className="text-[10px] font-mono text-amber-500 uppercase mb-2 animate-pulse">🔧 FLASHING OS...</span>
+              <div className="w-32 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-600">
+                <div className="h-full bg-amber-400 animate-pulse" style={{ width: '45%' }} />
+              </div>
+              <span className="text-[8px] font-mono text-slate-400 mt-2">Android 12 Bootloader active</span>
             </div>
-            <div className="text-[6px] text-amber-400 mt-2 font-bold px-2 py-0.5 border border-amber-400/40 rounded bg-amber-500/5">
-              💡 LUNCH PROTOCOL: Recovery stats active
+          ) : (
+            <div className={`w-48 h-32 rounded-xl border-4 transition-all duration-300 bg-black flex flex-col items-center justify-center p-3 relative ${
+              completedCount === 3 ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.25)]' : 'border-amber-600'
+            }`}>
+              <span className="absolute top-1 right-2 text-[6px] font-mono text-slate-400">
+                {completedCount === 3 ? '🔋 100% Connected' : '🔌 DISCONNECTED (15%)'}
+              </span>
+              <div className={`text-3xl font-black font-mono tracking-wider mb-1 ${completedCount === 3 ? 'text-emerald-400' : 'text-amber-500'}`}>
+                {formattedTime}<span className="text-slate-500 text-xl font-bold">:{formattedSeconds}</span>
+              </div>
+              <div className="text-[8px] font-mono text-slate-300 font-extrabold uppercase text-center mt-1">
+                {formattedDate}
+              </div>
+              <div className={`text-[6px] mt-2 font-bold px-2 py-0.5 border rounded ${
+                completedCount === 3 ? 'text-emerald-400 border-emerald-400/40 bg-emerald-500/5' : 'text-amber-400 border-amber-400/40 bg-amber-500/5'
+              }`}>
+                {completedCount === 3 ? '💡 WALL MOUNTED: Recovery stats active' : '⚠️ MOUNT SYSTEM INCOMPLETE'}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
           Fullscreen Clock Dashboard: Re-purposed Android/iOS Tablet
@@ -1587,27 +1623,45 @@ function IdeaIllustration({ device, purpose }: { device: string; purpose: string
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
         <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
           <span>MACRO KEYBOARD CONSOLE</span>
-          <span className="text-purple-400 font-extrabold">TOUCH DECK</span>
+          <span className={`font-extrabold ${completedCount === 3 ? 'text-purple-400' : 'text-slate-500'}`}>
+            {completedCount === 3 ? 'TOUCH DECK ACTIVE' : 'STANDBY'}
+          </span>
         </div>
         <div className="flex-1 flex items-center justify-center p-6 bg-[#0D0D1F]">
-          <div className="grid grid-cols-3 gap-2 border-3 border-slate-600 bg-slate-800 p-3.5 rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.15)]">
-            {[
-              { label: '🔇 MUTE', color: 'bg-red-500/20 text-red-400 border-red-500/50' },
-              { label: '📷 CAM', color: 'bg-blue-500/20 text-blue-400 border-blue-500/50' },
-              { label: '⏺ REC', color: 'bg-amber-500/20 text-amber-400 border-amber-500/50' },
-              { label: '🚀 RUN', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' },
-              { label: '📝 EDIT', color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50' },
-              { label: '🔄 SYNC', color: 'bg-pink-500/20 text-pink-400 border-pink-500/50' }
-            ].map((btn, idx) => (
-              <button 
-                key={idx}
-                className={`border-2 p-2 rounded font-mono text-[9px] font-extrabold hover:scale-105 active:scale-95 transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${btn.color}`}
-                onClick={() => alert(`Macro Active: ${btn.label}`)}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
+          {completedCount === 0 ? (
+            <div className="border-3 border-slate-700 bg-slate-900 p-4 rounded-lg text-center">
+              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ HARDWARE DISCONNECTED</span>
+              <span className="text-[8px] font-mono text-slate-500">[USB COM PORT OFFLINE]</span>
+            </div>
+          ) : completedCount === 1 ? (
+            <div className="border-3 border-slate-700 bg-slate-950 p-4 rounded-lg text-center">
+              <span className="text-[10px] font-mono text-amber-500 uppercase animate-pulse block mb-1">🔄 SYNCING PORTAL APP...</span>
+              <span className="text-[8px] font-mono text-slate-400">[WAITING FOR USER INITIATION]</span>
+            </div>
+          ) : (
+            <div className={`grid grid-cols-3 gap-2 border-3 p-3.5 rounded-lg transition-all duration-300 ${
+              completedCount === 3 ? 'border-purple-500 bg-slate-800 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : 'border-slate-600 bg-slate-900'
+            }`}>
+              {[
+                { label: '🔇 MUTE', color: completedCount === 3 ? 'bg-red-500/20 text-red-400 border-red-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
+                { label: '📷 CAM', color: completedCount === 3 ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
+                { label: '⏺ REC', color: completedCount === 3 ? 'bg-amber-500/20 text-amber-400 border-amber-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
+                { label: '🚀 RUN', color: completedCount === 3 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
+                { label: '📝 EDIT', color: completedCount === 3 ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' },
+                { label: '🔄 SYNC', color: completedCount === 3 ? 'bg-pink-500/20 text-pink-400 border-pink-500/50' : 'bg-slate-800 text-slate-500 border-slate-700' }
+              ].map((btn, idx) => (
+                <button 
+                  key={idx}
+                  className={`border-2 p-2 rounded font-mono text-[9px] font-extrabold transition-all w-14 h-10 flex items-center justify-center text-center leading-tight shadow-md ${
+                    completedCount === 3 ? 'hover:scale-105 active:scale-95 cursor-pointer' : 'opacity-40 cursor-not-allowed'
+                  } ${btn.color}`}
+                  onClick={() => completedCount === 3 && alert(`Macro Active: ${btn.label}`)}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-slate-700 text-xs font-bold text-amber-400">
           Touch portal shortkey interface: Re-mapped phone grid
@@ -1621,27 +1675,47 @@ function IdeaIllustration({ device, purpose }: { device: string; purpose: string
       <div className="w-full h-full bg-[#1A1A2E] rounded-xl border-4 border-[#1A1A2E] text-white flex flex-col justify-between overflow-hidden relative shadow-[4px_4px_0px_rgba(26,26,46,0.15)] min-h-[300px]">
         <div className="bg-[#242445] px-3 py-1.5 border-b-2 border-[#1A1A2E] flex justify-between items-center text-[10px] font-mono">
           <span>LVDS DRIVER INTEGRATION</span>
-          <span className="text-sky-400 font-extrabold">MONITOR FRAME</span>
+          <span className={`font-extrabold ${completedCount === 3 ? 'text-sky-400' : 'text-slate-500'}`}>
+            {completedCount === 3 ? 'MONITOR LIVE' : 'NO SIGNAL'}
+          </span>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4 bg-[#0D0D1F] space-y-4">
-          <svg width="220" height="140" viewBox="0 0 220 140" fill="none">
-            <rect x="20" y="10" width="120" height="80" rx="3" fill="#1e293b" stroke="#FFF" strokeWidth="2.5" />
-            <text x="35" y="50" fill="#a7f3d0" fontSize="8" fontFamily="monospace" fontWeight="bold">EXTRACTED PANEL</text>
-            <text x="35" y="62" fill="#64748b" fontSize="6" fontFamily="monospace">LCD/LED Matrix</text>
-            
-            <rect x="155" y="45" width="50" height="40" rx="2" fill="#065f46" stroke="#34d399" strokeWidth="1.5" />
-            <circle cx="165" cy="55" r="2" fill="#facc15" />
-            <circle cx="175" cy="55" r="2" fill="#facc15" />
-            <rect x="185" y="70" width="15" height="10" fill="#475569" />
-            <text x="158" y="80" fill="#FFF" fontSize="5" fontFamily="monospace">LVDS CTRL</text>
-            
-            <path d="M140,50 L155,50" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 2" />
-            <path d="M140,70 L155,70" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3 2" />
-            
-            <path d="M185,85 L185,120" stroke="#94a3b8" strokeWidth="2" />
-            <rect x="180" y="120" width="10" height="6" fill="#0f172a" />
-            <text x="194" y="115" fill="#94a3b8" fontSize="5" fontFamily="monospace">HDMI IN</text>
-          </svg>
+          {completedCount === 0 ? (
+            <div className="w-52 h-32 border-4 border-dashed border-slate-800 bg-slate-950/40 flex flex-col items-center justify-center p-3 text-center rounded-lg">
+              <span className="text-[10px] font-mono text-red-500 uppercase tracking-wider block mb-1">⚠️ EXTRACTED PANEL REQUIRED</span>
+              <span className="text-[8px] font-mono text-slate-650">[SAFE TEARDOWN INITIATION STAGE]</span>
+            </div>
+          ) : (
+            <svg width="220" height="140" viewBox="0 0 220 140" fill="none">
+              <rect x="20" y="10" width="120" height="80" rx="3" fill="#1e293b" stroke={completedCount >= 2 ? '#FFF' : '#475569'} strokeWidth="2.5" />
+              {completedCount === 3 ? (
+                <>
+                  <text x="35" y="45" fill="#34d399" fontSize="8" fontFamily="monospace" fontWeight="bold">EXTRACTED PANEL</text>
+                  <text x="35" y="58" fill="#60a5fa" fontSize="7" fontFamily="monospace" fontWeight="bold">● SIGNAL MATCHED</text>
+                  <text x="35" y="70" fill="#a7f3d0" fontSize="5" fontFamily="monospace">HDMI RESOLUTION: 1080P</text>
+                </>
+              ) : (
+                <>
+                  <text x="35" y="45" fill="#94a3b8" fontSize="8" fontFamily="monospace" fontWeight="bold">EXTRACTED PANEL</text>
+                  <text x="35" y="58" fill="#f87171" fontSize="7" fontFamily="monospace" fontWeight="bold" className="animate-pulse">⚠️ NO HDMI LINK</text>
+                  <text x="35" y="70" fill="#64748b" fontSize="5" fontFamily="monospace">LVDS standby loop...</text>
+                </>
+              )}
+              
+              <rect x="155" y="45" width="50" height="40" rx="2" fill={completedCount >= 2 ? '#065f46' : '#1e293b'} stroke={completedCount >= 2 ? '#34d399' : '#475569'} strokeWidth="1.5" />
+              <circle cx="165" cy="55" r="2" fill={completedCount >= 2 ? '#facc15' : '#64748b'} />
+              <circle cx="175" cy="55" r="2" fill={completedCount >= 2 ? '#facc15' : '#64748b'} />
+              <rect x="185" y="70" width="15" height="10" fill={completedCount >= 2 ? '#475569' : '#334155'} />
+              <text x="158" y="80" fill="#FFF" fontSize="5" fontFamily="monospace">LVDS CTRL</text>
+              
+              <path d="M140,50 L155,50" stroke={completedCount >= 2 ? '#f43f5e' : '#475569'} strokeWidth="2" strokeDasharray="3 2" />
+              <path d="M140,70 L155,70" stroke={completedCount >= 2 ? '#3b82f6' : '#475569'} strokeWidth="2" strokeDasharray="3 2" />
+              
+              <path d="M185,85 L185,120" stroke={completedCount === 3 ? '#94a3b8' : '#475569'} strokeWidth="2" />
+              <rect x="180" y="120" width="10" height="6" fill="#0f172a" />
+              <text x="194" y="115" fill={completedCount === 3 ? '#94a3b8' : '#475569'} fontSize="5" fontFamily="monospace">HDMI IN</text>
+            </svg>
+          )}
         </div>
         <div className="bg-[#1A1A2E] p-3 text-center border-t-2 border-[#1A1A2E] text-xs font-bold text-amber-400">
           Extracted laptop display panel connected via standard LVDS card
@@ -1927,10 +2001,12 @@ function SliderCalculatorCard({ block }: { block: Extract<ChapterBlock, { type: 
 function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'ideaGenerator' }> }) {
   const [index, setIndex] = useState(0)
   const [isSpinning, setIsSpinning] = useState(false)
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
   const idea = block.combinations[index]
 
   const spin = () => {
     setIsSpinning(true)
+    setCompletedSteps(new Set())
     setTimeout(() => {
       setIndex(Math.floor(Math.random() * block.combinations.length))
       setIsSpinning(false)
@@ -1958,9 +2034,31 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
                 Repurpose the device with a simple transformation path instead of sending it straight to storage or scrap.
               </p>
               <div className="bg-white border-2 border-[#1A1A2E] rounded-xl p-4 shadow-[2px_2px_0px_#1A1A2E]">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">Build sequence</span>
-                <ol className="list-decimal pl-4 space-y-1.5 text-xs text-[#1A1A2E] font-bold">
-                  {idea.steps.map((s, i) => <li key={i}>{s}</li>)}
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-2">Build sequence (Click steps to check)</span>
+                <ol className="list-decimal list-inside space-y-2 text-xs text-[#1A1A2E] font-bold">
+                  {idea.steps.map((s, i) => {
+                    const isDone = completedSteps.has(i)
+                    return (
+                      <li 
+                        key={i} 
+                        className={`cursor-pointer select-none transition-all duration-150 p-2 rounded-lg border-2 ${
+                          isDone 
+                            ? 'border-emerald-500 bg-emerald-50 text-slate-400 line-through shadow-[1px_1px_0px_#1A1A2E]' 
+                            : 'border-slate-200 hover:border-slate-400 bg-slate-50/50'
+                        }`}
+                        onClick={() => {
+                          setCompletedSteps(prev => {
+                            const next = new Set(prev)
+                            if (next.has(i)) next.delete(i)
+                            else next.add(i)
+                            return next
+                          })
+                        }}
+                      >
+                        <span className="ml-1 text-[#1A1A2E] font-extrabold">{s}</span>
+                      </li>
+                    )
+                  })}
                 </ol>
               </div>
             </div>
@@ -1974,7 +2072,7 @@ function IdeaGeneratorCard({ block }: { block: Extract<ChapterBlock, { type: 'id
           </div>
         </div>
         <div className="flex items-stretch justify-stretch">
-          <IdeaIllustration device={idea.device} purpose={idea.purpose} />
+          <IdeaIllustration device={idea.device} purpose={idea.purpose} completedCount={completedSteps.size} />
         </div>
       </div>
     </section>
@@ -2804,6 +2902,107 @@ function PathwayFlipCards() {
   )
 }
 
+function CreativeUpcycleBento() {
+  return (
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+      {/* Card 1: CRT Planters */}
+      <div className="border-4 border-[#1A1A2E] rounded-2xl bg-[#EEFDF7] p-6 shadow-[5px_5px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[7px_7px_0px_#1A1A2E] transition-all duration-300 min-h-[260px]">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+        
+        <div className="flex justify-between items-start mb-6 relative z-10">
+          <div className="w-16 h-16 bg-white rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center shadow-[3px_3px_0px_#1A1A2E] group-hover:scale-110 transition-all duration-300">
+            <svg viewBox="0 0 100 100" className="w-11 h-11" fill="none">
+              <rect x="15" y="20" width="70" height="52" rx="8" fill="#475569" stroke="#1A1A2E" strokeWidth="4" />
+              <rect x="22" y="26" width="56" height="40" rx="4" fill="#334155" stroke="#1A1A2E" strokeWidth="3" />
+              <path d="M40,72 L35,84 L65,84 L60,72 Z" fill="#334155" stroke="#1A1A2E" strokeWidth="4" />
+              <line x1="30" y1="84" x2="70" y2="84" stroke="#1A1A2E" strokeWidth="4" strokeLinecap="round" />
+              <path d="M45,26 Q40,10 52,4" stroke="#10B981" strokeWidth="3" strokeLinecap="round" />
+              <path d="M55,26 Q62,14 50,8" stroke="#10B981" strokeWidth="3" strokeLinecap="round" />
+              <path d="M52,4 Q57,0 52,-4 Q47,0 52,4" fill="#34D399" stroke="#1A1A2E" strokeWidth="2" />
+              <path d="M50,8 Q45,6 48,2 Q53,4 50,8" fill="#34D399" stroke="#1A1A2E" strokeWidth="2" />
+              <path d="M42,16 Q36,15 39,11 Q45,12 42,16" fill="#34D399" stroke="#1A1A2E" strokeWidth="2" />
+              <path d="M58,16 Q64,15 61,11 Q55,12 58,16" fill="#34D399" stroke="#1A1A2E" strokeWidth="2" />
+            </svg>
+          </div>
+          <span className="bg-[#10B981] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+            IDEA 01
+          </span>
+        </div>
+
+        <div className="relative z-10">
+          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">CRT Planters</h4>
+          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+            Convert old CRT monitor shells into unique planters or pet beds.
+          </p>
+        </div>
+      </div>
+
+      {/* Card 2: PCB Art */}
+      <div className="border-4 border-[#1A1A2E] rounded-2xl bg-[#FAF5FF] p-6 shadow-[5px_5px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[7px_7px_0px_#1A1A2E] transition-all duration-300 min-h-[260px]">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+        
+        <div className="flex justify-between items-start mb-6 relative z-10">
+          <div className="w-16 h-16 bg-white rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center shadow-[3px_3px_0px_#1A1A2E] group-hover:scale-110 transition-all duration-300">
+            <svg viewBox="0 0 100 100" className="w-11 h-11" fill="none">
+              <path d="M50,8 C50,2 44,2 44,6 C44,12 50,15 50,22" stroke="#64748B" strokeWidth="3" strokeLinecap="round" fill="none" />
+              <circle cx="50" cy="24" r="4" fill="none" stroke="#1A1A2E" strokeWidth="3" />
+              <polygon points="50,28 72,50 50,72 28,50" fill="#0D9488" stroke="#1A1A2E" strokeWidth="4" />
+              <path d="M50,34 L50,66" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M40,40 L40,55 L50,55" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" />
+              <path d="M60,60 L60,45 L50,45" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="40" cy="40" r="2.5" fill="#FCD34D" stroke="#1A1A2E" strokeWidth="1.5" />
+              <circle cx="60" cy="60" r="2.5" fill="#FCD34D" stroke="#1A1A2E" strokeWidth="1.5" />
+              <circle cx="50" cy="50" r="3.5" fill="#FFF" stroke="#1A1A2E" strokeWidth="2" />
+            </svg>
+          </div>
+          <span className="bg-[#A855F7] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform -rotate-3 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+            IDEA 02
+          </span>
+        </div>
+
+        <div className="relative z-10">
+          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">PCB Jewelry</h4>
+          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+            Transform retired circuit boards into high-tech jewelry and decorative wall art.
+          </p>
+        </div>
+      </div>
+
+      {/* Card 3: Tactile Inputs */}
+      <div className="border-4 border-[#1A1A2E] rounded-2xl bg-[#FFFDF2] p-6 shadow-[5px_5px_0px_#1A1A2E] flex flex-col justify-between relative overflow-hidden group hover:-translate-y-1 hover:translate-x-1 hover:shadow-[7px_7px_0px_#1A1A2E] transition-all duration-300 min-h-[260px]">
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A1A2E 18%, transparent 19%)', backgroundSize: '8px 8px' }} />
+        
+        <div className="flex justify-between items-start mb-6 relative z-10">
+          <div className="w-16 h-16 bg-white rounded-xl border-3 border-[#1A1A2E] flex items-center justify-center shadow-[3px_3px_0px_#1A1A2E] group-hover:scale-110 transition-all duration-300">
+            <svg viewBox="0 0 100 100" className="w-11 h-11" fill="none">
+              <rect x="15" y="32" width="70" height="46" rx="8" fill="#4F46E5" stroke="#1A1A2E" strokeWidth="4" />
+              <rect x="20" y="37" width="60" height="36" rx="4" fill="#312E81" stroke="#1A1A2E" strokeWidth="2" />
+              <rect x="26" y="22" width="20" height="20" rx="3" fill="#E2E8F0" stroke="#1A1A2E" strokeWidth="3" />
+              <rect x="29" y="25" width="14" height="10" rx="1" fill="#F8FAFC" />
+              <text x="32" y="33" fill="#1A1A2E" fontSize="9" fontWeight="bold" fontFamily="monospace">A</text>
+              <rect x="54" y="22" width="20" height="20" rx="3" fill="#E2E8F0" stroke="#1A1A2E" strokeWidth="3" />
+              <rect x="57" y="25" width="14" height="10" rx="1" fill="#F8FAFC" />
+              <text x="60" y="33" fill="#1A1A2E" fontSize="9" fontWeight="bold" fontFamily="monospace">B</text>
+              <circle cx="36" cy="64" r="2.5" fill="#10B981" />
+              <circle cx="64" cy="64" r="2.5" fill="#10B981" />
+            </svg>
+          </div>
+          <span className="bg-[#F59E0B] text-white font-black text-[10px] px-2 py-0.5 border-2 border-[#1A1A2E] rounded transform rotate-6 shadow-[1.5px_1.5px_0px_#1A1A2E] uppercase">
+            IDEA 03
+          </span>
+        </div>
+
+        <div className="relative z-10">
+          <h4 className="font-extrabold text-[#1A1A2E] text-lg mb-2 uppercase tracking-tight font-['Poppins']">Tactile Inputs</h4>
+          <p className="text-[#334155] text-xs leading-relaxed font-bold">
+            Use mechanical keyboard components to build custom controllers or tactile interfaces.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function renderBlock(block: ChapterBlock): ReactNode {
   if (block.type === 'paragraph') {
     return (
@@ -2907,6 +3106,10 @@ function renderBlock(block: ChapterBlock): ReactNode {
 
     if (block.type === 'bulletList' && block.items[0]?.startsWith('Formal recycling protects workers')) {
       return <PathwayFlipCards />
+    }
+
+    if (block.type === 'bulletList' && block.items[0]?.startsWith('Convert old CRT monitor')) {
+      return <CreativeUpcycleBento />
     }
 
     return (
