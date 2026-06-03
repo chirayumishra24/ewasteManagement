@@ -4,57 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Rush Pro | Skilizee E-Waste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800&family=Comic+Neue:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
-            --page-bg: #071320;
-            --surface: rgba(15, 23, 42, 0.6);
-            --surface-soft: rgba(255, 255, 255, 0.05);
-            --primary: #3c8f73;
-            --primary-light: #5bb99a;
-            --text-primary: #f1f5f9;
-            --text-muted: #94a3b8;
-            --gold: #f59e0b;
-            --silver: #cbd5e1;
-            --copper: #ea580c;
-            --palladium: #a78bfa;
-            --outline: 1px solid rgba(255, 255, 255, 0.08);
+            --paper-warm: #FFFDF7;
+            --ink-dark: #1A1A2E;
+            --pow-yellow: #FACC15;
+            --hero-green: #15803D;
+            --hero-blue: #1E40AF;
+            --biome-accent: #2bc1a6; /* Recovery green theme */
+            --text-muted: #7B7A8A;
+            --text-secondary: #2D2D44;
+            --shadow-card: 4px 4px 0px #1A1A2E;
+            --shadow-card-hover: 6px 6px 0px #1A1A2E;
+            --font-display: 'Bangers', cursive;
+            --font-body: 'Nunito', sans-serif;
+            --font-speech: 'Comic Neue', cursive;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--page-bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
+            background-color: var(--paper-warm);
+            color: var(--ink-dark);
+            font-family: var(--font-body);
             margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(60, 143, 115, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
             min-height: 100vh;
+            background-image: radial-gradient(rgba(26, 26, 46, 0.04) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
         }
 
-        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+        body, p, span, button, input, select, textarea, li, a, label, td, th {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-size: max(20px, 1.25em);
+        }
 
+        .gold-rush-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .gold-rush-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 4px solid var(--ink-dark);
+            padding-bottom: 1.5rem;
+        }
+
+        .gold-rush-title-group h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink-dark);
+            -webkit-text-stroke: 1.5px var(--ink-dark);
+            text-shadow: 3px 3px 0 var(--pow-yellow);
+            line-height: 1;
+        }
+
+        .gold-rush-title-group p {
+            font-family: var(--font-speech);
+            font-weight: 700;
+            margin: 0.5rem 0 0 0;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-dark);
+            cursor: pointer;
+            box-shadow: var(--shadow-card);
+            transition: all 0.15s ease-out;
+        }
+
+        .fullscreen-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow-card-hover);
+            background: var(--pow-yellow);
+        }
+
+        .fullscreen-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0 0 0 transparent;
+        }
+
+        /* Market Ticker */
         .market-ticker {
-            background: rgba(0, 0, 0, 0.45);
-            color: #94a3b8;
-            padding: 12px 0;
+            background: #ffffff;
+            color: var(--ink-dark);
+            padding: 14px 0;
             overflow: hidden;
             white-space: nowrap;
+            font-family: var(--font-mono);
             font-size: 20px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            border-bottom: var(--outline);
-            backdrop-filter: blur(10px);
+            border-bottom: 4px solid var(--ink-dark);
         }
 
         .ticker-content {
             display: inline-block;
-            animation: scroll 30s linear infinite;
+            animation: scroll 35s linear infinite;
         }
 
         @keyframes scroll {
@@ -62,142 +132,463 @@
             100% { transform: translateX(-50%); }
         }
 
-        .topic-card {
-            background: var(--surface);
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            border: var(--outline);
-            backdrop-filter: blur(16px);
-            transition: all 0.3s ease;
-        }
-        
-        .topic-card:hover {
-            border-color: rgba(16, 185, 129, 0.25);
-            box-shadow: 0 15px 45px rgba(16, 185, 129, 0.06);
-        }
-
-        .device-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 2px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1.5rem 1.25rem;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* System Briefing Callout */
+        .briefing-card {
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
             position: relative;
         }
 
-        .device-card.active { 
-            border-color: var(--primary); 
-            transform: translateY(-4px); 
-            background: rgba(60, 143, 115, 0.12); 
-            box-shadow: 0 8px 28px rgba(60, 143, 115, 0.25);
+        .briefing-badge {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background: var(--biome-accent);
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            padding: 6px 16px;
+            border: 4px solid var(--ink-dark);
+            box-shadow: 2px 2px 0 var(--ink-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transform: rotate(-1.5deg);
         }
 
+        .briefing-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .briefing-sections {
+                flex-direction: row;
+                gap: 2rem;
+            }
+        }
+
+        .briefing-sec {
+            flex: 1;
+        }
+
+        .briefing-sec-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            letter-spacing: 0.05em;
+            color: var(--ink-dark);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .briefing-sec-title.purpose {
+            color: var(--hero-blue);
+        }
+
+        .briefing-sec-title.instruction {
+            color: var(--hero-green);
+        }
+
+        .briefing-sec p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* Topic Panel Cards */
+        .topic-card {
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .topic-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 4px dashed var(--ink-dark);
+            padding-bottom: 1rem;
+        }
+
+        .topic-card-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink-dark);
+        }
+
+        /* Milestone Badge */
+        .milestone-badge {
+            background: var(--pow-yellow);
+            border: 3.5px solid var(--ink-dark);
+            box-shadow: 3px 3px 0 var(--ink-dark);
+            color: var(--ink-dark);
+            padding: 6px 16px;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transform: skew(-5deg);
+        }
+
+        /* Device Grid & Cards */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .device-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .device-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        .device-card {
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            padding: 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease-out;
+            min-width: 0; /* Prevents cell expansion */
+        }
+
+        .device-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .device-card.active {
+            background: #f0fdf4; /* Light green highlight */
+            border-color: var(--hero-green);
+            box-shadow: 4px 4px 0 var(--hero-green);
+        }
+
+        .device-canvas-container {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border: 3px solid var(--ink-dark);
+            box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .device-canvas-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .drag-hint {
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            font-size: 11px !important;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--text-muted);
+            pointer-events: none;
+            letter-spacing: 0.05em;
+            z-index: 10;
+        }
+
+        .device-card-title {
+            font-family: var(--font-body);
+            font-size: 16px !important;
+            font-weight: 800;
+            color: var(--ink-dark);
+            text-transform: uppercase;
+            margin: 0 0 0.75rem 0;
+            text-align: center;
+        }
+
+        /* Stepper Component */
         .stepper {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            margin-top: 1.25rem;
-            padding: 4px;
+            border: 3px solid var(--ink-dark);
+            background: #ffffff;
+            padding: 2px;
             width: 100%;
         }
 
         .stepper button {
-            width: 48px;
-            height: 48px;
-            color: var(--primary-light);
+            width: 36px;
+            height: 36px;
+            color: var(--ink-dark);
+            font-family: var(--font-display);
             font-weight: 800;
-            font-size: 24px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.2s ease;
+            font-size: 1.25rem;
+            background: var(--pow-yellow);
+            border: 2px solid var(--ink-dark);
+            box-shadow: 1px 1px 0 var(--ink-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.1s ease-out;
+            flex-shrink: 0;
         }
 
         .stepper button:hover {
-            background: rgba(60, 143, 115, 0.25);
-            border-color: rgba(60, 143, 115, 0.4);
-            color: white;
+            background: var(--biome-accent);
+            color: #ffffff;
+        }
+
+        .stepper button:active {
+            transform: translate(1px, 1px);
+            box-shadow: 0 0 0 transparent;
         }
 
         .stepper input {
             flex: 1;
-            min-width: 60px;
-            font-size: 22px;
+            min-width: 0;
+            width: 100%;
+            max-width: 50px;
+            font-family: var(--font-mono);
+            font-size: 20px;
             text-align: center;
             font-weight: 800;
             border: 0;
             outline: 0;
             background: transparent;
-            color: white;
+            color: var(--ink-dark);
         }
 
-        .yield-bar-track { height: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 99px; overflow: hidden; }
-        .yield-bar-fill { height: 100%; border-radius: 99px; width: 0%; transition: width 1s ease; box-shadow: 0 0 10px currentColor; }
-        
-        .milestone-badge {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            color: var(--gold);
-            padding: 6px 16px;
-            border-radius: 99px;
-            font-size: 20px;
+        .stepper input::-webkit-outer-spin-button,
+        .stepper input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .stepper input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Yield Items & Progress Bars */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .summary-grid {
+                grid-template-columns: 1.5fr 1fr;
+            }
+        }
+
+        .yield-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .yield-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .yield-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .yield-label {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .yield-value {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--ink-dark);
+        }
+
+        .yield-bar-track {
+            height: 24px;
+            background: #ffffff;
+            border: 3.5px solid var(--ink-dark);
+            box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .yield-bar-fill {
+            height: 100%;
+            border-right: 3.5px solid var(--ink-dark);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Market Valuation Card */
+        .market-card {
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            padding: 2.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .market-label {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--hero-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .value-display {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 800;
+            color: var(--ink-dark);
+            -webkit-text-stroke: 1.5px var(--ink-dark);
+            text-shadow: 4px 4px 0 var(--pow-yellow);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .value-breakdown-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .breakdown-item {
+            font-family: var(--font-mono);
             font-weight: 700;
+            font-size: 15px !important;
+            background: #ffffff;
+            border: 2.5px solid var(--ink-dark);
+            padding: 4px 10px;
+            box-shadow: 2px 2px 0 var(--ink-dark);
+            text-transform: uppercase;
+        }
+
+        /* Environment Stats Section */
+        .env-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .env-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .env-card {
+            background: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease-out;
+        }
+
+        .env-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .env-label {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .env-value {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ink-dark);
+        }
+
+        .env-card.co2 .env-value { color: var(--hero-green); }
+        .env-card.water .env-value { color: var(--hero-blue); }
+        .env-card.energy .env-value { color: var(--pow-yellow); text-shadow: 1px 1px 0 var(--ink-dark); }
+        .env-card.waste .env-value { color: var(--biome-accent); }
+
+        /* Comic Action Button */
+        .comic-btn {
+            font-family: var(--font-display);
+            background: var(--biome-accent);
+            color: #ffffff;
+            border: 4px solid var(--ink-dark);
+            box-shadow: var(--shadow-card);
+            transform: skew(-3deg);
+            padding: 0.75rem 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            width: 100%;
+            margin-top: 2rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .value-display {
-            font-family: 'Poppins', sans-serif;
-            font-size: 4.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fef3c7, #f59e0b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.35));
+        .comic-btn:hover {
+            transform: skew(-3deg) translate(-2px, -2px);
+            box-shadow: var(--shadow-card-hover);
+            background: var(--pow-yellow);
+            color: var(--ink-dark);
         }
 
-        /* Fullscreen btn */
-        .fullscreen-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            z-index: 100;
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            border: var(--outline);
-            backdrop-filter: blur(10px);
-        }
-
-        .fullscreen-btn:hover { background: rgba(255, 255, 255, 0.15); }
-    </style>
-
-    <style>
-        /* Global font size override fallback */
-        body, p, span, button, input, select, textarea, li, a, label, td, th {
-            font-size: 20px;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-size: max(20px, 1.25em);
+        .comic-btn:active {
+            transform: skew(-3deg) translate(2px, 2px);
+            box-shadow: 0 0 0 transparent;
         }
     </style>
-    </head>
+</head>
 <body>
     <div class="market-ticker">
         <div class="ticker-content" id="ticker">
@@ -205,82 +596,82 @@
         </div>
     </div>
 
-    <main class="max-w-6xl mx-auto px-6 py-12 space-y-8">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-4xl font-extrabold tracking-tight">Gold Rush Pro</h1>
-                <p class="text-[var(--text-muted)]">Real-time Urban Mining Intelligence</p>
+    <main class="gold-rush-container">
+        <header class="gold-rush-header">
+            <div class="gold-rush-title-group">
+                <h1>Gold Rush Pro</h1>
+                <p>Real-time Urban Mining Intelligence</p>
             </div>
             
             <button class="fullscreen-btn" id="toggle-fullscreen" title="Toggle Fullscreen">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
                 </svg>
             </button>
         </header>
 
-        <!-- Premium Glassmorphic Systems Briefing Banner -->
-        <div class="mb-8 border-2 border-emerald-500/20 rounded-3xl bg-slate-900/60 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.37)] relative overflow-hidden backdrop-blur-md">
-            <div class="absolute top-0 right-0 bg-emerald-500 text-slate-950 font-black px-5 py-1.5 border-b-2 border-l-2 border-emerald-500/20 text-[18px] uppercase font-mono tracking-wider rounded-bl-2xl">
-                System Briefing
-            </div>
-            <div class="space-y-4 pr-32">
-                <div>
-                    <span class="text-[20px] font-black text-emerald-400 uppercase tracking-widest block mb-1">Learning Purpose</span>
-                    <p class="text-xl text-slate-200 font-bold leading-relaxed">Understand the economic viability of urban mining. E-waste contains precious metals at concentrations up to 100 times higher than natural ores. Simulating recovery yields highlights the waste of landfilling.</p>
+        <!-- Comic System Briefing -->
+        <div class="briefing-card">
+            <div class="briefing-badge">System Briefing</div>
+            <div class="briefing-sections">
+                <div class="briefing-sec">
+                    <div class="briefing-sec-title purpose">Learning Purpose</div>
+                    <p>Understand the economic viability of urban mining. E-waste contains precious metals at concentrations up to 100 times higher than natural ores. Simulating recovery yields highlights the waste of landfilling.</p>
                 </div>
-                <div class="border-t border-slate-700/50 pt-4">
-                    <span class="text-[20px] font-black text-amber-400 uppercase tracking-widest block mb-1">Instruction</span>
-                    <p class="text-xl text-slate-300 font-semibold leading-relaxed">Adjust the counts of discarded devices using the stepper buttons to calculate the metals recovered, their current market valuation, and the environmental resources saved.</p>
+                <div class="briefing-sec">
+                    <div class="briefing-sec-title instruction">Instruction</div>
+                    <p>Adjust the counts of discarded devices using the stepper buttons to calculate the metals recovered, their current market valuation, and the environmental resources saved.</p>
                 </div>
             </div>
         </div>
 
-        <section class="topic-card p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="text-xl font-bold">🛠️ Device Collection</h3>
+        <section class="topic-card">
+            <div class="topic-card-header">
+                <h3>🛠️ Device Collection</h3>
                 <div class="milestone-badge" id="milestone-text">Goal: Collect 10 devices</div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" id="device-grid">
+            <div class="device-grid" id="device-grid">
                 <!-- Filled by JS -->
             </div>
         </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
-            <section class="topic-card p-8">
-                <h3 class="text-xl font-bold mb-6">⚗️ Estimated Extraction</h3>
-                <div class="space-y-6" id="yield-list">
+        <div class="summary-grid">
+            <section class="topic-card">
+                <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin: 0 0 1.5rem 0; text-transform: uppercase; border-bottom: 4px dashed var(--ink-dark); padding-bottom: 1rem;">⚗️ Estimated Extraction</h3>
+                <div class="yield-list" id="yield-list">
                     <!-- Filled by JS -->
                 </div>
             </section>
 
-            <section class="topic-card p-8 bg-slate-900/50 border-emerald-500/20 flex flex-col items-center justify-center text-center">
-                <p class="text-[20px] font-bold uppercase tracking-widest text-emerald-400 mb-2">Market Valuation</p>
+            <section class="market-card">
+                <p class="market-label">Market Valuation</p>
                 <div class="value-display" id="total-value">₹0</div>
-                <div class="flex flex-wrap justify-center gap-4 mt-6 text-xl font-bold text-slate-300" id="value-breakdown"></div>
+                <div class="value-breakdown-container" id="value-breakdown">
+                    <!-- Filled by JS -->
+                </div>
                 
-                <button class="mt-10 w-full py-4 bg-emerald-500 text-slate-950 rounded-2xl font-black hover:bg-emerald-400 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-500/20 cursor-pointer" id="generate-cert">
+                <button class="comic-btn" id="generate-cert">
                     Generate Impact Certificate
                 </button>
             </section>
         </div>
 
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="topic-card p-6 text-center">
-                <p class="text-[20px] font-bold text-[var(--muted)] uppercase mb-2">CO2 Saved</p>
-                <p class="text-2xl font-black text-[var(--primary)]" id="env-co2">0 kg</p>
+        <section class="env-grid">
+            <div class="env-card co2">
+                <p class="env-label">CO2 Saved</p>
+                <p class="env-value" id="env-co2">0 kg</p>
             </div>
-            <div class="topic-card p-6 text-center">
-                <p class="text-[20px] font-bold text-[var(--muted)] uppercase mb-2">Water Saved</p>
-                <p class="text-2xl font-black text-blue-500" id="env-water">0 L</p>
+            <div class="env-card water">
+                <p class="env-label">Water Saved</p>
+                <p class="env-value" id="env-water">0 L</p>
             </div>
-            <div class="topic-card p-6 text-center">
-                <p class="text-[20px] font-bold text-[var(--muted)] uppercase mb-2">Energy Saved</p>
-                <p class="text-2xl font-black text-amber-500" id="env-energy">0 kWh</p>
+            <div class="env-card energy">
+                <p class="env-label">Energy Saved</p>
+                <p class="env-value" id="env-energy">0 kWh</p>
             </div>
-            <div class="topic-card p-6 text-center">
-                <p class="text-[20px] font-bold text-[var(--muted)] uppercase mb-2">Waste Diverted</p>
-                <p class="text-2xl font-black text-emerald-500" id="env-landfill">0 kg</p>
+            <div class="env-card waste">
+                <p class="env-label">Waste Diverted</p>
+                <p class="env-value" id="env-landfill">0 kg</p>
             </div>
         </section>
     </main>
