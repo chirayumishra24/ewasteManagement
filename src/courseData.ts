@@ -338,6 +338,7 @@ export const chapters: CourseChapter[] = [
               { label: 'Growth Rate', value: '3x', trend: 'up', detail: 'Faster than any other household waste stream.' }
             ]
           },
+          video('Orientation Overview', '/video/1-0.mp4', 'HQ Dispatch Transmission — Watch this system overview before starting your mission.'),
           p('This course moves from identification to action. You will learn to read the waste stream, extend device life, and mobilize your community.'),
           q('Sustainable tech is not just about better batteries; it is about better disposal systems.', 'System Recovery Protocol'),
         ],

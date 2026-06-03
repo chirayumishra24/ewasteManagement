@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import type { CourseChapter } from '../courseData';
 
@@ -16,6 +16,30 @@ export default function ChapterShell({
   children,
 }: ChapterShellProps) {
   const shellRef = useRef<HTMLDivElement>(null);
+
+  // Scroll progress state
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   // Custom Audio State
   const [isPlaying, setIsPlaying] = useState(false);
@@ -84,7 +108,13 @@ export default function ChapterShell({
         '--biome-active': chapter.accentColor,
       } as CSSProperties}
     >
-
+      {/* Vertical Scroll Progress Bar */}
+      <div className="comic-vertical-progress-bar no-print" title="Scroll Progress">
+        <div 
+          className="progress-fill"
+          style={{ height: `${scrollProgress}%` }}
+        />
+      </div>
 
       {/* Chapter Viewport Hero */}
       <section className="chapter-hero-viewport comic-cover-header">

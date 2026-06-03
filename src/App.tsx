@@ -9,6 +9,7 @@ import Preloader from './components/Preloader'
 import PlanetaryHUD from './components/PlanetaryHUD'
 import OrbitalMap from './components/OrbitalMap'
 import ChapterShell from './components/ChapterShell'
+import CustomVideoPlayer from './components/CustomVideoPlayer'
 import { getBiomeFromTheme } from './components/background/SceneLighting'
 import { VillainProfileCard } from './components/cards/VillainProfileCard'
 import { PowerUpCard } from './components/cards/PowerUpCard'
@@ -3286,6 +3287,7 @@ function renderBlock(block: ChapterBlock): ReactNode {
   }
 
   if (block.type === 'video') {
+    const isLocalVideo = block.url.endsWith('.mp4') || block.url.includes('/video/');
     return (
       <section className="content-card media-card video-card">
         <div className="media-card-head">
@@ -3295,15 +3297,19 @@ function renderBlock(block: ChapterBlock): ReactNode {
             {block.note && <p className="media-note">{block.note}</p>}
           </div>
         </div>
-        <div className="media-frame">
-          <iframe
-            src={toYouTubeEmbedUrl(block.url)}
-            title={block.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
+        {isLocalVideo ? (
+          <CustomVideoPlayer src={block.url} title={block.title} />
+        ) : (
+          <div className="media-frame">
+            <iframe
+              src={toYouTubeEmbedUrl(block.url)}
+              title={block.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
       </section>
     )
   }

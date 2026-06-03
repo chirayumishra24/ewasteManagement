@@ -463,3 +463,28 @@
     margin-top: 2.5rem;
   }
 }
+
+/* --- Vertical Scroll Progress Bar --- */
+.comic-vertical-progress-bar {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 33.33vh;
+  width: 12px;
+  border: 3px solid var(--ink-dark);
+  background: var(--paper-warm);
+  box-shadow: 3px 3px 0 var(--ink-dark);
+  z-index: 1000;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.comic-vertical-progress-bar .progress-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, var(--biome-accent, var(--hero-blue)), #61b8ff);
+  transition: height 80ms linear;
+}
